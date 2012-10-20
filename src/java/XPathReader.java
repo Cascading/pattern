@@ -18,6 +18,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.DirectedGraph;
+
  
 public class XPathReader
 {
@@ -127,6 +131,7 @@ public class XPathReader
       // generate code for each tree
 
       ArrayList<String> predicates = new ArrayList<String>();
+      ArrayList<DirectedGraph<String, DefaultEdge>> forest = new ArrayList<DirectedGraph<String, DefaultEdge>>();
 
       expr = "/PMML/MiningModel/Segmentation/Segment";
       node_list = (NodeList) reader.read( expr, XPathConstants.NODESET );
@@ -138,9 +143,9 @@ public class XPathReader
 	      String id = ( (Element) node ).getAttribute( "id" );
 	      String tree_name = "tree_" + id;
 
-	      expr = "//TreeModel/Node[1]";
+	      expr = "./TreeModel/Node[1]";
 	      NodeList root_node = (NodeList) reader.read( node, expr, XPathConstants.NODESET );
-	      traverseTree( (Element) root_node.item( 0 ), tree_name, predicates );
+	      traverseTree( (Element) root_node.item( 0 ), tree_name, predicates, forest );
 	  }
       }
 
@@ -167,12 +172,6 @@ public class XPathReader
   }
 
 
-  private static void traverseTree( Element tree_root, String tree_name, ArrayList<String> predicates ) throws Exception {
-      System.out.println( tree_name );
-      traverseNode( tree_root, 0, predicates );
-  }
-
-
   private static String spacer( int depth ) {
       String pad = "";
 
@@ -184,11 +183,25 @@ public class XPathReader
   }
 
 
-  private static void traverseNode( Element node, Integer depth, ArrayList<String> predicates ) throws Exception {
+  private static void traverseTree( Element tree_root, String tree_name, ArrayList<String> predicates, ArrayList<DirectedGraph<String, DefaultEdge>> forest ) throws Exception {
+      DirectedGraph<String, DefaultEdge> graph = new DefaultDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
+      forest.add( graph );
+
+      System.out.println( tree_name );
+
+      traverseNode( tree_root, 0, predicates, graph );
+
+      System.out.println( "// " + graph.toString() );
+  }
+
+
+  private static String traverseNode( Element node, Integer depth, ArrayList<String> predicates, DirectedGraph<String, DefaultEdge> graph ) throws Exception {
       String pad = spacer( depth );
 
       String id = ( node ).getAttribute( "id" );
-      //System.out.println( pad + "node " + id + ", " + depth );
+      graph.addVertex( id );
+
+      System.out.println( pad + "// node " + id + ", " + depth );
 
       NodeList child_nodes = node.getChildNodes();
 
@@ -206,10 +219,13 @@ public class XPathReader
 		  }
 	      }
 	      else if ( child.getNodeName().equals( "Node" ) ) {
-		  traverseNode( (Element) child, depth + 1, predicates );
+		  String child_id = traverseNode( (Element) child, depth + 1, predicates, graph );
+		  graph.addEdge( id, child_id );
 	      }
 	  }
       }
+
+      return id;
   }
 
 
