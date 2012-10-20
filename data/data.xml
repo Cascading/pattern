@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://www.dmg.org/v4-0/pmml-4-0.xsd">
+ <Header copyright="Copyright (c) 2012 ceteri" description="Random Forest Tree Model">
+  <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
+  <Application name="Rattle/PMML" version="1.2.30"/>
+  <Timestamp>2012-10-09 17:10:46</Timestamp>
+ </Header>
+ <DataDictionary numberOfFields="4">
+  <DataField name="is_fraud" optype="categorical" dataType="string">
+   <Value value="0"/>
+   <Value value="1"/>
+  </DataField>
+  <DataField name="var1" optype="continuous" dataType="double"/>
+  <DataField name="var2" optype="continuous" dataType="double"/>
+  <DataField name="var3" optype="continuous" dataType="double"/>
+ </DataDictionary>
+ <MiningModel modelName="randomForest_Model" functionName="classification">
+  <MiningSchema>
+   <MiningField name="is_fraud" usageType="predicted"/>
+   <MiningField name="var1" usageType="active"/>
+   <MiningField name="var2" usageType="active"/>
+   <MiningField name="var3" usageType="active"/>
+  </MiningSchema>
+  <Segmentation multipleModelMethod="majorityVote">
+   <Segment id="1">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="classification" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="is_fraud" usageType="predicted"/>
+      <MiningField name="var1" usageType="active"/>
+      <MiningField name="var2" usageType="active"/>
+      <MiningField name="var3" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="var3" operator="lessOrEqual" value="0.5"/>
+       <Node id="4" score="0">
+        <SimplePredicate field="var2" operator="lessOrEqual" value="0.5"/>
+       </Node>
+       <Node id="5" score="1">
+        <SimplePredicate field="var2" operator="greaterThan" value="0.5"/>
+       </Node>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="var3" operator="greaterThan" value="0.5"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="2">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="classification" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="is_fraud" usageType="predicted"/>
+      <MiningField name="var1" usageType="active"/>
+      <MiningField name="var2" usageType="active"/>
+      <MiningField name="var3" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="0">
+       <SimplePredicate field="var2" operator="lessOrEqual" value="0.5"/>
+      </Node>
+      <Node id="3" score="1">
+       <SimplePredicate field="var2" operator="greaterThan" value="0.5"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+  </Segmentation>
+ </MiningModel>
+</PMML>
