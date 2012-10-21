@@ -26,8 +26,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.xml.xpath.XPathConstants;
-import org.codehaus.commons.compiler.CompileException;
+import org.codehaus.janino.CompileException;
 import org.codehaus.janino.ExpressionEvaluator;
+import org.codehaus.janino.Parser.ParseException;
+import org.codehaus.janino.Scanner.ScanException;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.w3c.dom.Element;
@@ -340,6 +342,10 @@ public class RandomForest
 	      ce.printStackTrace();
 	  } catch( InvocationTargetException ite ) {
 	      ite.printStackTrace();
+	  } catch( ParseException pe ) {
+	      pe.printStackTrace();
+	  } catch( ScanException se ) {
+	      se.printStackTrace();
 	  }
 
 	  predicate_id += 1;
