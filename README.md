@@ -2,18 +2,19 @@ cascading.pattern
 =================
 
 _Pattern_ sub-project for Cascading.org which uses flows as containers
-for machine learning models, importing PMML model descriptions from R,
-SAS, Weka, Matlab, etc.
+for machine learning models, importing
+[PMML](http://en.wikipedia.org/wiki/Predictive_Model_Markup_Language)
+model descriptions from _R_, _SAS_, _Weka_, _Matlab_, etc.
 
 
-generate an example data set
-----------------------------
+generate a baseline example data set
+------------------------------------
 
     ./src/py/rf_sample.py 100 > data/sample.tsv
 
 
-generate an example model
--------------------------
+generate a baseline example model
+---------------------------------
 
     R --vanilla --slave < src/r/rf_model.R > model.log
     ./src/py/rf_eval.py data/sample.xml > tmp.py
@@ -27,7 +28,8 @@ generate a JAR for Hadoop
 -------------------------
 
     gradle clean jar
-    hadoop jar build/libs/pattern.jar data/sample.xml data/sample.tsv
+    rm -rf output
+    hadoop jar build/libs/pattern.jar data/sample.xml data/sample.tsv output/eval
 
 The _confusion matrix_ shown in the log file should match the ones in
 the _R_ and _Python_ baseline examples.
