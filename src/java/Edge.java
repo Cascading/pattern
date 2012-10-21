@@ -4,7 +4,7 @@ import org.jgrapht.graph.DefaultEdge;
 public class Edge
     extends DefaultEdge
 {
-    public Integer predicate_id;
+    public Integer predicate_id = null;
 
 
     public void setPredicateId ( Integer predicate_id ) {

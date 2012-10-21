@@ -15,7 +15,7 @@ public class RandomForest
   protected XPathReader reader;
   public ArrayList<String> schema = new ArrayList<String>();
   public ArrayList<String> predicates = new ArrayList<String>();
-  public ArrayList<DirectedGraph<Vertex, Edge>> forest = new ArrayList<DirectedGraph<Vertex, Edge>>();
+  public ArrayList<Tree> forest = new ArrayList<Tree>();
 
 
   public static void main( String[] argv ) throws Exception {
@@ -29,6 +29,20 @@ public class RandomForest
       System.out.println( rf.schema );
       System.out.println( "---------" );
       System.out.println( rf.forest );
+      System.out.println( "---------" );
+
+      for ( Tree tree : rf.forest ) {
+	  System.out.println( tree );
+	  System.out.println( tree.getRoot() );
+
+	  for ( Edge edge : tree.getGraph().edgeSet() ) {
+	      System.out.println( edge );
+	  }
+
+	  System.out.println( "---------" );
+	  tree.traverse();
+      }
+
       System.out.println( "---------" );
 
       for ( String predicate : rf.predicates ) {
@@ -126,30 +140,22 @@ public class RandomForest
 
 	  if ( node.getNodeType() == Node.ELEMENT_NODE ) {
 	      String id = ( (Element) node ).getAttribute( "id" );
-	      String tree_name = "tree_" + id;
-
 	      String node_expr = "./TreeModel/Node[1]";
 	      NodeList root_node = (NodeList) reader.read( node, node_expr, XPathConstants.NODESET );
-	      buildTree( (Element) root_node.item( 0 ), tree_name );
+
+	      Tree tree = new Tree( id );
+	      forest.add( tree );
+
+	      Element root = (Element) root_node.item( 0 );
+	      Vertex vertex = makeVertex( root, 0, tree.getGraph() );
+	      tree.setRoot( vertex );
+	      buildNode( root, vertex, 0, tree.getGraph() );
+
+	      /* */
+	      System.out.println( "// " + tree.getGraph().toString() );
+	      /* */
 	  }
       }
-  }
-
-
-  protected void buildTree( Element tree_root, String tree_name ) throws Exception {
-      DirectedGraph<Vertex, Edge> graph = new DefaultDirectedGraph<Vertex, Edge>(Edge.class);
-      forest.add( graph );
-
-      /* */
-      System.out.println( tree_name );
-      /* */
-
-      Vertex vertex = makeVertex( tree_root, 0, graph );
-      buildNode( tree_root, vertex, 0, graph );
-
-      /* */
-      System.out.println( "// " + graph.toString() );
-      /* */
   }
 
 
