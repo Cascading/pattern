@@ -31,9 +31,12 @@ import cascading.tuple.TupleEntry;
 
 public class Classifier extends BaseOperation implements Function
   {
+    //protected RandomForest rf;
+
     public Classifier( Fields fieldDeclaration, RandomForest rf )
     {
     super( 1, fieldDeclaration );
+    //this.rf = rf;
     }
 
   public void operate( FlowProcess flowProcess, FunctionCall functionCall )
@@ -44,5 +47,7 @@ public class Classifier extends BaseOperation implements Function
     Tuple result = new Tuple();
     result.add( score );
     functionCall.getOutputCollector().add( result );
+
+    //System.out.println( rf.schema );
     }
   }
