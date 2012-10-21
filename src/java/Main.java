@@ -7,7 +7,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.DirectedGraph;
 
  
@@ -72,7 +71,7 @@ public class Main
       // generate code for each tree
 
       ArrayList<String> predicates = new ArrayList<String>();
-      ArrayList<DirectedGraph<Vertex, DefaultEdge>> forest = new ArrayList<DirectedGraph<Vertex, DefaultEdge>>();
+      ArrayList<DirectedGraph<Vertex, Edge>> forest = new ArrayList<DirectedGraph<Vertex, Edge>>();
 
       expr = "/PMML/MiningModel/Segmentation/Segment";
       node_list = (NodeList) reader.read( expr, XPathConstants.NODESET );
@@ -93,6 +92,8 @@ public class Main
       // STAGE 3:
       // enumerate the predicates
 
+      System.out.println( "---------" );
+      System.out.println( forest );
       System.out.println( "---------" );
 
       for ( String predicate : predicates ) {
@@ -124,19 +125,20 @@ public class Main
   }
 
 
-  private static void traverseTree( Element tree_root, String tree_name, ArrayList<String> predicates, ArrayList<DirectedGraph<Vertex, DefaultEdge>> forest ) throws Exception {
-      DirectedGraph<Vertex, DefaultEdge> graph = new DefaultDirectedGraph<Vertex, DefaultEdge>(DefaultEdge.class);
+  private static void traverseTree( Element tree_root, String tree_name, ArrayList<String> predicates, ArrayList<DirectedGraph<Vertex, Edge>> forest ) throws Exception {
+      DirectedGraph<Vertex, Edge> graph = new DefaultDirectedGraph<Vertex, Edge>(Edge.class);
       forest.add( graph );
 
       System.out.println( tree_name );
 
-      traverseNode( tree_root, 0, predicates, graph );
+      Vertex vertex = makeVertex( tree_root, 0, graph );
+      traverseNode( tree_root, vertex, 0, predicates, graph );
 
       System.out.println( "// " + graph.toString() );
   }
 
 
-  private static String traverseNode( Element node, Integer depth, ArrayList<String> predicates, DirectedGraph<Vertex, DefaultEdge> graph ) throws Exception {
+  private static Vertex makeVertex( Element node, Integer depth, DirectedGraph<Vertex, Edge> graph ) {
       String pad = spacer( depth );
 
       String id = ( node ).getAttribute( "id" );
@@ -144,6 +146,12 @@ public class Main
       graph.addVertex( vertex );
       System.out.println( pad + "// node " + id + ", " + depth );
 
+      return vertex;
+  }
+
+
+  private static void traverseNode( Element node, Vertex vertex, Integer depth, ArrayList<String> predicates, DirectedGraph<Vertex, Edge> graph ) throws Exception {
+      String pad = spacer( depth );
       NodeList child_nodes = node.getChildNodes();
 
       for ( int i = 0; i < child_nodes.getLength(); i++ ) {
@@ -151,26 +159,27 @@ public class Main
 
 	  if ( child.getNodeType() == Node.ELEMENT_NODE ) {
 	      if ( child.getNodeName().equals( "SimplePredicate" ) ) {
-		  int position = composePredicate( (Element) child, predicates );
-		  System.out.println( pad + "if expr[ " + position + " ]" );
+		  Integer predicate_id = composePredicate( (Element) child, predicates );
+		  System.out.println( pad + "if expr[ " + predicate_id + " ]" );
 
 		  if ( node.hasAttribute( "score" ) ) {
 		      String score = ( node ).getAttribute( "score" );
 		      vertex.setScore( score );
 		      System.out.println( pad + " score " + score );
 		  }
+
+		  for (Edge e: graph.edgesOf( vertex ) ) {
+		      e.setPredicateId( predicate_id );
+		  }
 	      }
 	      else if ( child.getNodeName().equals( "Node" ) ) {
-		  String child_id = traverseNode( (Element) child, depth + 1, predicates, graph );
-		  Vertex child_vertex = new Vertex( child_id );
-		  graph.addVertex( child_vertex );
+		  Vertex child_vertex = makeVertex( (Element) child, depth + 1, graph );
+		  Edge edge = graph.addEdge( vertex, child_vertex );
 
-		  DefaultEdge edge = graph.addEdge( vertex, child_vertex );
+		  traverseNode( (Element) child, child_vertex, depth + 1, predicates, graph );
 	      }
 	  }
       }
-
-      return id;
   }
 
 
@@ -195,8 +204,8 @@ public class Main
 	  predicates.add( eval );
       }
 
-      int position = predicates.indexOf( eval );
+      int predicate_id = predicates.indexOf( eval );
 
-      return position;
+      return predicate_id;
   }
 }

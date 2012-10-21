@@ -1,7 +1,7 @@
 public class Vertex
 {
     public String id;
-    public String score;
+    public String score = null;
 
 
     public Vertex ( String id ) {
@@ -20,6 +20,11 @@ public class Vertex
 
 
     public String toString () {
-	return id;
+	if ( score != null ) {
+	    return id + ":" + score;
+	}
+	else {
+	    return id;
+	}
     }
 }
