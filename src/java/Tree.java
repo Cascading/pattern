@@ -38,27 +38,34 @@ public class Tree
   }
 
 
-  public void traverse () {
-      traverseVertex( root );
+  public String traverse ( Boolean[] pred ) {
+      return traverseVertex( root, pred );
   }
 
 
-  protected String traverseVertex ( Vertex vertex ) {
+  protected String traverseVertex ( Vertex vertex, Boolean[] pred ) {
       String score = vertex.getScore();
 
       if ( score != null ) {
+	  /** /
 	  System.out.println( "  then " + score );
-	  return null; // score
+	  /* */
+
+	  return score;
       }
 
       for ( Edge edge : graph.outgoingEdgesOf( vertex ) ) {
+	  /** /
 	  System.out.println( edge );
-	  System.out.println( " if pred[ " + edge.getPredicateId() + " ]:" );
+	  System.out.println( " if pred[ " + edge.getPredicateId() + " ]:" + pred[ edge.getPredicateId() ] );
+	  /* */
 
-	  score = traverseVertex( graph.getEdgeTarget( edge ) );
+	  if ( pred[ edge.getPredicateId() ] ) {
+	      score = traverseVertex( graph.getEdgeTarget( edge ), pred );
 
-	  if ( score != null ) {
-	      return score;
+	      if ( score != null ) {
+		  return score;
+	      }
 	  }
       }
 

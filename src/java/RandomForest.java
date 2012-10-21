@@ -1,13 +1,16 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.xml.xpath.XPathConstants;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.ExpressionEvaluator;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.graph.DefaultDirectedGraph;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.DirectedGraph;
 
  
 public class RandomForest
@@ -38,9 +41,6 @@ public class RandomForest
 	  for ( Edge edge : tree.getGraph().edgeSet() ) {
 	      System.out.println( edge );
 	  }
-
-	  System.out.println( "---------" );
-	  tree.traverse();
       }
 
       System.out.println( "---------" );
@@ -49,17 +49,60 @@ public class RandomForest
 	  System.out.println( "expr[ " + rf.predicates.indexOf( predicate ) + " ]: " + predicate );
       }
 
-      // evaluate the predicates
+      // evaluate the TSV data
 
-      try {
-	  ExpressionEvaluator exprEval = new ExpressionEvaluator();
-	  exprEval.cook("3 + 4");
-	  System.out.println(exprEval.evaluate(null));
-      } catch( CompileException ce ) {
-	  ce.printStackTrace();
-      } catch( InvocationTargetException ite ) {
-	  ite.printStackTrace();
+      String tsv_file = argv[1];
+      eval_data( tsv_file, rf );
+  }
+
+
+  private static void eval_data( String tsv_file, RandomForest rf ) throws Exception {
+      FileReader fr = new FileReader( tsv_file );
+      BufferedReader br = new BufferedReader( fr );
+      String line;
+      int count = 0;
+
+      HashMap<String, Integer> confuse = new HashMap<String, Integer>();
+      confuse.put( "TN", 0 );
+      confuse.put( "TP", 0 );
+      confuse.put( "FN", 0 );
+      confuse.put( "FP", 0 );
+
+      while ( ( line = br.readLine() ) != null ) {
+	  /** /
+	  System.out.println( line );
+	  /* */
+
+	  if ( count++ > 0 ) {
+	      // tally votes for each tree in the forest
+
+	      String[] fields = line.split( "\\t" );
+	      Boolean[] pred = rf.evalTuple( fields );
+	      String score = rf.tallyVotes( pred );
+
+	      // update tallies into the confusion matrix
+
+	      if ( "1".equals( fields[ 0 ] ) ) {
+		  if ( "1".equals( score ) ) {
+		      confuse.put( "TP", confuse.get( "TP" ) + 1 );
+		  }
+		  else {
+		      confuse.put( "FN", confuse.get( "FN" ) + 1 );
+		  }
+	      }
+	      else {
+		  if ( "0".equals( score ) ) {
+		      confuse.put( "TN", confuse.get( "TN" ) + 1 );
+		  }
+		  else {
+		      confuse.put( "FP", confuse.get( "FP" ) + 1 );
+		  }
+	      }
+	  }
       }
+
+      fr.close(); 
+      System.out.println( confuse );
   }
 
 
@@ -159,6 +202,17 @@ public class RandomForest
   }
 
 
+  private static String spacer( int depth ) {
+      String pad = "";
+
+      for (int i = 0; i < depth; i++) {
+	  pad += " ";
+      }
+
+      return pad;
+  }
+
+
   protected Vertex makeVertex( Element node, Integer depth, DirectedGraph<Vertex, Edge> graph ) {
       String pad = spacer( depth );
       String id = ( node ).getAttribute( "id" );
@@ -220,10 +274,10 @@ public class RandomForest
       String eval = null;
 
       if ( operator.equals( "greaterThan" ) ) {
-	  eval = "fields[ " + schema.indexOf( field ) + " ] > " + value;
+	  eval = field + " > " + value;
       }
       else if ( operator.equals( "lessOrEqual" ) ) {
-	  eval = "fields[ " + schema.indexOf( field ) + " ] <= " + value;
+	  eval = field + " <= " + value;
       }
       else {
 	  throw new Exception( "unknown operator: " + operator );
@@ -239,13 +293,63 @@ public class RandomForest
   }
 
 
-  private static String spacer( int depth ) {
-      String pad = "";
+  public Boolean[] evalTuple( String[] fields ) {
+      // map from input tuple to forest predicate values
 
-      for (int i = 0; i < depth; i++) {
-	  pad += " ";
+      Boolean[] pred = new Boolean[ predicates.size() ];
+      int predicate_id = 0;
+
+      for ( String predicate : predicates ) {
+	  try {
+	      Object[] param_values = new Object[ schema.size() ];
+	      String[] param_names = new String[ schema.size() ];
+	      Class[] param_types = new Class[ schema.size() ];
+
+	      for ( int i = 0; i < param_values.length; i++ ) {
+		  param_values[ i ] = new Double( fields[ i ] );
+		  param_names[ i ] = schema.get( i );
+		  param_types[ i ] = double.class;
+	      }
+
+	      ExpressionEvaluator ee = new ExpressionEvaluator( predicate, boolean.class, param_names, param_types, new Class[0], null );
+	      Object res = ee.evaluate( param_values );
+	      pred[ predicate_id ] = new Boolean( res.toString() );
+	  } catch( CompileException ce ) {
+	      ce.printStackTrace();
+	  } catch( InvocationTargetException ite ) {
+	      ite.printStackTrace();
+	  }
+
+	  predicate_id += 1;
       }
 
-      return pad;
+      return pred;
+  }
+
+
+  public String tallyVotes( Boolean[] pred ) {
+      HashMap<String, Integer> tally = new HashMap<String, Integer>();
+      tally.put( "0", 0 );
+      tally.put( "1", 0 );
+
+      for ( Tree tree : forest ) {
+	  String score = tree.traverse( pred );
+	  tally.put( score, tally.get( score ) + 1 );
+
+	  /** /
+	  System.out.println( tree.tree_name + ": " + score );
+	  /* */
+      }
+
+      /** /
+      System.out.println( tally );
+      /* */
+
+      if ( tally.get( "1" ) >= tally.get( "0" ) ) {      
+	  return "1";
+      }
+      else {
+	  return "0";
+      }
   }
 }

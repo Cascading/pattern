@@ -8,4 +8,4 @@ javac -d build src/java/Edge.java
 javac -d build src/java/Tree.java
 javac -d build src/java/RandomForest.java
 
-java RandomForest data/sample.xml
+java RandomForest data/sample.xml data/sample.tsv
