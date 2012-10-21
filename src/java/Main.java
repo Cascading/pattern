@@ -72,7 +72,7 @@ public class Main
       // generate code for each tree
 
       ArrayList<String> predicates = new ArrayList<String>();
-      ArrayList<DirectedGraph<String, DefaultEdge>> forest = new ArrayList<DirectedGraph<String, DefaultEdge>>();
+      ArrayList<DirectedGraph<Vertex, DefaultEdge>> forest = new ArrayList<DirectedGraph<Vertex, DefaultEdge>>();
 
       expr = "/PMML/MiningModel/Segmentation/Segment";
       node_list = (NodeList) reader.read( expr, XPathConstants.NODESET );
@@ -124,8 +124,8 @@ public class Main
   }
 
 
-  private static void traverseTree( Element tree_root, String tree_name, ArrayList<String> predicates, ArrayList<DirectedGraph<String, DefaultEdge>> forest ) throws Exception {
-      DirectedGraph<String, DefaultEdge> graph = new DefaultDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
+  private static void traverseTree( Element tree_root, String tree_name, ArrayList<String> predicates, ArrayList<DirectedGraph<Vertex, DefaultEdge>> forest ) throws Exception {
+      DirectedGraph<Vertex, DefaultEdge> graph = new DefaultDirectedGraph<Vertex, DefaultEdge>(DefaultEdge.class);
       forest.add( graph );
 
       System.out.println( tree_name );
@@ -136,12 +136,12 @@ public class Main
   }
 
 
-  private static String traverseNode( Element node, Integer depth, ArrayList<String> predicates, DirectedGraph<String, DefaultEdge> graph ) throws Exception {
+  private static String traverseNode( Element node, Integer depth, ArrayList<String> predicates, DirectedGraph<Vertex, DefaultEdge> graph ) throws Exception {
       String pad = spacer( depth );
 
       String id = ( node ).getAttribute( "id" );
-      graph.addVertex( id );
-
+      Vertex vertex = new Vertex( id );
+      graph.addVertex( vertex );
       System.out.println( pad + "// node " + id + ", " + depth );
 
       NodeList child_nodes = node.getChildNodes();
@@ -156,12 +156,16 @@ public class Main
 
 		  if ( node.hasAttribute( "score" ) ) {
 		      String score = ( node ).getAttribute( "score" );
+		      vertex.setScore( score );
 		      System.out.println( pad + " score " + score );
 		  }
 	      }
 	      else if ( child.getNodeName().equals( "Node" ) ) {
 		  String child_id = traverseNode( (Element) child, depth + 1, predicates, graph );
-		  graph.addEdge( id, child_id );
+		  Vertex child_vertex = new Vertex( child_id );
+		  graph.addVertex( child_vertex );
+
+		  DefaultEdge edge = graph.addEdge( vertex, child_vertex );
 	      }
 	  }
       }
