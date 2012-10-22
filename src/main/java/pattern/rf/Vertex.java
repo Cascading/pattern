@@ -20,7 +20,10 @@
 
 package pattern.rf;
 
-public class Vertex
+import java.io.Serializable;
+
+
+public class Vertex implements Serializable
 {
     public String id;
     public String score = null;

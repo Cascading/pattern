@@ -31,23 +31,28 @@ import cascading.tuple.TupleEntry;
 
 public class Classifier extends BaseOperation implements Function
   {
-    //protected RandomForest rf;
+    public RandomForest rf;
 
     public Classifier( Fields fieldDeclaration, RandomForest rf )
     {
     super( 1, fieldDeclaration );
-    //this.rf = rf;
+    this.rf = rf;
     }
 
   public void operate( FlowProcess flowProcess, FunctionCall functionCall )
     {
     TupleEntry argument = functionCall.getArguments();
-    String score = "0";
+    String[] fields = new String[ rf.schema.size() ];
+
+    for ( int i = 0; i < rf.schema.size(); i++ ) {
+	fields[ i ] = argument.getString( i );
+    }
+
+    Boolean[] pred = rf.evalTuple( fields );
+    String score = rf.tallyVotes( pred );
 
     Tuple result = new Tuple();
     result.add( score );
     functionCall.getOutputCollector().add( result );
-
-    //System.out.println( rf.schema );
     }
   }

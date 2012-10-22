@@ -22,13 +22,14 @@ package pattern.rf;
 
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.DirectedGraph;
+import java.io.Serializable;
 
  
-public class Tree
+public class Tree implements Serializable
 {
-  protected String tree_name;
-  protected Vertex root;
-  protected DirectedGraph<Vertex, Edge> graph = new DefaultDirectedGraph<Vertex, Edge>(Edge.class);
+  public String tree_name;
+  public Vertex root;
+  public DirectedGraph<Vertex, Edge> graph = new DefaultDirectedGraph<Vertex, Edge>(Edge.class);
 
 
   public Tree ( String id ) throws Exception {

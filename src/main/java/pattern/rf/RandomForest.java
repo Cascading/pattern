@@ -22,6 +22,7 @@ package pattern.rf;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,9 +38,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
  
-public class RandomForest
+public class RandomForest implements Serializable
 {
-  protected XPathReader reader;
+  protected transient XPathReader reader;
   public ArrayList<String> schema = new ArrayList<String>();
   public ArrayList<String> predicates = new ArrayList<String>();
   public ArrayList<Tree> forest = new ArrayList<Tree>();
@@ -49,30 +50,6 @@ public class RandomForest
       String pmml_file = argv[0];
       RandomForest rf = new RandomForest( pmml_file );
 
-      //////////////////////////////////////////////////////////////////////
-      // enumerate the predicates
-
-      System.out.println( "---------" );
-      System.out.println( rf.schema );
-      System.out.println( "---------" );
-      System.out.println( rf.forest );
-      System.out.println( "---------" );
-
-      for ( Tree tree : rf.forest ) {
-	  System.out.println( tree );
-	  System.out.println( tree.getRoot() );
-
-	  for ( Edge edge : tree.getGraph().edgeSet() ) {
-	      System.out.println( edge );
-	  }
-      }
-
-      System.out.println( "---------" );
-
-      for ( String predicate : rf.predicates ) {
-	  System.out.println( "expr[ " + rf.predicates.indexOf( predicate ) + " ]: " + predicate );
-      }
-
       // evaluate the TSV data
 
       String tsv_file = argv[1];
@@ -80,7 +57,39 @@ public class RandomForest
   }
 
 
+  public String toString () {
+      StringBuilder buf = new StringBuilder();
+
+      buf.append( "---------" );
+      buf.append( schema );
+      buf.append( "---------" );
+      buf.append( forest );
+      buf.append( "---------" );
+
+      for ( Tree tree : forest ) {
+	  buf.append( tree );
+	  buf.append( tree.getRoot() );
+
+	  for ( Edge edge : tree.getGraph().edgeSet() ) {
+	      buf.append( edge );
+	  }
+      }
+
+      buf.append( "---------" );
+
+      for ( String predicate : predicates ) {
+	  buf.append( "expr[ " + predicates.indexOf( predicate ) + " ]: " + predicate );
+      }
+
+      return buf.toString();
+    }
+
+
   private static void eval_data( String tsv_file, RandomForest rf ) throws Exception {
+      /* */
+      System.out.println( rf );
+      /* */
+
       FileReader fr = new FileReader( tsv_file );
       BufferedReader br = new BufferedReader( fr );
       String line;

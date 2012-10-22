@@ -23,8 +23,7 @@ package pattern.rf;
 import org.jgrapht.graph.DefaultEdge;
 
 
-public class Edge
-    extends DefaultEdge
+public class Edge extends DefaultEdge
 {
     public Integer predicate_id = null;
 
