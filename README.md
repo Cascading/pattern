@@ -29,7 +29,7 @@ generate a JAR for Hadoop
 
     gradle clean jar
     rm -rf output
-    hadoop jar build/libs/pattern.jar data/sample.xml data/sample.tsv output/eval
+    hadoop jar build/libs/pattern.jar data/sample.xml data/sample.tsv output/eval output/confuse
 
-The _confusion matrix_ shown in the log file should match the ones in
-the _R_ and _Python_ baseline examples.
+The _confusion matrix_ shown in `output/confuse/part*` should match
+the ones in the _R_ and _Python_ baseline examples.
