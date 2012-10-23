@@ -51,8 +51,16 @@ public class ClassifierFunction extends BaseOperation implements Function
 	fields[ i++ ] = argument.getString( name );
     }
 
-    Tuple result = new Tuple();
-    result.add( model.classifyTuple( fields ) );
-    functionCall.getOutputCollector().add( result );
+    try {
+	Tuple result = new Tuple();
+	String label = model.classifyTuple( fields );
+
+	result.add( label );
+	functionCall.getOutputCollector().add( result );
+    } catch ( PatternException e ) {
+	e.printStackTrace();
+	System.exit( -1 );
     }
-  }
+    }
+}
+

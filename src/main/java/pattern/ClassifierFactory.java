@@ -38,7 +38,7 @@ public class ClassifierFactory {
 	  classifier = new RandomForest( reader );
       }
       else {
-	  throw new PatternException( "incorrect model type: " + model_type );
+	  throw new PatternException( "unsupported model type: " + model_type );
       }
 
       return classifier;

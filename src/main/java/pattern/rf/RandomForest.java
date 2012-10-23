@@ -20,8 +20,6 @@
 
 package pattern.rf;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -197,7 +195,7 @@ public class RandomForest extends Classifier implements Serializable
   }
 
 
-  public String classifyTuple( String[] fields ) {
+  public String classifyTuple( String[] fields ) throws PatternException {
     Boolean[] pred_eval = evalPredicates( fields );
     HashMap<String, Integer> votes = new HashMap<String, Integer>();
     String label = tallyVotes( pred_eval, votes );
@@ -206,7 +204,7 @@ public class RandomForest extends Classifier implements Serializable
   }
 
 
-  public Boolean[] evalPredicates( String[] fields ) {
+  public Boolean[] evalPredicates( String[] fields ) throws PatternException {
       // map from input tuple to an array of predicate values for the forest
 
       Boolean[] pred_eval = new Boolean[ predicates.size() ];
@@ -231,12 +229,22 @@ public class RandomForest extends Classifier implements Serializable
 	      pred_eval[ predicate_id ] = new Boolean( res.toString() );
 	  } catch( CompileException e ) {
 	      e.printStackTrace();
+	      throw new PatternException( "predicate did not compile", e );
 	  } catch( InvocationTargetException e ) {
 	      e.printStackTrace();
+	      throw new PatternException( "predicate did not compile", e );
 	  } catch( ParseException e ) {
 	      e.printStackTrace();
+	      throw new PatternException( "predicate did not compile", e );
 	  } catch( ScanException e ) {
 	      e.printStackTrace();
+	      throw new PatternException( "predicate did not compile", e );
+	  } catch( NumberFormatException e ) {
+	      e.printStackTrace();
+	      throw new PatternException( "tuple format is bad", e );
+	  } catch( NullPointerException e ) {
+	      e.printStackTrace();
+	      throw new PatternException( "predicates failed", e );
 	  }
 
 	  predicate_id += 1;
@@ -275,53 +283,5 @@ public class RandomForest extends Classifier implements Serializable
       }
 
       return label;
-  }
-
-
-  //////////////////////////////////////////////////////////////////////
-  // command line testing
-
-  public static void main( String[] argv ) throws Exception {
-      String pmml_file = argv[0];
-      RandomForest model = (RandomForest) ClassifierFactory.getClassifier( pmml_file );
-
-      // evaluate sample data from a TSV file
-
-      String tsv_file = argv[1];
-      eval_data( tsv_file, model );
-  }
-
-
-  public static void eval_data( String tsv_file, RandomForest model ) throws Exception {
-      System.out.println( model );
-
-      FileReader fr = new FileReader( tsv_file );
-      BufferedReader br = new BufferedReader( fr );
-      String line;
-      int count = 0;
-
-      while ( ( line = br.readLine() ) != null ) {
-	  if ( count++ > 0 ) {
-	      // compare classifier label vs. predicted for each line in the TSV file
-
-	      String[] fields = line.split( "\\t" );
-	      String predicted = fields[ fields.length - 1 ];
-
-	      System.out.println( line );
-
-	      Boolean[] pred_eval = model.evalPredicates( fields );
-	      HashMap<String, Integer> votes = new HashMap<String, Integer>();
-	      String label = model.tallyVotes( pred_eval, votes );
-
-	      if ( !predicted.equals( label ) ) {
-		  System.err.println( "regression: classifier label does not match [ " + label + " ]" );
-		  System.exit( -1 );
-	      }
-
-	      System.out.println( "label: " + label + " votes: " + votes );
-	  }
-      }
-
-      fr.close(); 
   }
 }

@@ -15,9 +15,9 @@ Currently supported algorithms for PMML include:
 Build Instructions
 ------------------
 
-To build _Pattern_ and run its unit tests:
+To build _Pattern_ and then run its unit tests:
 
-    gradle clean test
+    gradle --info --stacktrace clean test
 
 The following scripts generate a baseline for the _Random Forest_
 algorithm. This baseline includes a reference data set (simulated
@@ -26,7 +26,7 @@ ecommerce orders) plus a predictive model in PMML:
     ./src/py/rf_sample.py 200 > data/orders.tsv
     R --vanilla --slave < src/r/rf_model.R > model.log
 
-To build _Pattern_ and run this baseline test:
+To build _Pattern_ and then run this baseline test:
 
     gradle clean jar
     rm -rf output
@@ -39,6 +39,10 @@ model. Tuples which fail that assertion get trapped into
 
 Also, the _confusion matrix_ shown in `output/measure/part*` should
 match the one logged in `model.log` from baseline generated in _R_.
+
+Alternatively, if you just want to re-use this assembly for your own
+Cascading app, you can remove `verifyPipe` and `measurePipe` from the
+sample code.
 
 
 PMML Resources
