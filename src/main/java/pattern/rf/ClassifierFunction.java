@@ -29,11 +29,11 @@ import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
 
 
-public class Classifier extends BaseOperation implements Function
+public class ClassifierFunction extends BaseOperation implements Function
   {
     public RandomForest rf;
 
-    public Classifier( Fields fieldDeclaration, RandomForest rf )
+    public ClassifierFunction( Fields fieldDeclaration, RandomForest rf )
     {
     super( 1, fieldDeclaration );
     this.rf = rf;
@@ -42,12 +42,7 @@ public class Classifier extends BaseOperation implements Function
   public void operate( FlowProcess flowProcess, FunctionCall functionCall )
     {
     TupleEntry argument = functionCall.getArguments();
-    String[] fields = new String[ rf.schema.size() ];
-
-    for ( int i = 0; i < rf.schema.size(); i++ ) {
-	fields[ i ] = argument.getString( i );
-    }
-
+    String fields[] = rf.loadTuple( argument );
     Boolean[] pred = rf.evalTuple( fields );
     String score = rf.tallyVotes( pred );
 

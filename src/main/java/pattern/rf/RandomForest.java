@@ -20,12 +20,14 @@
 
 package pattern.rf;
 
+import cascading.tuple.TupleEntry;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import javax.xml.xpath.XPathConstants;
 import org.codehaus.janino.CompileException;
 import org.codehaus.janino.ExpressionEvaluator;
@@ -41,7 +43,7 @@ import org.w3c.dom.NodeList;
 public class RandomForest implements Serializable
 {
   protected transient XPathReader reader;
-  public ArrayList<String> schema = new ArrayList<String>();
+  public LinkedHashMap<String, DataField> schema = new LinkedHashMap<String, DataField>();
   public ArrayList<String> predicates = new ArrayList<String>();
   public ArrayList<Tree> forest = new ArrayList<Tree>();
 
@@ -86,7 +88,7 @@ public class RandomForest implements Serializable
 
 
   private static void eval_data( String tsv_file, RandomForest rf ) throws Exception {
-      /** /
+      /* */
       System.out.println( rf );
       /* */
 
@@ -102,10 +104,6 @@ public class RandomForest implements Serializable
       confuse.put( "FP", 0 );
 
       while ( ( line = br.readLine() ) != null ) {
-	  /** /
-	  System.out.println( line );
-	  /* */
-
 	  if ( count++ > 0 ) {
 	      // tally votes for each tree in the forest
 
@@ -169,15 +167,11 @@ public class RandomForest implements Serializable
 
 	  if ( node.getNodeType() == Node.ELEMENT_NODE ) {
 	      String name = ( (Element) node ).getAttribute( "name" );
-	      String op_type = ( (Element) node ).getAttribute( "optype" );
+	      String data_type = ( (Element) node ).getAttribute( "dataType" );
 
-	      if ( !schema.contains( name ) ) {
-		  schema.add( name );
+	      if ( !schema.containsKey( name ) ) {
+		  schema.put( name, new DataField( name, data_type ) );
 	      }
-
-	      /** /
-	      System.out.println( "// " + schema.indexOf( name ) + ", " + name  + ", " + op_type );
-	      /* */
 	  }
       }
 
@@ -193,13 +187,9 @@ public class RandomForest implements Serializable
 	      String name = ( (Element) node ).getAttribute( "name" );
 	      String usage_type = ( (Element) node ).getAttribute( "usageType" );
 
-	      if ( !schema.contains( name ) ) {
-		  schema.add( name );
+	      if ( schema.containsKey( name ) && !"active".equals( usage_type ) ) {
+		  schema.remove( name );
 	      }
-
-	      /** /
-	      System.out.println( "// " + schema.indexOf( name ) + ", " + name  + ", " + usage_type );
-	      /* */
 	  }
       }
   }
@@ -226,10 +216,6 @@ public class RandomForest implements Serializable
 	      Vertex vertex = makeVertex( root, 0, tree.getGraph() );
 	      tree.setRoot( vertex );
 	      buildNode( root, vertex, 0, tree.getGraph() );
-
-	      /** /
-	      System.out.println( "// " + tree.getGraph().toString() );
-	      /* */
 	  }
       }
   }
@@ -252,10 +238,6 @@ public class RandomForest implements Serializable
       Vertex vertex = new Vertex( id );
       graph.addVertex( vertex );
 
-      /** /
-      System.out.println( pad + "// node " + id + ", " + depth );
-      /* */
-
       return vertex;
   }
 
@@ -271,17 +253,9 @@ public class RandomForest implements Serializable
 	      if ( child.getNodeName().equals( "SimplePredicate" ) ) {
 		  Integer predicate_id = makePredicate( (Element) child );
 
-		  /** /
-		  System.out.println( pad + "if expr[ " + predicate_id + " ]" );
-		  /* */
-
 		  if ( node.hasAttribute( "score" ) ) {
 		      String score = ( node ).getAttribute( "score" );
 		      vertex.setScore( score );
-
-		      /** /
-		      System.out.println( pad + " score " + score );
-		      /* */
 		  }
 
 		  for (Edge e: graph.edgesOf( vertex ) ) {
@@ -326,6 +300,18 @@ public class RandomForest implements Serializable
   }
 
 
+  public String[] loadTuple( TupleEntry argument ) {
+    String[] fields = new String[ schema.size() ];
+    int i = 0;
+
+    for ( String name : schema.keySet() ) {
+	fields[ i++ ] = argument.getString( name );
+    }
+
+    return fields;
+  }
+
+
   public Boolean[] evalTuple( String[] fields ) {
       // map from input tuple to forest predicate values
 
@@ -334,14 +320,16 @@ public class RandomForest implements Serializable
 
       for ( String predicate : predicates ) {
 	  try {
-	      Object[] param_values = new Object[ schema.size() ];
-	      String[] param_names = new String[ schema.size() ];
-	      Class[] param_types = new Class[ schema.size() ];
+	      Object[] param_values = new Object[ fields.length ];
+	      String[] param_names = new String[ fields.length ];
+	      Class[] param_types = new Class[ fields.length ];
+	      int i = 0;
 
-	      for ( int i = 0; i < param_values.length; i++ ) {
+	      for ( String name : schema.keySet() ) {
 		  param_values[ i ] = new Double( fields[ i ] );
-		  param_names[ i ] = schema.get( i );
+		  param_names[ i ] = name;
 		  param_types[ i ] = double.class;
+		  i++;
 	      }
 
 	      ExpressionEvaluator ee = new ExpressionEvaluator( predicate, boolean.class, param_names, param_types, new Class[0], null );
@@ -372,15 +360,7 @@ public class RandomForest implements Serializable
       for ( Tree tree : forest ) {
 	  String score = tree.traverse( pred );
 	  tally.put( score, tally.get( score ) + 1 );
-
-	  /** /
-	  System.out.println( tree.tree_name + ": " + score );
-	  /* */
       }
-
-      /** /
-      System.out.println( tally );
-      /* */
 
       if ( tally.get( "1" ) >= tally.get( "0" ) ) {      
 	  return "1";

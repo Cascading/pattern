@@ -74,9 +74,9 @@ public class
     Tap measureTap = new Hfs( new TextDelimited( true, "\t" ), measurePath );
     Tap trapTap = new Hfs( new TextDelimited( true, "\t" ), trapPath );
 
-    // define "Classifier" to evaluate the orders
+    // define a "Classifier" to evaluate the orders
     Pipe classifyPipe = new Pipe( "classify" );
-    classifyPipe = new Each( classifyPipe, Fields.ALL, new Classifier( new Fields( "score" ), rf ), Fields.ALL );
+    classifyPipe = new Each( classifyPipe, Fields.ALL, new ClassifierFunction( new Fields( "score" ), rf ), Fields.ALL );
 
     // verify the model results vs. what R predicted
     Pipe verifyPipe = new Pipe( "verify", classifyPipe );
