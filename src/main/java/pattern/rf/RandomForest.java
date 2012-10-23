@@ -37,6 +37,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import pattern.Classifier;
+import pattern.ClassifierFactory;
 import pattern.XPathReader;
 
  
@@ -46,20 +47,8 @@ public class RandomForest extends Classifier implements Serializable
   public ArrayList<Tree> forest = new ArrayList<Tree>();
 
 
-  public RandomForest ( String pmml_file ) throws Exception {
-      // parse the PMML file and verify the model type
-
-      reader = new XPathReader( pmml_file );
-
-      String expr = "/PMML/MiningModel/@modelName";
-      String model_type = (String) reader.read( expr, XPathConstants.STRING );
-
-      if ( !"randomForest_Model".equals(model_type) ) {
-	  throw new Exception( "incorrect model type: " + model_type );
-      }
-
-      // build the serializable model
-
+  public RandomForest ( XPathReader reader ) throws Exception {
+      this.reader = reader;
       buildSchema();
       buildForest();
   }
@@ -266,22 +255,22 @@ public class RandomForest extends Classifier implements Serializable
 
 
   //////////////////////////////////////////////////////////////////////
-  // TODO: refactor into unit tests
+  // TODO: refactor into factory + unit tests
 
   public static void main( String[] argv ) throws Exception {
       String pmml_file = argv[0];
-      RandomForest rf = new RandomForest( pmml_file );
+      RandomForest model = (RandomForest) ClassifierFactory.getClassifier( pmml_file );
 
-      // evaluate the sample data from a TSV file
+      // evaluate sample data from a TSV file
 
       String tsv_file = argv[1];
-      eval_data( tsv_file, rf );
+      eval_data( tsv_file, model );
   }
 
 
-  private static void eval_data( String tsv_file, RandomForest rf ) throws Exception {
+  private static void eval_data( String tsv_file, RandomForest model ) throws Exception {
       /* */
-      System.out.println( rf );
+      System.out.println( model );
       /* */
 
       FileReader fr = new FileReader( tsv_file );
@@ -300,8 +289,8 @@ public class RandomForest extends Classifier implements Serializable
 	      // tally votes for each tree in the forest
 
 	      String[] fields = line.split( "\\t" );
-	      Boolean[] pred = rf.evalTuple( fields );
-	      String score = rf.tallyVotes( pred );
+	      Boolean[] pred = model.evalTuple( fields );
+	      String score = model.tallyVotes( pred );
 
 	      // update tallies into the confusion matrix
 

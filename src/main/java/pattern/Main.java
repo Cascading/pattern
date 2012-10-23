@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package pattern.rf;
+package pattern;
 
 import cascading.flow.Flow;
 import cascading.flow.FlowDef;
@@ -40,7 +40,6 @@ import cascading.tap.Tap;
 import cascading.tap.hadoop.Hfs;
 import cascading.tuple.Fields;
 import java.util.Properties;
-import pattern.ClassifierFunction;
 
 
 public class
@@ -59,11 +58,11 @@ public class
     AppProps.setApplicationJarClass( properties, Main.class );
     HadoopFlowConnector flowConnector = new HadoopFlowConnector( properties );
 
-    // build the RF classifier model from PMML
-    RandomForest model = null;
+    // build the classifier model from PMML
+    Classifier model = null;
 
     try {
-      model = new RandomForest( pmmlPath );
+      model = ClassifierFactory.getClassifier( pmmlPath );
     } catch ( Exception e ) {
       e.printStackTrace();
       System.exit( -1 );
