@@ -23,7 +23,12 @@ package pattern.rf;
 import cascading.flow.Flow;
 import cascading.flow.FlowDef;
 import cascading.flow.hadoop.HadoopFlowConnector;
+import cascading.operation.AssertionLevel;
+import cascading.operation.Debug;
+import cascading.operation.DebugLevel;
 import cascading.operation.aggregator.Count;
+import cascading.operation.assertion.AssertMatches;
+import cascading.operation.expression.ExpressionFunction;
 import cascading.pipe.Each;
 import cascading.pipe.Every;
 import cascading.pipe.GroupBy;
@@ -47,6 +52,7 @@ public class
     String ordersPath = args[ 1 ];
     String classifyPath = args[ 2 ];
     String measurePath = args[ 3 ];
+    String trapPath = args[ 4 ];
 
     Properties properties = new Properties();
     AppProps.setApplicationJarClass( properties, Main.class );
@@ -66,13 +72,24 @@ public class
     Tap ordersTap = new Hfs( new TextDelimited( true, "\t" ), ordersPath );
     Tap classifyTap = new Hfs( new TextDelimited( true, "\t" ), classifyPath );
     Tap measureTap = new Hfs( new TextDelimited( true, "\t" ), measurePath );
+    Tap trapTap = new Hfs( new TextDelimited( true, "\t" ), trapPath );
 
     // define "Classifier" to evaluate the orders
     Pipe classifyPipe = new Pipe( "classify" );
     classifyPipe = new Each( classifyPipe, Fields.ALL, new Classifier( new Fields( "score" ), rf ), Fields.ALL );
 
+    // verify the model results vs. what R predicted
+    Pipe verifyPipe = new Pipe( "verify", classifyPipe );
+    String expression = "predicted == score";
+    ExpressionFunction matchExpression = new ExpressionFunction( new Fields( "match" ), expression, Integer.class );
+    verifyPipe = new Each( verifyPipe, Fields.ALL, matchExpression, Fields.ALL );
+    verifyPipe = new Each( verifyPipe, DebugLevel.VERBOSE, new Debug( true ) );
+
+    AssertMatches assertMatches = new AssertMatches( ".*true" );
+    verifyPipe = new Each( verifyPipe, AssertionLevel.STRICT, assertMatches );
+
     // calculate a confusion matrix for the model results
-    Pipe measurePipe = new Pipe( "measure", classifyPipe );
+    Pipe measurePipe = new Pipe( "measure", verifyPipe );
     measurePipe = new GroupBy( measurePipe, new Fields( "label", "score" ) );
     measurePipe = new Every( measurePipe, Fields.ALL, new Count(), Fields.ALL );
 
@@ -81,7 +98,14 @@ public class
      .setName( "classify" )
      .addSource( classifyPipe, ordersTap )
      .addSink( classifyPipe, classifyTap )
+     .addTrap( verifyPipe, trapTap )
      .addTailSink( measurePipe, measureTap );
+
+    // set to DebugLevel.VERBOSE for trace, or DebugLevel.NONE in production
+    flowDef.setDebugLevel( DebugLevel.NONE );
+
+    // set to AssertionLevel.STRICT for all assertions, or AssertionLevel.NONE in production
+    flowDef.setAssertionLevel( AssertionLevel.STRICT );
 
     // write a DOT file and run the flow
     Flow classifyFlow = flowConnector.connect( flowDef );
