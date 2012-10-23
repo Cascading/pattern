@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package pattern.rf;
+package pattern;
 
 import cascading.flow.FlowProcess;
 import cascading.operation.BaseOperation;

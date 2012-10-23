@@ -36,6 +36,8 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import pattern.Classifier;
+import pattern.XPathReader;
 
  
 public class RandomForest extends Classifier implements Serializable

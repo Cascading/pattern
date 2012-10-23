@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package pattern.rf;
+package pattern;
 
 import java.io.IOException;
 import javax.xml.namespace.QName;

@@ -40,6 +40,7 @@ import cascading.tap.Tap;
 import cascading.tap.hadoop.Hfs;
 import cascading.tuple.Fields;
 import java.util.Properties;
+import pattern.ClassifierFunction;
 
 
 public class
@@ -59,10 +60,10 @@ public class
     HadoopFlowConnector flowConnector = new HadoopFlowConnector( properties );
 
     // build the RF classifier model from PMML
-    RandomForest rf = null;
+    RandomForest model = null;
 
     try {
-      rf = new RandomForest( pmmlPath );
+      model = new RandomForest( pmmlPath );
     } catch ( Exception e ) {
       e.printStackTrace();
       System.exit( -1 );
@@ -76,7 +77,7 @@ public class
 
     // define a "Classifier" to evaluate the orders
     Pipe classifyPipe = new Pipe( "classify" );
-    classifyPipe = new Each( classifyPipe, Fields.ALL, new ClassifierFunction( new Fields( "score" ), rf ), Fields.ALL );
+    classifyPipe = new Each( classifyPipe, Fields.ALL, new ClassifierFunction( new Fields( "score" ), model ), Fields.ALL );
 
     // verify the model results vs. what R predicted
     Pipe verifyPipe = new Pipe( "verify", classifyPipe );
