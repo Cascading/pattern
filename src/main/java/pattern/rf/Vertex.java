@@ -24,32 +24,54 @@ import java.io.Serializable;
 
 
 public class Vertex implements Serializable
-{
-    public String id;
-    public String score = null;
+  {
+  public String id;
+  public String score = null;
 
 
-    public Vertex ( String id ) {
-	this.id = id;
+  /**
+   *
+   * @param id
+   */
+  public Vertex( String id )
+    {
+    this.id = id;
     }
 
 
-    public void setScore ( String score ) {
-	this.score = score;
+  /**
+   *
+   * @param score
+   */
+  public void setScore( String score )
+    {
+    this.score = score;
     }
 
 
-    public String getScore () {
-	return score;
+  /**
+   *
+   * @return
+   */
+  public String getScore()
+    {
+    return score;
     }
 
 
-    public String toString () {
-	if ( score != null ) {
-	    return id + ":" + score;
-	}
-	else {
-	    return id;
-	}
+  /**
+   *
+   * @return
+   */
+  public String toString()
+    {
+    if( score != null )
+      {
+      return id + ":" + score;
+      }
+    else
+      {
+      return id;
+      }
     }
-}
+  }

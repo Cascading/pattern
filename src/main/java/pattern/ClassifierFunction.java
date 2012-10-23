@@ -34,6 +34,11 @@ public class ClassifierFunction extends BaseOperation implements Function
     public Classifier model;
 
 
+  /**
+   *
+   * @param fieldDeclaration
+   * @param model
+   */
     public ClassifierFunction( Fields fieldDeclaration, Classifier model )
     {
     super( 1, fieldDeclaration );
@@ -41,6 +46,11 @@ public class ClassifierFunction extends BaseOperation implements Function
     }
 
 
+  /**
+   *
+   * @param flowProcess
+   * @param functionCall
+   */
   public void operate( FlowProcess flowProcess, FunctionCall functionCall )
     {
     TupleEntry argument = functionCall.getArguments();

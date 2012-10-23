@@ -24,18 +24,29 @@ import java.io.Serializable;
 
 
 public class DataField implements Serializable
-{
-    public String name;
-    public String type;
+  {
+  public String name;
+  public String type;
 
 
-    public DataField ( String name, String type ) {
-	this.name = name;
-	this.type = type;
+  /**
+   *
+   * @param name
+   * @param type
+   */
+  public DataField( String name, String type )
+    {
+    this.name = name;
+    this.type = type;
     }
 
 
-    public String toString () {
-	return name + ":" + type;
+  /**
+   *
+   * @return
+   */
+  public String toString()
+    {
+    return name + ":" + type;
     }
-}
+  }

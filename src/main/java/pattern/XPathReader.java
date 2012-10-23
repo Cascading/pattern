@@ -28,49 +28,82 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
- 
+
 public class
   XPathReader
   {
   private Document xmlDocument;
   private XPath xPath;
 
- 
-  public XPathReader( String xmlFile ) {
-    try {
+  /**
+   *
+   * @param xmlFile
+   */
+  public XPathReader( String xmlFile )
+    {
+    try
+      {
       xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse( xmlFile );
       xPath = XPathFactory.newInstance().newXPath();
-    } catch ( IOException e ) {
+      }
+    catch( IOException e )
+      {
       e.printStackTrace();
-    } catch ( SAXException e ) {
+      }
+    catch( SAXException e )
+      {
       e.printStackTrace();
-    } catch ( ParserConfigurationException e ) {
+      }
+    catch( ParserConfigurationException e )
+      {
       e.printStackTrace();
+      }
     }
-  }
 
- 
-  public Object read( String expression, QName returnType ) {
-    try {
+
+  /**
+   *
+   * @param expression
+   * @param returnType
+   * @return
+   */
+  public Object read( String expression, QName returnType )
+    {
+    try
+      {
       XPathExpression xPathExpression = xPath.compile( expression );
       return xPathExpression.evaluate( xmlDocument, returnType );
-    } catch( XPathExpressionException e ) {
+      }
+    catch( XPathExpressionException e )
+      {
       e.printStackTrace();
       return null;
+      }
     }
-  }
 
 
-  public Object read( Object item, String expression, QName returnType ) {
-    try {
+  /**
+   *
+   * @param item
+   * @param expression
+   * @param returnType
+   * @return
+   */
+  public Object read( Object item, String expression, QName returnType )
+    {
+    try
+      {
       XPathExpression xPathExpression = xPath.compile( expression );
       return xPathExpression.evaluate( item, returnType );
-    } catch( XPathExpressionException e ) {
+      }
+    catch( XPathExpressionException e )
+      {
       e.printStackTrace();
       return null;
+      }
     }
   }
-}

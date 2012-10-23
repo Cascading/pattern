@@ -22,16 +22,30 @@ package pattern;
 
 
 public class PatternException extends Exception
-{
-    public PatternException () {}
-
-
-    public PatternException ( String message ) {
-	super( message );
+  {
+  /**
+   *
+   */
+  public PatternException()
+    {
     }
 
-
-    public PatternException ( String message, Throwable cause ) {
-	super( message, cause );
+  /**
+   *
+   * @param message
+   */
+  public PatternException( String message )
+    {
+    super( message );
     }
-}
+
+  /**
+   *
+   * @param message
+   * @param cause
+   */
+  public PatternException( String message, Throwable cause )
+    {
+    super( message, cause );
+    }
+  }

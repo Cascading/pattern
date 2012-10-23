@@ -20,31 +20,37 @@
 
 package pattern;
 
-import pattern.rf.RandomForest;
-
 import javax.xml.xpath.XPathConstants;
 
+import pattern.rf.RandomForest;
 
-public class ClassifierFactory {
-    /**
-     * Parse the given PMML file, verify the model type, and create the appropriate Classifier object.
-     * @param pmml_file PMML file
-     * @return Classifier
-     * @throws PatternException
-     */
-    public static Classifier getClassifier(String pmml_file) throws PatternException {
-        XPathReader reader = new XPathReader(pmml_file);
-        Classifier classifier = null;
 
-        String expr = "/PMML/MiningModel/@modelName";
-        String model_type = (String) reader.read(expr, XPathConstants.STRING);
+public class ClassifierFactory
+  {
+  /**
+   * Parse the given PMML file, verify the model type, and create the appropriate Classifier object.
+   *
+   * @param pmml_file PMML file
+   * @return Classifier
+   * @throws PatternException
+   */
+  public static Classifier getClassifier( String pmml_file ) throws PatternException
+    {
+    XPathReader reader = new XPathReader( pmml_file );
+    Classifier classifier = null;
 
-        if ("randomForest_Model".equals(model_type)) {
-            classifier = new RandomForest(reader);
-        } else {
-            throw new PatternException("unsupported model type: " + model_type);
-        }
+    String expr = "/PMML/MiningModel/@modelName";
+    String model_type = (String) reader.read( expr, XPathConstants.STRING );
 
-        return classifier;
+    if( "randomForest_Model".equals( model_type ) )
+      {
+      classifier = new RandomForest( reader );
+      }
+    else
+      {
+      throw new PatternException( "unsupported model type: " + model_type );
+      }
+
+    return classifier;
     }
-}
+  }

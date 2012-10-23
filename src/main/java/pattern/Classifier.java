@@ -23,55 +23,70 @@ package pattern;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import javax.xml.xpath.XPathConstants;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
- 
+
 public abstract class Classifier implements Serializable
-{
+  {
   protected transient XPathReader reader;
   public LinkedHashMap<String, DataField> schema = new LinkedHashMap<String, DataField>();
 
 
+  /**
+   *
+   * @param fields
+   * @return
+   * @throws PatternException
+   */
   public abstract String classifyTuple( String[] fields ) throws PatternException;
 
 
-  protected void buildSchema () {
-      // build the data dictionary
+  /**
+   * Build the data dictionary
+   */
+  protected void buildSchema()
+    {
+    String expr = "/PMML/DataDictionary/DataField";
+    NodeList node_list = (NodeList) reader.read( expr, XPathConstants.NODESET );
 
-      String expr = "/PMML/DataDictionary/DataField";
-      NodeList node_list = (NodeList) reader.read( expr, XPathConstants.NODESET );
+    for( int i = 0; i < node_list.getLength(); i++ )
+      {
+      Node node = node_list.item( i );
 
-      for ( int i = 0; i < node_list.getLength(); i++ ) {
-	  Node node = node_list.item( i );
+      if( node.getNodeType() == Node.ELEMENT_NODE )
+        {
+        String name = ( (Element) node ).getAttribute( "name" );
+        String data_type = ( (Element) node ).getAttribute( "dataType" );
 
-	  if ( node.getNodeType() == Node.ELEMENT_NODE ) {
-	      String name = ( (Element) node ).getAttribute( "name" );
-	      String data_type = ( (Element) node ).getAttribute( "dataType" );
-
-	      if ( !schema.containsKey( name ) ) {
-		  schema.put( name, new DataField( name, data_type ) );
-	      }
-	  }
+        if( !schema.containsKey( name ) )
+          {
+          schema.put( name, new DataField( name, data_type ) );
+          }
+        }
       }
 
-      // determine the active tuple fields for the input schema
+    // determine the active tuple fields for the input schema
 
-      expr = "/PMML/MiningModel/MiningSchema/MiningField";
-      node_list = (NodeList) reader.read( expr, XPathConstants.NODESET );
+    expr = "/PMML/MiningModel/MiningSchema/MiningField";
+    node_list = (NodeList) reader.read( expr, XPathConstants.NODESET );
 
-      for ( int i = 0; i < node_list.getLength(); i++ ) {
-	  Node node = node_list.item( i );
+    for( int i = 0; i < node_list.getLength(); i++ )
+      {
+      Node node = node_list.item( i );
 
-	  if ( node.getNodeType() == Node.ELEMENT_NODE ) {
-	      String name = ( (Element) node ).getAttribute( "name" );
-	      String usage_type = ( (Element) node ).getAttribute( "usageType" );
+      if( node.getNodeType() == Node.ELEMENT_NODE )
+        {
+        String name = ( (Element) node ).getAttribute( "name" );
+        String usage_type = ( (Element) node ).getAttribute( "usageType" );
 
-	      if ( schema.containsKey( name ) && !"active".equals( usage_type ) ) {
-		  schema.remove( name );
-	      }
-	  }
+        if( schema.containsKey( name ) && !"active".equals( usage_type ) )
+          {
+          schema.remove( name );
+          }
+        }
       }
+    }
   }
-}
