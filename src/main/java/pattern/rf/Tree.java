@@ -32,7 +32,7 @@ public class Tree implements Serializable
   public DirectedGraph<Vertex, Edge> graph = new DefaultDirectedGraph<Vertex, Edge>(Edge.class);
 
 
-  public Tree ( String id ) throws Exception {
+  public Tree ( String id ) {
       tree_name = "tree_" + id;
 
       /** /
@@ -61,12 +61,12 @@ public class Tree implements Serializable
   }
 
 
-  public String traverse ( Boolean[] pred ) {
-      return traverseVertex( root, pred );
+  public String traverse ( Boolean[] pred_eval ) {
+      return traverseVertex( root, pred_eval );
   }
 
 
-  protected String traverseVertex ( Vertex vertex, Boolean[] pred ) {
+  protected String traverseVertex ( Vertex vertex, Boolean[] pred_eval ) {
       String score = vertex.getScore();
 
       if ( score != null ) {
@@ -83,8 +83,8 @@ public class Tree implements Serializable
 	  System.out.println( " if pred[ " + edge.getPredicateId() + " ]:" + pred[ edge.getPredicateId() ] );
 	  /* */
 
-	  if ( pred[ edge.getPredicateId() ] ) {
-	      score = traverseVertex( graph.getEdgeTarget( edge ), pred );
+	  if ( pred_eval[ edge.getPredicateId() ] ) {
+	      score = traverseVertex( graph.getEdgeTarget( edge ), pred_eval );
 
 	      if ( score != null ) {
 		  return score;

@@ -20,27 +20,13 @@
 
 package pattern;
 
-import javax.xml.xpath.XPathConstants;
-import pattern.rf.RandomForest;
+
+public class PatternException extends Exception
+{
+    public PatternException () {}
 
 
-public class ClassifierFactory {
-    public static Classifier getClassifier( String pmml_file ) throws PatternException {
-      // parse the PMML file and verify the model type
-
-      XPathReader reader = new XPathReader( pmml_file );
-      Classifier classifier = null;
-
-      String expr = "/PMML/MiningModel/@modelName";
-      String model_type = (String) reader.read( expr, XPathConstants.STRING );
-
-      if ( "randomForest_Model".equals(model_type) ) {
-	  classifier = new RandomForest( reader );
-      }
-      else {
-	  throw new PatternException( "incorrect model type: " + model_type );
-      }
-
-      return classifier;
+    public PatternException ( String message ) {
+	super( message );
     }
 }

@@ -38,6 +38,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import pattern.Classifier;
 import pattern.ClassifierFactory;
+import pattern.PatternException;
 import pattern.XPathReader;
 
  
@@ -47,7 +48,7 @@ public class RandomForest extends Classifier implements Serializable
   public ArrayList<Tree> forest = new ArrayList<Tree>();
 
 
-  public RandomForest ( XPathReader reader ) throws Exception {
+  public RandomForest ( XPathReader reader ) throws PatternException {
       this.reader = reader;
       buildSchema();
       buildForest();
@@ -91,7 +92,7 @@ public class RandomForest extends Classifier implements Serializable
     }
 
 
-  protected void buildForest () throws Exception {
+  protected void buildForest () throws PatternException {
       // generate code for each tree
 
       String expr = "/PMML/MiningModel/Segmentation/Segment";
@@ -138,7 +139,7 @@ public class RandomForest extends Classifier implements Serializable
   }
 
 
-  protected void buildNode( Element node, Vertex vertex, Integer depth, DirectedGraph<Vertex, Edge> graph ) throws Exception {
+  protected void buildNode( Element node, Vertex vertex, Integer depth, DirectedGraph<Vertex, Edge> graph ) throws PatternException {
       String pad = spacer( depth );
       NodeList child_nodes = node.getChildNodes();
 
@@ -169,7 +170,7 @@ public class RandomForest extends Classifier implements Serializable
   }
 
 
-  protected Integer makePredicate( Element node ) throws Exception {
+  protected Integer makePredicate( Element node ) throws PatternException {
       String field = node.getAttribute( "field" );
       String operator = node.getAttribute( "operator" );
       String value = node.getAttribute( "value" );
@@ -183,7 +184,7 @@ public class RandomForest extends Classifier implements Serializable
 	  eval = field + " <= " + value;
       }
       else {
-	  throw new Exception( "unknown operator: " + operator );
+	  throw new PatternException( "unknown operator: " + operator );
       }
 
       if ( !predicates.contains( eval ) ) {
@@ -197,17 +198,18 @@ public class RandomForest extends Classifier implements Serializable
 
 
   public String classifyTuple( String[] fields ) {
-    Boolean[] pred = evalTuple( fields );
-    String label = tallyVotes( pred );
+    Boolean[] pred_eval = evalPredicates( fields );
+    HashMap<String, Integer> votes = new HashMap<String, Integer>();
+    String label = tallyVotes( pred_eval, votes );
 
     return label;
   }
 
 
-  protected Boolean[] evalTuple( String[] fields ) {
-      // map from input tuple to forest predicate values
+  public Boolean[] evalPredicates( String[] fields ) {
+      // map from input tuple to an array of predicate values for the forest
 
-      Boolean[] pred = new Boolean[ predicates.size() ];
+      Boolean[] pred_eval = new Boolean[ predicates.size() ];
       int predicate_id = 0;
 
       for ( String predicate : predicates ) {
@@ -226,7 +228,7 @@ public class RandomForest extends Classifier implements Serializable
 
 	      ExpressionEvaluator ee = new ExpressionEvaluator( predicate, boolean.class, param_names, param_types, new Class[0], null );
 	      Object res = ee.evaluate( param_values );
-	      pred[ predicate_id ] = new Boolean( res.toString() );
+	      pred_eval[ predicate_id ] = new Boolean( res.toString() );
 	  } catch( CompileException e ) {
 	      e.printStackTrace();
 	  } catch( InvocationTargetException e ) {
@@ -240,19 +242,18 @@ public class RandomForest extends Classifier implements Serializable
 	  predicate_id += 1;
       }
 
-      return pred;
+      return pred_eval;
   }
 
 
-  protected String tallyVotes( Boolean[] pred ) {
-      HashMap<String, Integer> votes = new HashMap<String, Integer>();
+  public String tallyVotes( Boolean[] pred_eval, HashMap<String, Integer> votes ) {
       String label = null;
       Integer winning_vote = 0;
 
       // tally the vote for each tree in the forest
 
       for ( Tree tree : forest ) {
-	  label = tree.traverse( pred );
+	  label = tree.traverse( pred_eval );
 
 	  if ( !votes.containsKey( label ) ) {
 	      winning_vote = 1;
@@ -278,7 +279,7 @@ public class RandomForest extends Classifier implements Serializable
 
 
   //////////////////////////////////////////////////////////////////////
-  // TODO: refactor into factory + unit tests
+  // command line testing
 
   public static void main( String[] argv ) throws Exception {
       String pmml_file = argv[0];
@@ -291,52 +292,36 @@ public class RandomForest extends Classifier implements Serializable
   }
 
 
-  private static void eval_data( String tsv_file, RandomForest model ) throws Exception {
-      /* */
+  public static void eval_data( String tsv_file, RandomForest model ) throws Exception {
       System.out.println( model );
-      /* */
 
       FileReader fr = new FileReader( tsv_file );
       BufferedReader br = new BufferedReader( fr );
       String line;
       int count = 0;
 
-      HashMap<String, Integer> confuse = new HashMap<String, Integer>();
-      confuse.put( "TN", 0 );
-      confuse.put( "TP", 0 );
-      confuse.put( "FN", 0 );
-      confuse.put( "FP", 0 );
-
       while ( ( line = br.readLine() ) != null ) {
 	  if ( count++ > 0 ) {
-	      // tally votes for each tree in the forest
+	      // compare classifier label vs. predicted for each line in the TSV file
 
 	      String[] fields = line.split( "\\t" );
-	      Boolean[] pred = model.evalTuple( fields );
-	      String label = model.tallyVotes( pred );
+	      String predicted = fields[ fields.length - 1 ];
 
-	      // update tallies into the confusion matrix
+	      System.out.println( line );
 
-	      if ( "1".equals( fields[ 0 ] ) ) {
-		  if ( "1".equals( label ) ) {
-		      confuse.put( "TP", confuse.get( "TP" ) + 1 );
-		  }
-		  else {
-		      confuse.put( "FN", confuse.get( "FN" ) + 1 );
-		  }
+	      Boolean[] pred_eval = model.evalPredicates( fields );
+	      HashMap<String, Integer> votes = new HashMap<String, Integer>();
+	      String label = model.tallyVotes( pred_eval, votes );
+
+	      if ( !predicted.equals( label ) ) {
+		  System.err.println( "regression: classifier label does not match [ " + label + " ]" );
+		  System.exit( -1 );
 	      }
-	      else {
-		  if ( "0".equals( label ) ) {
-		      confuse.put( "TN", confuse.get( "TN" ) + 1 );
-		  }
-		  else {
-		      confuse.put( "FP", confuse.get( "FP" ) + 1 );
-		  }
-	      }
+
+	      System.out.println( "label: " + label + " votes: " + votes );
 	  }
       }
 
       fr.close(); 
-      System.out.println( confuse );
   }
 }

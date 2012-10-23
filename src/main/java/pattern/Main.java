@@ -69,7 +69,7 @@ public class
 
     try {
       model = ClassifierFactory.getClassifier( pmmlPath );
-    } catch ( Exception e ) {
+    } catch ( PatternException e ) {
       e.printStackTrace();
       System.exit( -1 );
     }
