@@ -50,7 +50,7 @@ public class RandomForest implements Serializable
       String pmml_file = argv[0];
       RandomForest rf = new RandomForest( pmml_file );
 
-      // evaluate the TSV data
+      // evaluate the sample data from a TSV file
 
       String tsv_file = argv[1];
       eval_data( tsv_file, rf );
@@ -86,7 +86,7 @@ public class RandomForest implements Serializable
 
 
   private static void eval_data( String tsv_file, RandomForest rf ) throws Exception {
-      /* */
+      /** /
       System.out.println( rf );
       /* */
 
@@ -175,7 +175,7 @@ public class RandomForest implements Serializable
 		  schema.add( name );
 	      }
 
-	      /* */
+	      /** /
 	      System.out.println( "// " + schema.indexOf( name ) + ", " + name  + ", " + op_type );
 	      /* */
 	  }
@@ -197,7 +197,7 @@ public class RandomForest implements Serializable
 		  schema.add( name );
 	      }
 
-	      /* */
+	      /** /
 	      System.out.println( "// " + schema.indexOf( name ) + ", " + name  + ", " + usage_type );
 	      /* */
 	  }
@@ -227,7 +227,7 @@ public class RandomForest implements Serializable
 	      tree.setRoot( vertex );
 	      buildNode( root, vertex, 0, tree.getGraph() );
 
-	      /* */
+	      /** /
 	      System.out.println( "// " + tree.getGraph().toString() );
 	      /* */
 	  }
@@ -252,7 +252,7 @@ public class RandomForest implements Serializable
       Vertex vertex = new Vertex( id );
       graph.addVertex( vertex );
 
-      /* */
+      /** /
       System.out.println( pad + "// node " + id + ", " + depth );
       /* */
 
@@ -271,7 +271,7 @@ public class RandomForest implements Serializable
 	      if ( child.getNodeName().equals( "SimplePredicate" ) ) {
 		  Integer predicate_id = makePredicate( (Element) child );
 
-		  /* */
+		  /** /
 		  System.out.println( pad + "if expr[ " + predicate_id + " ]" );
 		  /* */
 
@@ -279,7 +279,7 @@ public class RandomForest implements Serializable
 		      String score = ( node ).getAttribute( "score" );
 		      vertex.setScore( score );
 
-		      /* */
+		      /** /
 		      System.out.println( pad + " score " + score );
 		      /* */
 		  }
@@ -347,14 +347,14 @@ public class RandomForest implements Serializable
 	      ExpressionEvaluator ee = new ExpressionEvaluator( predicate, boolean.class, param_names, param_types, new Class[0], null );
 	      Object res = ee.evaluate( param_values );
 	      pred[ predicate_id ] = new Boolean( res.toString() );
-	  } catch( CompileException ce ) {
-	      ce.printStackTrace();
-	  } catch( InvocationTargetException ite ) {
-	      ite.printStackTrace();
-	  } catch( ParseException pe ) {
-	      pe.printStackTrace();
-	  } catch( ScanException se ) {
-	      se.printStackTrace();
+	  } catch( CompileException e ) {
+	      e.printStackTrace();
+	  } catch( InvocationTargetException e ) {
+	      e.printStackTrace();
+	  } catch( ParseException e ) {
+	      e.printStackTrace();
+	  } catch( ScanException e ) {
+	      e.printStackTrace();
 	  }
 
 	  predicate_id += 1;

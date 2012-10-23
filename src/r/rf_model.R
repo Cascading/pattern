@@ -7,9 +7,8 @@ library(randomForest)
 
 ## load the "baseline" reference data
 
-dat_folder = './data'
-data <- read.table(file=paste(dat_folder, "sample.tsv", sep="/"), sep="\t", quote="", na.strings="NULL", header=TRUE, encoding="UTF8")
-colnames(data)[1] <- "is_fraud"
+dat_folder <- './data'
+data <- read.table(file=paste(dat_folder, "orders.tsv", sep="/"), sep="\t", quote="", na.strings="NULL", header=TRUE, encoding="UTF8")
 
 dim(data)
 head(data)
@@ -17,41 +16,38 @@ head(data)
 ## split data into test and train sets
 
 set.seed(71)
-split_ratio = 2/10
-split = round(dim(data)[1] * split_ratio)
+split_ratio <- 2/10
+split <- round(dim(data)[1] * split_ratio)
 
-data_tests = data[1:split,]
+data_tests <- data[1:split,]
 dim(data_tests)
-print(table(data_tests[,"is_fraud"]))
+print(table(data_tests[,"label"]))
 
-data_train = data[(split + 1):dim(data)[1],]
+data_train <- data[(split + 1):dim(data)[1],]
+i <- colnames(data_train) == "order_id"
+j <- 1:length(i)
+data_train <- data_train[,-j[i]]
 dim(data_train)
-
-d_pos <- data_train[data_train[,"is_fraud"]==1,]
-dim(d_pos)
-
-d_neg <- data_train[data_train[,"is_fraud"]==0,]
-dim(d_neg)
 
 ## train a RandomForest model
 
-f <- as.formula("as.factor(is_fraud) ~ .")
-
-data0 <- rbind(d_pos, d_neg[sample(1:nrow(d_neg), nrow(d_pos)),])
-dim(data0)
-
-fit <- randomForest(f, data0, ntree=2)
+f <- as.formula("as.factor(label) ~ .")
+fit <- randomForest(f, data_train, ntree=2)
 
 ## test the model on the holdout test set
 
-pred <- predict(fit, data_tests[,-1])
-pred.tab <- table(pred = pred, true = data_tests[,1])
-
 print(fit$importance)
 print(fit)
-print(pred.tab)
 
-## export to PMML
+predicted <- predict(fit, data)
+data$predicted <- predicted
+confuse <- table(pred = predicted, true = data[,1])
+print(confuse)
 
-pmml(fit)
+## export predicted labels to TSV
+
+write.table(data, file=paste(dat_folder, "sample.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
+
+## export model to PMML
+
 saveXML(pmml(fit), file=paste(dat_folder, "sample.xml", sep="/"))

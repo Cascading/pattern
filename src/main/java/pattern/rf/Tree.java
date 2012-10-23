@@ -35,7 +35,7 @@ public class Tree implements Serializable
   public Tree ( String id ) throws Exception {
       tree_name = "tree_" + id;
 
-      /* */
+      /** /
       System.out.println( tree_name );
       /* */
   }

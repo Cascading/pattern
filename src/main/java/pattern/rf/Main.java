@@ -28,7 +28,6 @@ import cascading.pipe.Each;
 import cascading.pipe.Every;
 import cascading.pipe.GroupBy;
 import cascading.pipe.Pipe;
-import cascading.pipe.assembly.Rename;
 import cascading.property.AppProps;
 import cascading.scheme.Scheme;
 import cascading.scheme.hadoop.TextDelimited;
@@ -47,7 +46,7 @@ public class
     String pmmlPath = args[ 0 ];
     String ordersPath = args[ 1 ];
     String classifyPath = args[ 2 ];
-    String confusePath = args[ 3 ];
+    String measurePath = args[ 3 ];
 
     Properties properties = new Properties();
     AppProps.setApplicationJarClass( properties, Main.class );
@@ -66,24 +65,23 @@ public class
     // create source and sink taps
     Tap ordersTap = new Hfs( new TextDelimited( true, "\t" ), ordersPath );
     Tap classifyTap = new Hfs( new TextDelimited( true, "\t" ), classifyPath );
-    Tap confuseTap = new Hfs( new TextDelimited( true, "\t" ), confusePath );
+    Tap measureTap = new Hfs( new TextDelimited( true, "\t" ), measurePath );
 
     // define "Classifier" to evaluate the orders
     Pipe classifyPipe = new Pipe( "classify" );
     classifyPipe = new Each( classifyPipe, Fields.ALL, new Classifier( new Fields( "score" ), rf ), Fields.ALL );
-    classifyPipe = new Rename( classifyPipe, new Fields( 0 ), new Fields( "label" ) );
 
     // calculate a confusion matrix for the model results
-    Pipe confusePipe = new Pipe( "confuse", classifyPipe );
-    confusePipe = new GroupBy( confusePipe, new Fields( "score", "label" ) );
-    confusePipe = new Every( confusePipe, Fields.ALL, new Count(), Fields.ALL );
+    Pipe measurePipe = new Pipe( "measure", classifyPipe );
+    measurePipe = new GroupBy( measurePipe, new Fields( "label", "score" ) );
+    measurePipe = new Every( measurePipe, Fields.ALL, new Count(), Fields.ALL );
 
     // connect the taps, pipes, etc., into a flow
     FlowDef flowDef = FlowDef.flowDef()
      .setName( "classify" )
      .addSource( classifyPipe, ordersTap )
      .addSink( classifyPipe, classifyTap )
-     .addTailSink( confusePipe, confuseTap );
+     .addTailSink( measurePipe, measureTap );
 
     // write a DOT file and run the flow
     Flow classifyFlow = flowConnector.connect( flowDef );

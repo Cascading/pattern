@@ -3,6 +3,7 @@ output/
 dot/
 .gradle
 *.class
+*.log
 *~
 
 # Package Files #

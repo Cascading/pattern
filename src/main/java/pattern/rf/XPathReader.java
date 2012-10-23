@@ -21,12 +21,10 @@
 package pattern.rf;
 
 import java.io.IOException;
-import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
@@ -37,28 +35,21 @@ import org.xml.sax.SAXException;
 public class
   XPathReader
   {
-  private String xmlFile;
   private Document xmlDocument;
   private XPath xPath;
 
  
   public XPathReader( String xmlFile ) {
-    this.xmlFile = xmlFile;
-    initObjects();
-  }
-
- 
-  private void initObjects() {
-      try {
-        xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlFile);
-        xPath = XPathFactory.newInstance().newXPath();
-      } catch ( IOException ex ) {
-        ex.printStackTrace();
-      } catch ( SAXException ex ) {
-        ex.printStackTrace();
-      } catch ( ParserConfigurationException ex ) {
-        ex.printStackTrace();
-      }
+    try {
+      xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse( xmlFile );
+      xPath = XPathFactory.newInstance().newXPath();
+    } catch ( IOException e ) {
+      e.printStackTrace();
+    } catch ( SAXException e ) {
+      e.printStackTrace();
+    } catch ( ParserConfigurationException e ) {
+      e.printStackTrace();
+    }
   }
 
  
@@ -66,8 +57,8 @@ public class
     try {
       XPathExpression xPathExpression = xPath.compile( expression );
       return xPathExpression.evaluate( xmlDocument, returnType );
-    } catch( XPathExpressionException ex ) {
-      ex.printStackTrace();
+    } catch( XPathExpressionException e ) {
+      e.printStackTrace();
       return null;
     }
   }
@@ -77,8 +68,8 @@ public class
     try {
       XPathExpression xPathExpression = xPath.compile( expression );
       return xPathExpression.evaluate( item, returnType );
-    } catch( XPathExpressionException ex ) {
-      ex.printStackTrace();
+    } catch( XPathExpressionException e ) {
+      e.printStackTrace();
       return null;
     }
   }

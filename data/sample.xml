@@ -3,47 +3,53 @@
  <Header copyright="Copyright (c) 2012 ceteri" description="Random Forest Tree Model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2012-10-09 17:10:46</Timestamp>
+  <Timestamp>2012-10-22 19:39:28</Timestamp>
  </Header>
  <DataDictionary numberOfFields="4">
-  <DataField name="is_fraud" optype="categorical" dataType="string">
+  <DataField name="label" optype="categorical" dataType="string">
    <Value value="0"/>
    <Value value="1"/>
   </DataField>
+  <DataField name="var0" optype="continuous" dataType="double"/>
   <DataField name="var1" optype="continuous" dataType="double"/>
   <DataField name="var2" optype="continuous" dataType="double"/>
-  <DataField name="var3" optype="continuous" dataType="double"/>
  </DataDictionary>
  <MiningModel modelName="randomForest_Model" functionName="classification">
   <MiningSchema>
-   <MiningField name="is_fraud" usageType="predicted"/>
+   <MiningField name="label" usageType="predicted"/>
+   <MiningField name="var0" usageType="active"/>
    <MiningField name="var1" usageType="active"/>
    <MiningField name="var2" usageType="active"/>
-   <MiningField name="var3" usageType="active"/>
   </MiningSchema>
   <Segmentation multipleModelMethod="majorityVote">
    <Segment id="1">
     <True/>
     <TreeModel modelName="randomForest_Model" functionName="classification" algorithmName="randomForest" splitCharacteristic="binarySplit">
      <MiningSchema>
-      <MiningField name="is_fraud" usageType="predicted"/>
+      <MiningField name="label" usageType="predicted"/>
+      <MiningField name="var0" usageType="active"/>
       <MiningField name="var1" usageType="active"/>
       <MiningField name="var2" usageType="active"/>
-      <MiningField name="var3" usageType="active"/>
      </MiningSchema>
      <Node id="1">
       <True/>
       <Node id="2">
-       <SimplePredicate field="var3" operator="lessOrEqual" value="0.5"/>
-       <Node id="4" score="0">
+       <SimplePredicate field="var0" operator="lessOrEqual" value="0.5"/>
+       <Node id="4" score="1">
         <SimplePredicate field="var2" operator="lessOrEqual" value="0.5"/>
        </Node>
-       <Node id="5" score="1">
+       <Node id="5" score="0">
         <SimplePredicate field="var2" operator="greaterThan" value="0.5"/>
        </Node>
       </Node>
-      <Node id="3" score="0">
-       <SimplePredicate field="var3" operator="greaterThan" value="0.5"/>
+      <Node id="3">
+       <SimplePredicate field="var0" operator="greaterThan" value="0.5"/>
+       <Node id="6" score="0">
+        <SimplePredicate field="var1" operator="lessOrEqual" value="0.5"/>
+       </Node>
+       <Node id="7" score="1">
+        <SimplePredicate field="var1" operator="greaterThan" value="0.5"/>
+       </Node>
       </Node>
      </Node>
     </TreeModel>
@@ -52,18 +58,18 @@
     <True/>
     <TreeModel modelName="randomForest_Model" functionName="classification" algorithmName="randomForest" splitCharacteristic="binarySplit">
      <MiningSchema>
-      <MiningField name="is_fraud" usageType="predicted"/>
+      <MiningField name="label" usageType="predicted"/>
+      <MiningField name="var0" usageType="active"/>
       <MiningField name="var1" usageType="active"/>
       <MiningField name="var2" usageType="active"/>
-      <MiningField name="var3" usageType="active"/>
      </MiningSchema>
      <Node id="1">
       <True/>
       <Node id="2" score="0">
-       <SimplePredicate field="var2" operator="lessOrEqual" value="0.5"/>
+       <SimplePredicate field="var1" operator="lessOrEqual" value="0.5"/>
       </Node>
       <Node id="3" score="1">
-       <SimplePredicate field="var2" operator="greaterThan" value="0.5"/>
+       <SimplePredicate field="var1" operator="greaterThan" value="0.5"/>
       </Node>
      </Node>
     </TreeModel>

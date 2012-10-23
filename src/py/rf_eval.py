@@ -119,7 +119,7 @@ if __name__ == "__main__":
     mining_schema = mining_model.getElementsByTagName("MiningSchema")[0]
 
     for mining_field in mining_schema.getElementsByTagName("MiningField"):
-        #<MiningField name="is_fraud" usageType="predicted"/>
+        #<MiningField name="label" usageType="predicted"/>
 
         if mining_field.attributes["usageType"].value == "predicted":
             dv_name = mining_field.attributes["name"].value
@@ -151,7 +151,7 @@ if __name__ == "__main__":
     print indent, "if count > 0:"
     indent = get_indent(2)
 
-    print indent, input_tuple + " = map(lambda x: float(x), line.strip().split('\\t') )"
+    print indent, input_tuple + " = map(lambda x: float(x), line.strip().split('\\t')[0:" + str(len(iv_list) + 1) + "] )"
     print indent, "vote = []"
     print indent, "expr = []"
 
@@ -164,10 +164,10 @@ if __name__ == "__main__":
         print indent, "vote.append( " + def_name + "() )"
 
     print indent, "predict = sum(vote) / float(len(vote))"
-    print indent, "print var1, var2, var3"
+    print indent, "print " + ", ".join(iv_list)
     print indent, "print vote"
-    print indent, "print is_fraud, predict, is_fraud == predict"
-    print indent, "x = str(int(is_fraud)) + str(int(predict))"
+    print indent, "print label, predict, label == predict"
+    print indent, "x = str(int(label)) + str(int(predict))"
     print indent, "confuse[status[x]] += 1"
 
     print

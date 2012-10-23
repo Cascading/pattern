@@ -3,6 +3,7 @@
 
 import random
 import sys
+import uuid
 
 
 debug = False # True
@@ -21,7 +22,10 @@ COIN_FLIP_THRESHOLD = 0.9
 if __name__ == '__main__':
     MAX_COUNT = int(sys.argv[1])
 
-    print "\t".join(map(lambda x: "var" + str(x), range(0, len(rand_vars[0]))))
+    headers = map(lambda x: "var" + str(x), range(0, len(rand_vars[0]) - 1))
+    headers.insert(0, "label")
+    headers.append("order_id")
+    print "\t".join(headers)
 
     for i in range(0, MAX_COUNT):
         var = random.choice(rand_vars)
@@ -32,6 +36,7 @@ if __name__ == '__main__':
         label = var[0]
         var = var[1:]
         coin_flip = random.random()
+        order_id = str(uuid.uuid1()).split("-")[0]
 
         if label:
             label_val = 1
@@ -41,5 +46,5 @@ if __name__ == '__main__':
         if coin_flip >= COIN_FLIP_THRESHOLD:
             label_val = abs(1 - label_val)
 
-        print "\t".join(map(lambda x: str(x), [label_val] + var))
+        print "\t".join(map(lambda x: str(x), [label_val] + var + [order_id]))
 

@@ -7,29 +7,22 @@ for machine learning models, importing
 model descriptions from _R_, _SAS_, _Weka_, _Matlab_, etc.
 
 
-generate a baseline example data set
-------------------------------------
+generate baseline
+-----------------
 
-    ./src/py/rf_sample.py 100 > data/sample.tsv
+The following scripts generate a baseline, which includes a sample
+data set (ecommerce orders) plus a predictive model:
 
-
-generate a baseline example model
----------------------------------
-
+    ./src/py/rf_sample.py 200 > data/orders.tsv
     R --vanilla --slave < src/r/rf_model.R > model.log
-    ./src/py/rf_eval.py data/sample.xml > tmp.py
-    python tmp.py < data/sample.tsv > eval.log
-
-At this point, the _confusion matrix_ shown in both log files should
-have the same values.
 
 
-generate a JAR for Hadoop
--------------------------
+build a JAR
+-----------
 
     gradle clean jar
     rm -rf output
-    hadoop jar build/libs/pattern.jar data/sample.xml data/sample.tsv output/eval output/confuse
+    hadoop jar build/libs/pattern.jar data/sample.xml data/sample.tsv output/classify output/measure
 
-The _confusion matrix_ shown in `output/confuse/part*` should match
-the ones in the _R_ and _Python_ baseline examples.
+The _confusion matrix_ shown in `output/measure/part*` should match
+the one in `model.log` from the _R_ and _Python_ baseline.
