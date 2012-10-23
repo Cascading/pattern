@@ -20,14 +20,12 @@
 
 package pattern.rf;
 
-import cascading.tuple.TupleEntry;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import javax.xml.xpath.XPathConstants;
 import org.codehaus.janino.CompileException;
 import org.codehaus.janino.ExpressionEvaluator;
@@ -40,22 +38,36 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
  
-public class RandomForest implements Serializable
+public class RandomForest extends Classifier implements Serializable
 {
-  protected transient XPathReader reader;
-  public LinkedHashMap<String, DataField> schema = new LinkedHashMap<String, DataField>();
   public ArrayList<String> predicates = new ArrayList<String>();
   public ArrayList<Tree> forest = new ArrayList<Tree>();
 
 
-  public static void main( String[] argv ) throws Exception {
-      String pmml_file = argv[0];
-      RandomForest rf = new RandomForest( pmml_file );
+  public RandomForest ( String pmml_file ) throws Exception {
+      // parse the PMML file and verify the model type
 
-      // evaluate the sample data from a TSV file
+      reader = new XPathReader( pmml_file );
 
-      String tsv_file = argv[1];
-      eval_data( tsv_file, rf );
+      String expr = "/PMML/MiningModel/@modelName";
+      String model_type = (String) reader.read( expr, XPathConstants.STRING );
+
+      if ( !"randomForest_Model".equals(model_type) ) {
+	  throw new Exception( "incorrect model type: " + model_type );
+      }
+
+      // build the serializable model
+
+      buildSchema();
+      buildForest();
+  }
+
+
+  public String scoreTuple( String[] fields ) {
+    Boolean[] pred = evalTuple( fields );
+    String score = tallyVotes( pred );
+
+    return score;
   }
 
 
@@ -85,114 +97,6 @@ public class RandomForest implements Serializable
 
       return buf.toString();
     }
-
-
-  private static void eval_data( String tsv_file, RandomForest rf ) throws Exception {
-      /* */
-      System.out.println( rf );
-      /* */
-
-      FileReader fr = new FileReader( tsv_file );
-      BufferedReader br = new BufferedReader( fr );
-      String line;
-      int count = 0;
-
-      HashMap<String, Integer> confuse = new HashMap<String, Integer>();
-      confuse.put( "TN", 0 );
-      confuse.put( "TP", 0 );
-      confuse.put( "FN", 0 );
-      confuse.put( "FP", 0 );
-
-      while ( ( line = br.readLine() ) != null ) {
-	  if ( count++ > 0 ) {
-	      // tally votes for each tree in the forest
-
-	      String[] fields = line.split( "\\t" );
-	      Boolean[] pred = rf.evalTuple( fields );
-	      String score = rf.tallyVotes( pred );
-
-	      // update tallies into the confusion matrix
-
-	      if ( "1".equals( fields[ 0 ] ) ) {
-		  if ( "1".equals( score ) ) {
-		      confuse.put( "TP", confuse.get( "TP" ) + 1 );
-		  }
-		  else {
-		      confuse.put( "FN", confuse.get( "FN" ) + 1 );
-		  }
-	      }
-	      else {
-		  if ( "0".equals( score ) ) {
-		      confuse.put( "TN", confuse.get( "TN" ) + 1 );
-		  }
-		  else {
-		      confuse.put( "FP", confuse.get( "FP" ) + 1 );
-		  }
-	      }
-	  }
-      }
-
-      fr.close(); 
-      System.out.println( confuse );
-  }
-
-
-  public RandomForest ( String pmml_file ) throws Exception {
-      // parse the PMML file and verify the model type
-
-      reader = new XPathReader( pmml_file );
-
-      String expr = "/PMML/MiningModel/@modelName";
-      String model_type = (String) reader.read( expr, XPathConstants.STRING );
-
-      if ( !"randomForest_Model".equals(model_type) ) {
-	  throw new Exception( "incorrect model type: " + model_type );
-      }
-
-      // build the serializable model
-
-      buildSchema();
-      buildForest();
-  }
-
-
-  protected void buildSchema () {
-      // build the data dictionary
-
-      String expr = "/PMML/DataDictionary/DataField";
-      NodeList node_list = (NodeList) reader.read( expr, XPathConstants.NODESET );
-
-      for ( int i = 0; i < node_list.getLength(); i++ ) {
-	  Node node = node_list.item( i );
-
-	  if ( node.getNodeType() == Node.ELEMENT_NODE ) {
-	      String name = ( (Element) node ).getAttribute( "name" );
-	      String data_type = ( (Element) node ).getAttribute( "dataType" );
-
-	      if ( !schema.containsKey( name ) ) {
-		  schema.put( name, new DataField( name, data_type ) );
-	      }
-	  }
-      }
-
-      // determine the active tuple fields for the input schema
-
-      expr = "/PMML/MiningModel/MiningSchema/MiningField";
-      node_list = (NodeList) reader.read( expr, XPathConstants.NODESET );
-
-      for ( int i = 0; i < node_list.getLength(); i++ ) {
-	  Node node = node_list.item( i );
-
-	  if ( node.getNodeType() == Node.ELEMENT_NODE ) {
-	      String name = ( (Element) node ).getAttribute( "name" );
-	      String usage_type = ( (Element) node ).getAttribute( "usageType" );
-
-	      if ( schema.containsKey( name ) && !"active".equals( usage_type ) ) {
-		  schema.remove( name );
-	      }
-	  }
-      }
-  }
 
 
   protected void buildForest () throws Exception {
@@ -300,19 +204,7 @@ public class RandomForest implements Serializable
   }
 
 
-  public String[] loadTuple( TupleEntry argument ) {
-    String[] fields = new String[ schema.size() ];
-    int i = 0;
-
-    for ( String name : schema.keySet() ) {
-	fields[ i++ ] = argument.getString( name );
-    }
-
-    return fields;
-  }
-
-
-  public Boolean[] evalTuple( String[] fields ) {
+  protected Boolean[] evalTuple( String[] fields ) {
       // map from input tuple to forest predicate values
 
       Boolean[] pred = new Boolean[ predicates.size() ];
@@ -352,7 +244,7 @@ public class RandomForest implements Serializable
   }
 
 
-  public String tallyVotes( Boolean[] pred ) {
+  protected String tallyVotes( Boolean[] pred ) {
       HashMap<String, Integer> tally = new HashMap<String, Integer>();
       tally.put( "0", 0 );
       tally.put( "1", 0 );
@@ -368,5 +260,69 @@ public class RandomForest implements Serializable
       else {
 	  return "0";
       }
+  }
+
+
+  //////////////////////////////////////////////////////////////////////
+  // TODO: refactor into unit tests
+
+  public static void main( String[] argv ) throws Exception {
+      String pmml_file = argv[0];
+      RandomForest rf = new RandomForest( pmml_file );
+
+      // evaluate the sample data from a TSV file
+
+      String tsv_file = argv[1];
+      eval_data( tsv_file, rf );
+  }
+
+
+  private static void eval_data( String tsv_file, RandomForest rf ) throws Exception {
+      /* */
+      System.out.println( rf );
+      /* */
+
+      FileReader fr = new FileReader( tsv_file );
+      BufferedReader br = new BufferedReader( fr );
+      String line;
+      int count = 0;
+
+      HashMap<String, Integer> confuse = new HashMap<String, Integer>();
+      confuse.put( "TN", 0 );
+      confuse.put( "TP", 0 );
+      confuse.put( "FN", 0 );
+      confuse.put( "FP", 0 );
+
+      while ( ( line = br.readLine() ) != null ) {
+	  if ( count++ > 0 ) {
+	      // tally votes for each tree in the forest
+
+	      String[] fields = line.split( "\\t" );
+	      Boolean[] pred = rf.evalTuple( fields );
+	      String score = rf.tallyVotes( pred );
+
+	      // update tallies into the confusion matrix
+
+	      if ( "1".equals( fields[ 0 ] ) ) {
+		  if ( "1".equals( score ) ) {
+		      confuse.put( "TP", confuse.get( "TP" ) + 1 );
+		  }
+		  else {
+		      confuse.put( "FN", confuse.get( "FN" ) + 1 );
+		  }
+	      }
+	      else {
+		  if ( "0".equals( score ) ) {
+		      confuse.put( "TN", confuse.get( "TN" ) + 1 );
+		  }
+		  else {
+		      confuse.put( "FP", confuse.get( "FP" ) + 1 );
+		  }
+	      }
+	  }
+      }
+
+      fr.close(); 
+      System.out.println( confuse );
   }
 }
