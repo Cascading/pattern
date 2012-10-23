@@ -20,27 +20,31 @@
 
 package pattern;
 
-import javax.xml.xpath.XPathConstants;
 import pattern.rf.RandomForest;
+
+import javax.xml.xpath.XPathConstants;
 
 
 public class ClassifierFactory {
-    public static Classifier getClassifier( String pmml_file ) throws PatternException {
-      // parse the PMML file and verify the model type
+    /**
+     * Parse the given PMML file, verify the model type, and create the appropriate Classifier object.
+     * @param pmml_file PMML file
+     * @return Classifier
+     * @throws PatternException
+     */
+    public static Classifier getClassifier(String pmml_file) throws PatternException {
+        XPathReader reader = new XPathReader(pmml_file);
+        Classifier classifier = null;
 
-      XPathReader reader = new XPathReader( pmml_file );
-      Classifier classifier = null;
+        String expr = "/PMML/MiningModel/@modelName";
+        String model_type = (String) reader.read(expr, XPathConstants.STRING);
 
-      String expr = "/PMML/MiningModel/@modelName";
-      String model_type = (String) reader.read( expr, XPathConstants.STRING );
+        if ("randomForest_Model".equals(model_type)) {
+            classifier = new RandomForest(reader);
+        } else {
+            throw new PatternException("unsupported model type: " + model_type);
+        }
 
-      if ( "randomForest_Model".equals(model_type) ) {
-	  classifier = new RandomForest( reader );
-      }
-      else {
-	  throw new PatternException( "unsupported model type: " + model_type );
-      }
-
-      return classifier;
+        return classifier;
     }
 }

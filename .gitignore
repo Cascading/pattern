@@ -6,6 +6,11 @@ dot/
 *.log
 *~
 
+# IntelliJ Files #
+*.ipr
+*.iml
+*.iws
+
 # Package Files #
 *.jar
 *.war
