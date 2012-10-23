@@ -4,14 +4,15 @@ cascading.pattern
 _Pattern_ sub-project for Cascading.org which uses flows as containers
 for machine learning models, importing
 [PMML](http://en.wikipedia.org/wiki/Predictive_Model_Markup_Language)
-model descriptions from _R_, _SAS_, _Weka_, etc.
+model descriptions from _R_, _SAS_, _Weka_, _RapidMiner_, _SQL
+Server_, etc.
 
 Currently supported algorithms for PMML include:
 
  * [Random Forest](http://en.wikipedia.org/wiki/Random_forest)
 
 
-build instructions
+Build Instructions
 ------------------
 
 To build _Pattern_ and run its unit tests:
@@ -19,7 +20,7 @@ To build _Pattern_ and run its unit tests:
     gradle clean test
 
 The following scripts generate a baseline for the _Random Forest_
-algorithm. The baseline includes a sample data set (simulated
+algorithm. This baseline includes a reference data set (simulated
 ecommerce orders) plus a predictive model in PMML:
 
     ./src/py/rf_sample.py 200 > data/orders.tsv
@@ -38,3 +39,11 @@ model. Tuples which fail that assertion get trapped into
 
 Also, the _confusion matrix_ shown in `output/measure/part*` should
 match the one logged in `model.log` from baseline generated in _R_.
+
+
+PMML Resources
+--------------
+
+ * [Data Mining Group](http://www.dmg.org/) XML standards and supported vendors
+ * [PMML In Action](http://www.amazon.com/dp/1470003244) book 
+ * [PMML validator](http://www.zementis.com/pmml_tools.htm)
