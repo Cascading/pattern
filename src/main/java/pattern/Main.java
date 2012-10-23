@@ -58,6 +58,12 @@ public class
     AppProps.setApplicationJarClass( properties, Main.class );
     HadoopFlowConnector flowConnector = new HadoopFlowConnector( properties );
 
+    // create source and sink taps
+    Tap ordersTap = new Hfs( new TextDelimited( true, "\t" ), ordersPath );
+    Tap classifyTap = new Hfs( new TextDelimited( true, "\t" ), classifyPath );
+    Tap measureTap = new Hfs( new TextDelimited( true, "\t" ), measurePath );
+    Tap trapTap = new Hfs( new TextDelimited( true, "\t" ), trapPath );
+
     // build the classifier model from PMML
     Classifier model = null;
 
@@ -67,12 +73,6 @@ public class
       e.printStackTrace();
       System.exit( -1 );
     }
-
-    // create source and sink taps
-    Tap ordersTap = new Hfs( new TextDelimited( true, "\t" ), ordersPath );
-    Tap classifyTap = new Hfs( new TextDelimited( true, "\t" ), classifyPath );
-    Tap measureTap = new Hfs( new TextDelimited( true, "\t" ), measurePath );
-    Tap trapTap = new Hfs( new TextDelimited( true, "\t" ), trapPath );
 
     // define a "Classifier" to evaluate the orders
     Pipe classifyPipe = new Pipe( "classify" );

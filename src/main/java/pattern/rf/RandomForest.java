@@ -54,22 +54,19 @@ public class RandomForest extends Classifier implements Serializable
   }
 
 
-  public String scoreTuple( String[] fields ) {
-    Boolean[] pred = evalTuple( fields );
-    String score = tallyVotes( pred );
-
-    return score;
-  }
-
-
   public String toString () {
       StringBuilder buf = new StringBuilder();
 
       buf.append( "---------" );
+      buf.append( "\n" );
       buf.append( schema );
+      buf.append( "\n" );
       buf.append( "---------" );
+      buf.append( "\n" );
       buf.append( forest );
+      buf.append( "\n" );
       buf.append( "---------" );
+      buf.append( "\n" );
 
       for ( Tree tree : forest ) {
 	  buf.append( tree );
@@ -78,12 +75,16 @@ public class RandomForest extends Classifier implements Serializable
 	  for ( Edge edge : tree.getGraph().edgeSet() ) {
 	      buf.append( edge );
 	  }
+
+	  buf.append( "\n" );
       }
 
       buf.append( "---------" );
+      buf.append( "\n" );
 
       for ( String predicate : predicates ) {
 	  buf.append( "expr[ " + predicates.indexOf( predicate ) + " ]: " + predicate );
+	  buf.append( "\n" );
       }
 
       return buf.toString();
@@ -195,6 +196,14 @@ public class RandomForest extends Classifier implements Serializable
   }
 
 
+  public String classifyTuple( String[] fields ) {
+    Boolean[] pred = evalTuple( fields );
+    String label = tallyVotes( pred );
+
+    return label;
+  }
+
+
   protected Boolean[] evalTuple( String[] fields ) {
       // map from input tuple to forest predicate values
 
@@ -236,21 +245,35 @@ public class RandomForest extends Classifier implements Serializable
 
 
   protected String tallyVotes( Boolean[] pred ) {
-      HashMap<String, Integer> tally = new HashMap<String, Integer>();
-      tally.put( "0", 0 );
-      tally.put( "1", 0 );
+      HashMap<String, Integer> votes = new HashMap<String, Integer>();
+      String label = null;
+      Integer winning_vote = 0;
+
+      // tally the vote for each tree in the forest
 
       for ( Tree tree : forest ) {
-	  String score = tree.traverse( pred );
-	  tally.put( score, tally.get( score ) + 1 );
+	  label = tree.traverse( pred );
+
+	  if ( !votes.containsKey( label ) ) {
+	      winning_vote = 1;
+	  }
+	  else {
+	      winning_vote = votes.get( label ) + 1;
+	  }
+
+	  votes.put( label, winning_vote );
       }
 
-      if ( tally.get( "1" ) >= tally.get( "0" ) ) {      
-	  return "1";
+      // determine the winning label
+
+      for ( String key : votes.keySet() ) {
+	  if ( votes.get( key ) > winning_vote ) {      
+	      label = key;
+	      winning_vote = votes.get( key );
+	  }
       }
-      else {
-	  return "0";
-      }
+
+      return label;
   }
 
 
@@ -290,12 +313,12 @@ public class RandomForest extends Classifier implements Serializable
 
 	      String[] fields = line.split( "\\t" );
 	      Boolean[] pred = model.evalTuple( fields );
-	      String score = model.tallyVotes( pred );
+	      String label = model.tallyVotes( pred );
 
 	      // update tallies into the confusion matrix
 
 	      if ( "1".equals( fields[ 0 ] ) ) {
-		  if ( "1".equals( score ) ) {
+		  if ( "1".equals( label ) ) {
 		      confuse.put( "TP", confuse.get( "TP" ) + 1 );
 		  }
 		  else {
@@ -303,7 +326,7 @@ public class RandomForest extends Classifier implements Serializable
 		  }
 	      }
 	      else {
-		  if ( "0".equals( score ) ) {
+		  if ( "0".equals( label ) ) {
 		      confuse.put( "TN", confuse.get( "TN" ) + 1 );
 		  }
 		  else {

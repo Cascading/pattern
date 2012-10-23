@@ -52,7 +52,7 @@ public class ClassifierFunction extends BaseOperation implements Function
     }
 
     Tuple result = new Tuple();
-    result.add( model.scoreTuple( fields ) );
+    result.add( model.classifyTuple( fields ) );
     functionCall.getOutputCollector().add( result );
     }
   }

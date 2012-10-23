@@ -34,7 +34,7 @@ public abstract class Classifier implements Serializable
   public LinkedHashMap<String, DataField> schema = new LinkedHashMap<String, DataField>();
 
 
-  public abstract String scoreTuple( String[] fields );
+  public abstract String classifyTuple( String[] fields );
 
 
   protected void buildSchema () {
