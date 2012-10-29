@@ -1,21 +1,7 @@
 /*
  * Copyright (c) 2007-2012 Concurrent, Inc. All Rights Reserved.
  *
- * Project and contact information: http://www.cascading.org/
- *
- * This file is part of the Cascading project.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Project and contact information: http://www.concurrentinc.com/
  */
 
 package pattern.rf;
@@ -27,11 +13,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
-import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import pattern.ClassifierFactory;
 import pattern.PatternException;
 
+import static org.junit.Assert.assertEquals;
 
 public class RandomForestTest
   {
@@ -43,8 +30,6 @@ public class RandomForestTest
   @Test
   public void testMain() throws Exception
     {
-    RandomForestTest tester = new RandomForestTest();
-
     String pmml_file = makeFile( "rf_test", ".xml", pmml_text );
     String data_file = makeFile( "rf_test", ".tsv", data_text );
 
@@ -53,7 +38,6 @@ public class RandomForestTest
     }
 
   /**
-   *
    * @param base
    * @param suffix
    * @param text
@@ -92,9 +76,7 @@ public class RandomForestTest
       }
     }
 
-
   /**
-   *
    * @param data_file
    * @param model
    * @throws IOException
@@ -145,9 +127,6 @@ public class RandomForestTest
     fr.close();
     }
 
-
   protected String pmml_text = "<?xml version=\"1.0\"?>\n<PMML xmlns=\"http://www.dmg.org/PMML-4_0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" version=\"4.0\" xsi:schemaLocation=\"http://www.dmg.org/PMML-4_0 http://www.dmg.org/v4-0/pmml-4-0.xsd\"><Header copyright=\"Copyright (c) 2012 ceteri\" description=\"Random Forest Tree Model\"><Extension name=\"user\" value=\"ceteri\" extender=\"Rattle/PMML\"/><Application name=\"Rattle/PMML\" version=\"1.2.30\"/><Timestamp>2012-10-22 19:39:28</Timestamp></Header><DataDictionary numberOfFields=\"4\"><DataField name=\"label\" optype=\"categorical\" dataType=\"string\"><Value value=\"0\"/><Value value=\"1\"/></DataField><DataField name=\"var0\" optype=\"continuous\" dataType=\"double\"/><DataField name=\"var1\" optype=\"continuous\" dataType=\"double\"/><DataField name=\"var2\" optype=\"continuous\" dataType=\"double\"/></DataDictionary><MiningModel modelName=\"randomForest_Model\" functionName=\"classification\"><MiningSchema><MiningField name=\"label\" usageType=\"predicted\"/><MiningField name=\"var0\" usageType=\"active\"/><MiningField name=\"var1\" usageType=\"active\"/><MiningField name=\"var2\" usageType=\"active\"/></MiningSchema><Segmentation multipleModelMethod=\"majorityVote\"><Segment id=\"1\"><True/><TreeModel modelName=\"randomForest_Model\" functionName=\"classification\" algorithmName=\"randomForest\" splitCharacteristic=\"binarySplit\"><MiningSchema><MiningField name=\"label\" usageType=\"predicted\"/><MiningField name=\"var0\" usageType=\"active\"/><MiningField name=\"var1\" usageType=\"active\"/><MiningField name=\"var2\" usageType=\"active\"/></MiningSchema><Node id=\"1\"><True/><Node id=\"2\"><SimplePredicate field=\"var0\" operator=\"lessOrEqual\" value=\"0.5\"/><Node id=\"4\" score=\"1\"><SimplePredicate field=\"var2\" operator=\"lessOrEqual\" value=\"0.5\"/></Node><Node id=\"5\" score=\"0\"><SimplePredicate field=\"var2\" operator=\"greaterThan\" value=\"0.5\"/></Node></Node><Node id=\"3\"><SimplePredicate field=\"var0\" operator=\"greaterThan\" value=\"0.5\"/><Node id=\"6\" score=\"0\"><SimplePredicate field=\"var1\" operator=\"lessOrEqual\" value=\"0.5\"/></Node><Node id=\"7\" score=\"1\"><SimplePredicate field=\"var1\" operator=\"greaterThan\" value=\"0.5\"/></Node></Node></Node></TreeModel></Segment><Segment id=\"2\"><True/><TreeModel modelName=\"randomForest_Model\" functionName=\"classification\" algorithmName=\"randomForest\" splitCharacteristic=\"binarySplit\"><MiningSchema><MiningField name=\"label\" usageType=\"predicted\"/><MiningField name=\"var0\" usageType=\"active\"/><MiningField name=\"var1\" usageType=\"active\"/><MiningField name=\"var2\" usageType=\"active\"/></MiningSchema><Node id=\"1\"><True/><Node id=\"2\" score=\"0\"><SimplePredicate field=\"var1\" operator=\"lessOrEqual\" value=\"0.5\"/></Node><Node id=\"3\" score=\"1\"><SimplePredicate field=\"var1\" operator=\"greaterThan\" value=\"0.5\"/></Node></Node></TreeModel></Segment></Segmentation></MiningModel></PMML>";
-
-
   protected String data_text = "label\tvar0\tvar1\tvar2\torder_id\tpredicted\n1\t0\t1\t0\t6f8e1014\t1\n0\t0\t0\t1\t6f8ea22e\t0\n1\t0\t1\t0\t6f8ea435\t1\n0\t0\t0\t1\t6f8ea5e1\t0\n1\t0\t1\t0\t6f8ea785\t1\n";
   }

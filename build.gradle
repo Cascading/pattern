@@ -1,21 +1,7 @@
 /*
  * Copyright (c) 2007-2012 Concurrent, Inc. All Rights Reserved.
  *
- * Project and contact information: http://www.cascading.org/
- *
- * This file is part of the Cascading project.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Project and contact information: http://www.concurrentinc.com/
  */
 
 import java.text.SimpleDateFormat
@@ -31,11 +17,11 @@ repositories {
   mavenRepo name: 'conjars', url: 'http://conjars.org/repo/'
 }
 
-
 dependencies {
-  compile( 'cascading:cascading-core:2.0.1' ) { exclude group: 'log4j' }
-  compile( 'cascading:cascading-hadoop:2.0.1' ) { transitive = true }
+  compile( 'cascading:cascading-core:2.1.0' )
+  compile( 'cascading:cascading-hadoop:2.1.0' )
 
+  testCompile( 'org.apache.hadoop:hadoop-core:1.0.3' )
   testCompile( 'org.apache.hadoop:hadoop-test:1.0.3' )
   testCompile( 'junit:junit:4.8.+' )
 }
@@ -79,9 +65,9 @@ test {
 
   //listening to test execution events
   beforeTest { descriptor ->
-     logger.lifecycle("Running test: " + descriptor)
+    logger.lifecycle( "Running test: " + descriptor )
   }
   onOutput { descriptor, event ->
-     logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
+    logger.lifecycle( "Test: " + descriptor + " produced standard out/err: " + event.message )
   }
 }

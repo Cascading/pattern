@@ -1,21 +1,7 @@
 /*
  * Copyright (c) 2007-2012 Concurrent, Inc. All Rights Reserved.
  *
- * Project and contact information: http://www.cascading.org/
- *
- * This file is part of the Cascading project.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Project and contact information: http://www.concurrentinc.com/
  */
 
 package pattern.rf;
@@ -24,12 +10,12 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.xml.xpath.XPathConstants;
 
-import org.codehaus.janino.CompileException;
+import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.ExpressionEvaluator;
-import org.codehaus.janino.Parser.ParseException;
-import org.codehaus.janino.Scanner.ScanException;
 import org.jgrapht.DirectedGraph;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -41,12 +27,10 @@ import pattern.XPathReader;
 
 public class RandomForest extends Classifier implements Serializable
   {
-  public ArrayList<String> predicates = new ArrayList<String>();
-  public ArrayList<Tree> forest = new ArrayList<Tree>();
-
+  public List<String> predicates = new ArrayList<String>();
+  public List<Tree> forest = new ArrayList<Tree>();
 
   /**
-   *
    * @param reader
    * @throws PatternException
    */
@@ -57,11 +41,7 @@ public class RandomForest extends Classifier implements Serializable
     buildForest();
     }
 
-
-  /**
-   *
-   * @return
-   */
+  /** @return  */
   public String toString()
     {
     StringBuilder buf = new StringBuilder();
@@ -83,9 +63,7 @@ public class RandomForest extends Classifier implements Serializable
       buf.append( tree.getRoot() );
 
       for( Edge edge : tree.getGraph().edgeSet() )
-        {
         buf.append( edge );
-        }
 
       buf.append( "\n" );
       }
@@ -105,6 +83,7 @@ public class RandomForest extends Classifier implements Serializable
 
   /**
    * Generate a serializable graph representation for each tree.
+   *
    * @throws PatternException
    */
   protected void buildForest() throws PatternException
@@ -133,9 +112,7 @@ public class RandomForest extends Classifier implements Serializable
       }
     }
 
-
   /**
-   *
    * @param depth
    * @return
    */
@@ -144,16 +121,12 @@ public class RandomForest extends Classifier implements Serializable
     String pad = "";
 
     for( int i = 0; i < depth; i++ )
-      {
       pad += " ";
-      }
 
     return pad;
     }
 
-
   /**
-   *
    * @param node
    * @param depth
    * @param graph
@@ -169,9 +142,7 @@ public class RandomForest extends Classifier implements Serializable
     return vertex;
     }
 
-
   /**
-   *
    * @param node
    * @param vertex
    * @param depth
@@ -200,9 +171,7 @@ public class RandomForest extends Classifier implements Serializable
             }
 
           for( Edge e : graph.edgesOf( vertex ) )
-            {
             e.setPredicateId( predicate_id );
-            }
           }
         else if( child.getNodeName().equals( "Node" ) )
           {
@@ -215,9 +184,7 @@ public class RandomForest extends Classifier implements Serializable
       }
     }
 
-
   /**
-   *
    * @param node
    * @return
    * @throws PatternException
@@ -231,31 +198,21 @@ public class RandomForest extends Classifier implements Serializable
     String eval = null;
 
     if( operator.equals( "greaterThan" ) )
-      {
       eval = field + " > " + value;
-      }
     else if( operator.equals( "lessOrEqual" ) )
-      {
       eval = field + " <= " + value;
-      }
     else
-      {
       throw new PatternException( "unknown operator: " + operator );
-      }
 
     if( !predicates.contains( eval ) )
-      {
       predicates.add( eval );
-      }
 
     Integer predicate_id = predicates.indexOf( eval );
 
     return predicate_id;
     }
 
-
   /**
-   *
    * @param fields
    * @return
    * @throws PatternException
@@ -263,15 +220,13 @@ public class RandomForest extends Classifier implements Serializable
   public String classifyTuple( String[] fields ) throws PatternException
     {
     Boolean[] pred_eval = evalPredicates( fields );
-    HashMap<String, Integer> votes = new HashMap<String, Integer>();
+    Map<String, Integer> votes = new HashMap<String, Integer>();
     String label = tallyVotes( pred_eval, votes );
 
     return label;
     }
 
-
   /**
-   *
    * @param fields
    * @return
    * @throws PatternException
@@ -314,16 +269,6 @@ public class RandomForest extends Classifier implements Serializable
         e.printStackTrace();
         throw new PatternException( "predicate did not compile", e );
         }
-      catch( ParseException e )
-        {
-        e.printStackTrace();
-        throw new PatternException( "predicate did not compile", e );
-        }
-      catch( ScanException e )
-        {
-        e.printStackTrace();
-        throw new PatternException( "predicate did not compile", e );
-        }
       catch( NumberFormatException e )
         {
         e.printStackTrace();
@@ -341,14 +286,12 @@ public class RandomForest extends Classifier implements Serializable
     return pred_eval;
     }
 
-
   /**
-   *
    * @param pred_eval
    * @param votes
    * @return
    */
-  public String tallyVotes( Boolean[] pred_eval, HashMap<String, Integer> votes )
+  public String tallyVotes( Boolean[] pred_eval, Map<String, Integer> votes )
     {
     String label = null;
     Integer winning_vote = 0;
@@ -360,13 +303,9 @@ public class RandomForest extends Classifier implements Serializable
       label = tree.traverse( pred_eval );
 
       if( !votes.containsKey( label ) )
-        {
         winning_vote = 1;
-        }
       else
-        {
         winning_vote = votes.get( label ) + 1;
-        }
 
       votes.put( label, winning_vote );
       }
