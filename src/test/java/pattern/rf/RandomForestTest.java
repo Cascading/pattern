@@ -15,13 +15,22 @@ import java.io.PrintStream;
 import java.util.HashMap;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pattern.ClassifierFactory;
 import pattern.PatternException;
 
+import cascading.tuple.Tuple;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 
 public class RandomForestTest
   {
+  /** Field LOG */
+  private static final Logger LOG = LoggerFactory.getLogger( RandomForestTest.class );
+
   /**
    * evaluate sample model + data from temp files
    *
@@ -43,7 +52,7 @@ public class RandomForestTest
    * @param text
    * @return
    */
-  protected String makeFile( String base, String suffix, String text )
+  protected String makeFile( String base, String suffix, String text ) throws IOException
     {
     String filename = null;
     PrintStream out = null;
@@ -54,15 +63,17 @@ public class RandomForestTest
       file.deleteOnExit();
 
       filename = file.getCanonicalFile().toString();
-      //System.out.format( "file: %s\n", filename );
+
+      if( LOG.isDebugEnabled() )
+        LOG.debug( "file: {}", filename );
 
       out = new PrintStream( new FileOutputStream( file ) );
       out.print( text );
       }
-    catch( IOException e )
+    catch( IOException exception )
       {
-      e.printStackTrace();
-      System.exit( -1 );
+      LOG.error( "could not create temp file", exception );
+      fail( "cannot set up test environment" );
       }
     finally
       {
@@ -93,31 +104,35 @@ public class RandomForestTest
       {
       if( count++ > 0 )
         {
-        // for each tuple in the data file...
+        // for each tuple in the reference data, knowing that "label"
+        // is in the first field...
 
-        String[] tuple = line.split( "\\t" );
-        String predicted = tuple[ tuple.length - 1 ];
+        String[] test_vector = line.split( "\\t" );
+        String predicted = test_vector[ test_vector.length - 1 ];
 
-        String[] fields = new String[ model.schema.size() ];
-        int i = 0;
+        Tuple values = new Tuple();
+        int i = 1;
 
         for( String key : model.schema.keySet() )
-          {
-          fields[ i ] = tuple[ i + 1 ];
-          i++;
-          }
+          values.addString( test_vector[ i++ ] );
 
         // compare classifier label vs. predicted
 
-        Boolean[] pred_eval = model.evalPredicates( fields );
+        model.prepareTuple( values );
+        model.evalPredicates( values );
+
         HashMap<String, Integer> votes = new HashMap<String, Integer>();
-        String label = model.tallyVotes( pred_eval, votes );
+        String label = model.tallyVotes( votes );
 
         if( !predicted.equals( label ) )
           {
-          System.err.format( "regression: classifier label [ %s ] does not match predicted [ %s ]\n", label, predicted );
-          System.err.println( line );
-          System.err.println( "votes: " + votes );
+          StringBuilder sb = new StringBuilder();
+
+          sb.append( String.format( "regression: classifier label [ %s ] does not match predicted [ %s ]\n", label, predicted ) )
+            .append( line ).append( "\n" )
+            .append( "votes: " ).append( votes );
+
+	  fail( sb.toString() );
           }
 
         assertEquals( "RandomForest", predicted, label );

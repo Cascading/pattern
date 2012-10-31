@@ -31,7 +31,7 @@ import cascading.tuple.Fields;
 public class Main
   {
   /** @param args  */
-  public static void main( String[] args )
+  public static void main( String[] args ) throws RuntimeException
     {
     String pmmlPath = args[ 0 ];
     String ordersPath = args[ 1 ];
@@ -49,22 +49,9 @@ public class Main
     Tap measureTap = new Hfs( new TextDelimited( true, "\t" ), measurePath );
     Tap trapTap = new Hfs( new TextDelimited( true, "\t" ), trapPath );
 
-    // build the classifier model from PMML
-    Classifier model = null;
-
-    try
-      {
-      model = ClassifierFactory.getClassifier( pmmlPath );
-      }
-    catch( PatternException e )
-      {
-      e.printStackTrace();
-      System.exit( -1 );
-      }
-
-    // define a "Classifier" to evaluate the orders
-    Pipe classifyPipe = new Pipe( "classify" );
-    classifyPipe = new Each( classifyPipe, Fields.ALL, new ClassifierFunction( new Fields( "score" ), model ), Fields.ALL );
+    // define a "Classifier" model from PMML to evaluate the orders
+    Classifier model = ClassifierFactory.getClassifier( pmmlPath );
+    Pipe classifyPipe = new Each( new Pipe( "classify" ), model.getFields(), new ClassifierFunction( new Fields( "score" ), model ), Fields.ALL );
 
     // verify the model results vs. what R predicted
     Pipe verifyPipe = new Pipe( "verify", classifyPipe );
@@ -86,6 +73,7 @@ public class Main
       .setName( "classify" )
       .addSource( classifyPipe, ordersTap )
       .addSink( classifyPipe, classifyTap )
+      .addTrap( classifyPipe, trapTap )
       .addTrap( verifyPipe, trapTap )
       .addTailSink( measurePipe, measureTap );
 

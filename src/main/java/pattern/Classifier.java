@@ -15,18 +15,39 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import cascading.tuple.Fields;
+import cascading.tuple.Tuple;
+
 
 public abstract class Classifier implements Serializable
   {
-  protected transient XPathReader reader;
   public Map<String, DataField> schema = new LinkedHashMap<String, DataField>();
 
+  protected transient XPathReader reader;
+
   /**
-   * @param fields
+   * Classify an input tuple, returning the predicted label.
+   *
+   * @param values
    * @return
    * @throws PatternException
    */
-  public abstract String classifyTuple( String[] fields ) throws PatternException;
+  public abstract String classifyTuple( Tuple values ) throws PatternException;
+
+  /**
+   * Returns a Fields data structure.
+   *
+   * @return
+   */
+  public Fields getFields()
+    {
+    Fields fields = new Fields();
+
+    for( String name : schema.keySet() )
+      fields = fields.append( new Fields( name ) );
+
+    return fields;
+    }
 
   /** Build the data dictionary */
   protected void buildSchema()

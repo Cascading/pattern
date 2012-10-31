@@ -7,7 +7,7 @@
 package pattern;
 
 
-public class PatternException extends Exception
+public class PatternException extends RuntimeException
   {
   /**
    *

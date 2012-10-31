@@ -15,12 +15,19 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+import pattern.PatternException;
 
 
 public class XPathReader
   {
+  /** Field LOG */
+  private static final Logger LOG = LoggerFactory.getLogger( XPathReader.class );
+
   private Document xmlDocument;
   private XPath xPath;
 
@@ -32,17 +39,20 @@ public class XPathReader
       xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse( xmlFile );
       xPath = XPathFactory.newInstance().newXPath();
       }
-    catch( IOException e )
+    catch( IOException exception )
       {
-      e.printStackTrace();
+      LOG.error( "could not read PMML file", exception );
+      throw new PatternException( " could not read PMML file", exception );
       }
-    catch( SAXException e )
+    catch( SAXException exception )
       {
-      e.printStackTrace();
+      LOG.error( "could not parse PMML file", exception );
+      throw new PatternException( " could not parse PMML file", exception );
       }
-    catch( ParserConfigurationException e )
+    catch( ParserConfigurationException exception )
       {
-      e.printStackTrace();
+      LOG.error( "could not configure parser for PMML file", exception );
+      throw new PatternException( " could not configure parser for PMML file", exception );
       }
     }
 
@@ -53,15 +63,21 @@ public class XPathReader
    */
   public Object read( String expression, QName returnType )
     {
+    Object result = null;
+
     try
       {
       XPathExpression xPathExpression = xPath.compile( expression );
-      return xPathExpression.evaluate( xmlDocument, returnType );
+      result = xPathExpression.evaluate( xmlDocument, returnType );
       }
-    catch( XPathExpressionException e )
+    catch( XPathExpressionException exception )
       {
-      e.printStackTrace();
-      return null;
+      String message = String.format( "could not evaluate XPath [ %s ] from doc root", expression );
+      LOG.error( message, exception );
+      throw new PatternException( message, exception );
+      }
+    finally {
+      return result;
       }
     }
 
@@ -73,15 +89,21 @@ public class XPathReader
    */
   public Object read( Object item, String expression, QName returnType )
     {
+    Object result = null;
+
     try
       {
       XPathExpression xPathExpression = xPath.compile( expression );
-      return xPathExpression.evaluate( item, returnType );
+      result = xPathExpression.evaluate( item, returnType );
       }
-    catch( XPathExpressionException e )
+    catch( XPathExpressionException exception )
       {
-      e.printStackTrace();
-      return null;
+      String message = String.format( "could not evaluate XPath [ %s ] from %s", expression, item.toString() );
+      LOG.error( message, exception );
+      throw new PatternException( message, exception );
+      }
+    finally {
+      return result;
       }
     }
   }

@@ -40,9 +40,31 @@ model. Tuples which fail that assertion get trapped into
 Also, the _confusion matrix_ shown in `output/measure/part*` should
 match the one logged in `model.log` from baseline generated in _R_.
 
+
+Usage
+-----
+
 Alternatively, if you just want to re-use this assembly for your own
 Cascading app, you can remove `verifyPipe` and `measurePipe` from the
-sample code.
+sample code and copy it into your app.
+
+The following snippet shows how to generate a PMML file `sample.xml`
+from a Random Forest model trained in R:
+
+    f <- as.formula("as.factor(label) ~ .")
+    fit <- randomForest(f, data_train, ntree=50)
+    saveXML(pmml(fit), file="sample.xml")
+
+
+Then to use the PMML file in your Java code, referenced as a command
+line argument called `pmmlPath`:
+
+    // define a "Classifier" model from PMML to evaluate the orders
+    Classifier model = ClassifierFactory.getClassifier( pmmlPath );
+    Pipe classifyPipe = new Each( new Pipe( "classify" ), model.getFields(), new ClassifierFunction( new Fields( "score" ), model ), Fields.ALL );
+
+Now when you run that Cascading app, provide a reference to
+`sample.xml` for the `pmmlPath` argument.
 
 
 PMML Resources

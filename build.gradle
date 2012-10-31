@@ -24,6 +24,10 @@ dependencies {
   testCompile( 'org.apache.hadoop:hadoop-core:1.0.3' )
   testCompile( 'org.apache.hadoop:hadoop-test:1.0.3' )
   testCompile( 'junit:junit:4.8.+' )
+
+  compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
+  runtime group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.6.1'
+  runtime group: 'log4j', name: 'log4j', version: '1.2.16'
 }
 
 jar {

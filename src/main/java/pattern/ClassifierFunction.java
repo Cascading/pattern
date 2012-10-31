@@ -36,25 +36,9 @@ public class ClassifierFunction extends BaseOperation implements Function
   public void operate( FlowProcess flowProcess, FunctionCall functionCall )
     {
     TupleEntry argument = functionCall.getArguments();
-    String[] fields = new String[ model.schema.size() ];
-    int i = 0;
+    String label = model.classifyTuple( argument.getTuple() );
 
-    for( String name : model.schema.keySet() )
-      fields[ i++ ] = argument.getString( name );
-
-    try
-      {
-      Tuple result = new Tuple();
-      String label = model.classifyTuple( fields );
-
-      result.add( label );
-      functionCall.getOutputCollector().add( result );
-      }
-    catch( PatternException e )
-      {
-      e.printStackTrace();
-      System.exit( -1 );
-      }
+    functionCall.getOutputCollector().add( new Tuple( label ) );
     }
   }
 

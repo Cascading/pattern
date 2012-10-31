@@ -10,10 +10,15 @@ import java.io.Serializable;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class Tree implements Serializable
   {
+  /** Field LOG */
+  private static final Logger LOG = LoggerFactory.getLogger( Tree.class );
+
   public String tree_name;
   public Vertex root;
   public DirectedGraph<Vertex, Edge> graph = new DefaultDirectedGraph<Vertex, Edge>( Edge.class );
@@ -23,9 +28,8 @@ public class Tree implements Serializable
     {
     tree_name = "tree_" + id;
 
-    /** /
-     System.out.println( tree_name );
-     /* */
+    if( LOG.isDebugEnabled() )
+      LOG.debug( tree_name );
     }
 
   /** @param root  */
@@ -72,19 +76,19 @@ public class Tree implements Serializable
 
     if( score != null )
       {
-      /** /
-       System.out.println( "  then " + score );
-       /* */
+      if( LOG.isDebugEnabled() )
+        LOG.debug( "  then " + score );
 
       return score;
       }
 
     for( Edge edge : graph.outgoingEdgesOf( vertex ) )
       {
-      /** /
-       System.out.println( edge );
-       System.out.println( " if pred[ " + edge.getPredicateId() + " ]:" + pred[ edge.getPredicateId() ] );
-       /* */
+      if( LOG.isDebugEnabled() )
+      {
+        LOG.debug( edge.toString() );
+        LOG.debug( " if pred_eval[ " + edge.getPredicateId() + " ]:" + pred_eval[ edge.getPredicateId() ] );
+      }
 
       if( pred_eval[ edge.getPredicateId() ] )
         {
