@@ -25,10 +25,10 @@ public class ClassifierFactory
     XPathReader reader = new XPathReader( pmml_file );
     Classifier classifier = null;
 
-    String expr = "/PMML/MiningModel/@modelName";
+    String expr = "/PMML/MiningModel/Segmentation/Segment/TreeModel/@algorithmName";
     String model_type = (String) reader.read( expr, XPathConstants.STRING );
 
-    if( "randomForest_Model".equals( model_type ) )
+    if( "randomForest".equals( model_type ) )
       classifier = new RandomForest( reader );
     else
       throw new PatternException( "unsupported model type: " + model_type );
