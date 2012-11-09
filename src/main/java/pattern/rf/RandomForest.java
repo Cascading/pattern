@@ -37,12 +37,10 @@ public class RandomForest extends Classifier implements Serializable
   public List<String> predicates = new ArrayList<String>();
   public List<Tree> forest = new ArrayList<Tree>();
 
-  protected transient Boolean[] pred_eval = null;
-  protected transient ExpressionEvaluator[] ee_list = null;
-  protected transient String[] param_names;
-  protected transient Class[] param_types;
-  protected transient Object[] param_values;
-  protected transient Map<String, Integer> votes;
+  protected Object[] param_values;
+  protected Boolean[] pred_eval;
+  protected ExpressionEvaluator[] ee_list;
+  protected Map<String, Integer> votes;
 
   /**
    * @param reader
@@ -56,69 +54,58 @@ public class RandomForest extends Classifier implements Serializable
     }
 
   /**
+   * Prepare to classify with this model. Called immediately before
+   * the enclosing Operation instance is put into play processing
+   * Tuples.
+   */
+  @Override
+  public void prepare()
+    {
+    // handle the loop-invariant preparations here,
+    // in lieu of incurring overhead for each tuple
+
+    String[] param_names = schema.getParamNames();
+    Class[] param_types = schema.getParamTypes();
+
+    pred_eval = new Boolean[ predicates.size() ];
+    ee_list = new ExpressionEvaluator[ predicates.size() ];
+
+    for( int i = 0; i < predicates.size(); i++ )
+      try
+        {
+          ee_list[ i ] = new ExpressionEvaluator( predicates.get( i ), boolean.class, param_names, param_types, new Class[ 0 ], null );
+        }
+      catch( NullPointerException exception )
+        {
+        String message = String.format( "predicate [ %s ] failed", predicates.get( i ) );
+        LOG.error( message, exception );
+        throw new PatternException( message, exception );
+        }
+      catch( CompileException exception )
+        {
+        String message = String.format( "predicate [ %s ] did not compile", predicates.get( i ) );
+        LOG.error( message, exception );
+        throw new PatternException( message, exception );
+        }
+
+    param_values = new Object[ schema.size() ];
+    votes = new HashMap<String, Integer>();
+    }
+
+  /**
    * Classify an input tuple, returning the predicted label.
    *
    * @param values
    * @return
    * @throws PatternException
    */
+  @Override
   public String classifyTuple( Tuple values ) throws PatternException
     {
-    prepareTuple( values );
     evalPredicates( values );
+    votes.clear();
 
     return tallyVotes( votes );
-    }
-
-  /**
-   * Handle the preparations for classifying tuples, both the
-   * loop-invariant cases (once) and those required for each tuple.
-   *
-   * @param values
-   */
-  protected void prepareTuple( Tuple values )
-    {
-    if( pred_eval == null )
-      {
-      // handle the loop-invariant preparations here,
-      // in lieu of incurring overhead for each tuple
-
-      pred_eval = new Boolean[ predicates.size() ];
-      ee_list = new ExpressionEvaluator[ predicates.size() ];
-
-      param_names = schema.keySet().toArray( new String[ 0 ] );
-      param_types = new Class[ values.size() ];
-      param_values = new Object[ values.size() ];
-
-      votes = new HashMap<String, Integer>();
-
-      for( int i = 0; i < schema.size(); i++ )
-        param_types[ i ] = double.class;
-
-      for( int i = 0; i < predicates.size(); i++ )
-        try
-          {
-            ee_list[ i ] = new ExpressionEvaluator( predicates.get( i ), boolean.class, param_names, param_types, new Class[ 0 ], null );
-          }
-        catch( NullPointerException exception )
-          {
-          String message = String.format( "predicate [ %s ] failed", predicates.get( i ) );
-          LOG.error( message, exception );
-          throw new PatternException( message, exception );
-          }
-        catch( CompileException exception )
-          {
-          String message = String.format( "predicate [ %s ] did not compile", predicates.get( i ) );
-          LOG.error( message, exception );
-          throw new PatternException( message, exception );
-          }
-      }
-    else
-      {
-      // handle the required preparations before evaluating each tuple
-
-      votes.clear();
-      }
     }
 
   /**
@@ -129,16 +116,7 @@ public class RandomForest extends Classifier implements Serializable
    */
   protected void evalPredicates( Tuple values ) throws PatternException
     {
-    for( int i = 0; i < param_values.length; i++ )
-      try
-        {
-        param_values[ i ] = values.getDouble( i );
-        }
-      catch( NumberFormatException exception )
-        {
-        LOG.error( "tuple format is bad", exception );
-        throw new PatternException( "tuple format is bad", exception );
-        }
+    schema.setParamValues( values, param_values );
 
     for( int i = 0; i < predicates.size(); i++ )
       try
@@ -306,6 +284,7 @@ public class RandomForest extends Classifier implements Serializable
     }
 
   /** @return  */
+  @Override
   public String toString()
     {
     StringBuilder buf = new StringBuilder();

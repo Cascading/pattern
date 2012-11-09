@@ -72,8 +72,8 @@ public class Main
     FlowDef flowDef = FlowDef.flowDef()
       .setName( "classify" )
       .addSource( classifyPipe, ordersTap )
-      .addSink( classifyPipe, classifyTap )
       .addTrap( classifyPipe, trapTap )
+      .addSink( classifyPipe, classifyTap )
       .addTrap( verifyPipe, trapTap )
       .addTailSink( measurePipe, measureTap );
 

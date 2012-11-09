@@ -10,14 +10,38 @@ import cascading.flow.FlowProcess;
 import cascading.operation.BaseOperation;
 import cascading.operation.Function;
 import cascading.operation.FunctionCall;
+import cascading.operation.OperationCall;
 import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
 
 
-public class ClassifierFunction extends BaseOperation implements Function
+public class ClassifierFunction extends BaseOperation<ClassifierFunction.Context> implements Function<ClassifierFunction.Context>
   {
   public Classifier model;
+
+  /** Class Context is used to hold intermediate values. */
+  protected static class Context
+    {
+    Tuple tuple = Tuple.size( 1 );
+    long count = 0L;
+
+    public Context reset()
+      {
+      count = 0L;
+      System.out.println("CALL reset()");
+
+      return this;
+      }
+
+    public Tuple result()
+      {
+      tuple.set( 0, count );
+      System.out.println("CALL result()");
+
+      return tuple;
+      }
+    }
 
   /**
    * @param fieldDeclaration
@@ -31,9 +55,21 @@ public class ClassifierFunction extends BaseOperation implements Function
 
   /**
    * @param flowProcess
+   * @param operationCall
+   */
+  @Override
+  public void prepare( FlowProcess flowProcess, OperationCall<ClassifierFunction.Context> operationCall )
+    {
+    super.prepare( flowProcess, operationCall );
+    model.prepare();
+    }
+
+  /**
+   * @param flowProcess
    * @param functionCall
    */
-  public void operate( FlowProcess flowProcess, FunctionCall functionCall )
+  @Override
+  public void operate( FlowProcess flowProcess, FunctionCall<ClassifierFunction.Context> functionCall )
     {
     TupleEntry argument = functionCall.getArguments();
     String label = model.classifyTuple( argument.getTuple() );

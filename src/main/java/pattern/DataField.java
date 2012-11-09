@@ -25,6 +25,12 @@ public class DataField implements Serializable
     }
 
   /** @return  */
+  public Class getClassType()
+    {
+    return double.class;
+    }
+
+  /** @return  */
   public String toString()
     {
     return name + ":" + type;

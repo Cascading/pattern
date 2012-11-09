@@ -7,8 +7,6 @@
 package pattern;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import javax.xml.xpath.XPathConstants;
 
 import org.w3c.dom.Element;
@@ -21,9 +19,18 @@ import cascading.tuple.Tuple;
 
 public abstract class Classifier implements Serializable
   {
-  public Map<String, DataField> schema = new LinkedHashMap<String, DataField>();
+  public Schema schema = new Schema();
 
   protected transient XPathReader reader;
+
+  /**
+   * Prepare to classify with this model. Called immediately before
+   * the enclosing Operation instance is put into play processing
+   * Tuples.
+   *
+   * @param values
+   */
+  public abstract void prepare();
 
   /**
    * Classify an input tuple, returning the predicted label.

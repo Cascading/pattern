@@ -118,7 +118,7 @@ public class RandomForestTest
 
         // compare classifier label vs. predicted
 
-        model.prepareTuple( values );
+        model.prepare();
         model.evalPredicates( values );
 
         HashMap<String, Integer> votes = new HashMap<String, Integer>();
