@@ -26,6 +26,7 @@ public class Edge extends DefaultEdge
     }
 
   /** @return  */
+  @Override
   public String toString()
     {
     String base = super.toString();

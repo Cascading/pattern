@@ -49,7 +49,7 @@ public class RandomForest extends Classifier implements Serializable
   public RandomForest( XPathReader reader ) throws PatternException
     {
     this.reader = reader;
-    buildSchema();
+    schema.parseDictionary( reader );
     buildForest();
     }
 

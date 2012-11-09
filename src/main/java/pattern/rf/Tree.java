@@ -50,12 +50,6 @@ public class Tree implements Serializable
     return graph;
     }
 
-  /** @return  */
-  public String toString()
-    {
-    return tree_name + ": " + graph;
-    }
-
   /**
    * @param pred_eval
    * @return
@@ -102,5 +96,12 @@ public class Tree implements Serializable
       }
 
     return null;
+    }
+
+  /** @return  */
+  @Override
+  public String toString()
+    {
+    return tree_name + ": " + graph;
     }
   }

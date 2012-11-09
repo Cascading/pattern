@@ -32,6 +32,7 @@ public class Vertex implements Serializable
     }
 
   /** @return  */
+  @Override
   public String toString()
     {
     if( score != null )
