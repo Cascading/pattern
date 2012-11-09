@@ -26,11 +26,13 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
   /** Field LOG */
   private static final Logger LOG = LoggerFactory.getLogger( Schema.class );
 
+  /** Field label_field - metadata of the label to be produced by the classifier */
   public DataField label_field;
 
   /**
    * Parse the data dictionary from PMML
    *
+   * @param reader
    * @throws PatternException
    */
   public void parseDictionary( XPathReader reader ) throws PatternException
@@ -50,7 +52,7 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
 
         if( !containsKey( name ) )
           {
-          DataField df = new DataField( name, op_type, data_type );
+          DataField df = DataFieldFactory.getDataField( reader, node, name, op_type, data_type );
           put( name, df );
           LOG.debug( "PMML add DataField: " + df );
           }
@@ -93,7 +95,7 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
   /**
    * Returns a Fields data structure.
    *
-   * @return
+   * @return Fields
    */
   public Fields getFields()
     {
@@ -108,7 +110,7 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
   /**
    * Returns the expected name for each field in the Tuple, to be
    * used as Janino parameters.
-   * @return
+   * @return String[]
    */
   public String[] getParamNames()
     {
@@ -118,7 +120,7 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
   /**
    * Returns the expected class for each field in the Tuple, to be
    * used as Janino parameters.
-   * @return
+   * @return Class[]
    */
   public Class[] getParamTypes()
     {

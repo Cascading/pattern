@@ -8,55 +8,35 @@ package pattern;
 
 import java.io.Serializable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.w3c.dom.Node;
 
 import cascading.tuple.Tuple;
 
 
-public class DataField implements Serializable
+public abstract class DataField implements Serializable
   {
-  /** Field LOG */
-  private static final Logger LOG = LoggerFactory.getLogger( DataField.class );
-
   public String name;
   public String op_type;
   public String data_type;
 
   /**
-   * @param name
-   * @param op_type
-   * @param data_type
+   * Does nothing. May override if a DataField subclass needs to parse additional info from PMML.
+   *
+   * @param reader
+   * @param node
    */
-  public DataField( String name, String op_type, String data_type )
+  public void parse( XPathReader reader, Node node )
     {
-    this.name = name;
-    this.op_type = op_type;
-    this.data_type = data_type;
     }
 
   /** @return  */
-  public Class getClassType()
-    {
-    return double.class;
-    }
+  public abstract Class getClassType();
 
   /**
    * @return
    * @throws PatternException
    */
-  public Object getValue( Tuple values, int i ) throws PatternException
-    {
-    try
-      {
-      return values.getDouble( i );
-      }
-    catch( NumberFormatException exception )
-      {
-      LOG.error( "tuple format is bad", exception );
-      throw new PatternException( "tuple format is bad", exception );
-      }
-    }
+  public abstract Object getValue( Tuple values, int i ) throws PatternException;
 
   /** @return  */
   @Override
