@@ -22,7 +22,9 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import pattern.Classifier;
+import pattern.DataField;
 import pattern.PatternException;
 import pattern.XPathReader;
 
@@ -73,6 +75,7 @@ public class RandomForest extends Classifier implements Serializable
     for( int i = 0; i < predicates.size(); i++ )
       try
         {
+          LOG.debug( "eval: " + predicates.get( i ) );
           ee_list[ i ] = new ExpressionEvaluator( predicates.get( i ), boolean.class, param_names, param_types, new Class[ 0 ], null );
         }
       catch( NullPointerException exception )
@@ -96,7 +99,7 @@ public class RandomForest extends Classifier implements Serializable
    * Classify an input tuple, returning the predicted label.
    *
    * @param values
-   * @return
+   * @return String
    * @throws PatternException
    */
   @Override
@@ -135,7 +138,7 @@ public class RandomForest extends Classifier implements Serializable
    * Tally the vote for each tree in the forest, to determine the winning label.
    *
    * @param votes
-   * @return
+   * @return String
    */
   protected String tallyVotes( Map<String, Integer> votes )
     {
@@ -204,7 +207,7 @@ public class RandomForest extends Classifier implements Serializable
   /**
    * @param node
    * @param graph
-   * @return
+   * @return Vertex
    */
   protected Vertex makeVertex( Element node, DirectedGraph<Vertex, Edge> graph )
     {
@@ -231,7 +234,7 @@ public class RandomForest extends Classifier implements Serializable
 
       if( child.getNodeType() == Node.ELEMENT_NODE )
         {
-        if( child.getNodeName().equals( "SimplePredicate" ) )
+        if( "SimplePredicate".equals( child.getNodeName() ) || "SimpleSetPredicate".equals( child.getNodeName() ) )
           {
           Integer predicate_id = makePredicate( (Element) child );
 
@@ -244,7 +247,7 @@ public class RandomForest extends Classifier implements Serializable
           for( Edge e : graph.edgesOf( vertex ) )
             e.setPredicateId( predicate_id );
           }
-        else if( child.getNodeName().equals( "Node" ) )
+        else if( "Node".equals( child.getNodeName() ) )
           {
           Vertex child_vertex = makeVertex( (Element) child, graph );
           Edge edge = graph.addEdge( vertex, child_vertex );
@@ -257,23 +260,13 @@ public class RandomForest extends Classifier implements Serializable
 
   /**
    * @param node
-   * @return
+   * @return Integer
    * @throws PatternException
    */
   protected Integer makePredicate( Element node ) throws PatternException
     {
     String field = node.getAttribute( "field" );
-    String operator = node.getAttribute( "operator" );
-    String value = node.getAttribute( "value" );
-
-    String eval = null;
-
-    if( operator.equals( "greaterThan" ) )
-      eval = field + " > " + value;
-    else if( operator.equals( "lessOrEqual" ) )
-      eval = field + " <= " + value;
-    else
-      throw new PatternException( "unknown operator: " + operator );
+    String eval = schema.get( field ).getEval( reader, node );
 
     if( !predicates.contains( eval ) )
       predicates.add( eval );
@@ -283,7 +276,7 @@ public class RandomForest extends Classifier implements Serializable
     return predicate_id;
     }
 
-  /** @return  */
+  /** @return String  */
   @Override
   public String toString()
     {

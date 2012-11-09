@@ -8,6 +8,7 @@ package pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 
 import cascading.tuple.Tuple;
 
@@ -27,6 +28,28 @@ public class ContinuousDataField extends DataField
     this.name = name;
     this.op_type = op_type;
     this.data_type = data_type;
+    }
+
+  /**
+   * @param reader
+   * @param node
+   * @return String
+   * @throws PatternException
+   */
+  public String getEval( XPathReader reader, Element node ) throws PatternException
+    {
+    String operator = node.getAttribute( "operator" );
+    String value = node.getAttribute( "value" );
+    String eval = null;
+
+    if( operator.equals( "greaterThan" ) )
+      eval = name + " > " + value;
+    else if( operator.equals( "lessOrEqual" ) )
+      eval = name + " <= " + value;
+    else
+      throw new PatternException( "unknown operator: " + operator );
+
+    return eval;
     }
 
   /** @return Class  */

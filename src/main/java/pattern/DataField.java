@@ -8,6 +8,7 @@ package pattern;
 
 import java.io.Serializable;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import cascading.tuple.Tuple;
@@ -28,6 +29,14 @@ public abstract class DataField implements Serializable
   public void parse( XPathReader reader, Node node )
     {
     }
+
+  /**
+   * @param reader
+   * @param node
+   * @return String
+   * @throws PatternException
+   */
+  public abstract String getEval( XPathReader reader, Element node ) throws PatternException;
 
   /** @return  */
   public abstract Class getClassType();

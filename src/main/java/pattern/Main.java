@@ -69,13 +69,13 @@ public class Main
     measurePipe = new Every( measurePipe, Fields.ALL, new Count(), Fields.ALL );
 
     // connect the taps, pipes, etc., into a flow
-    FlowDef flowDef = FlowDef.flowDef()
-      .setName( "classify" )
+    FlowDef flowDef = FlowDef.flowDef().setName( "classify" )
       .addSource( classifyPipe, ordersTap )
       .addTrap( classifyPipe, trapTap )
       .addSink( classifyPipe, classifyTap )
       .addTrap( verifyPipe, trapTap )
-      .addTailSink( measurePipe, measureTap );
+      .addTailSink( measurePipe, measureTap )
+      ;
 
     // set to DebugLevel.VERBOSE for trace, or DebugLevel.NONE in production
     flowDef.setDebugLevel( DebugLevel.NONE );

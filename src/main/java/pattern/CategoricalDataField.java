@@ -60,10 +60,41 @@ public class CategoricalDataField extends DataField
       }
     }
 
+  /**
+   * @param reader
+   * @param node
+   * @return String
+   * @throws PatternException
+   */
+  public String getEval( XPathReader reader, Element node ) throws PatternException
+    {
+    String operator = node.getAttribute( "booleanOperator" );
+    String eval = null;
+
+    String expr = "./Array[1]";
+    NodeList node_list = (NodeList) reader.read( node, expr, XPathConstants.NODESET );
+    Element child = (Element) node_list.item( 0 );
+
+    PortableBitSet bits = new PortableBitSet( categories.size() );
+    String value = child.getTextContent( );
+
+    value = value.substring( 1, value.length() - 1 );
+
+    for ( String s : value.split( "\\\"\\s+\\\"" ) )
+      bits.set( categories.indexOf( s ) );
+
+    if( operator.equals( "isIn" ) )
+      eval = String.format( "pattern.PortableBitSet.isIn( \"%s\", %s )", bits.toString(), name );
+    else
+      throw new PatternException( "unknown operator: " + operator );
+
+    return eval;
+    }
+
   /** @return Class */
   public Class getClassType()
     {
-    return String.class;
+    return int.class;
     }
 
   /**
@@ -73,6 +104,10 @@ public class CategoricalDataField extends DataField
    */
   public Object getValue( Tuple values, int i )
     {
-    return values.getString( i );
+    String field_value = values.getString( i );
+    int bit_index = categories.indexOf( field_value );
+
+    LOG.debug( String.format( "%s @ %d | %s", field_value, bit_index, categories) );
+    return bit_index;
     }
   }
