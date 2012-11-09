@@ -24,20 +24,10 @@ public class ClassifierFunction extends BaseOperation<ClassifierFunction.Context
   protected static class Context
     {
     Tuple tuple = Tuple.size( 1 );
-    long count = 0L;
 
-    public Context reset()
+    public Tuple result( String label )
       {
-      count = 0L;
-      System.out.println("CALL reset()");
-
-      return this;
-      }
-
-    public Tuple result()
-      {
-      tuple.set( 0, count );
-      System.out.println("CALL result()");
+      tuple.set( 0, label );
 
       return tuple;
       }
@@ -61,6 +51,7 @@ public class ClassifierFunction extends BaseOperation<ClassifierFunction.Context
   public void prepare( FlowProcess flowProcess, OperationCall<ClassifierFunction.Context> operationCall )
     {
     super.prepare( flowProcess, operationCall );
+    operationCall.setContext( new ClassifierFunction.Context() );
     model.prepare();
     }
 
@@ -74,7 +65,6 @@ public class ClassifierFunction extends BaseOperation<ClassifierFunction.Context
     TupleEntry argument = functionCall.getArguments();
     String label = model.classifyTuple( argument.getTuple() );
 
-    functionCall.getOutputCollector().add( new Tuple( label ) );
+    functionCall.getOutputCollector().add( functionCall.getContext().result( label ) );
     }
   }
-
