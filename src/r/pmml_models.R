@@ -48,6 +48,6 @@ print(confuse)
 
 write.table(data, file=paste(dat_folder, "sample.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
 
-## export model to PMML
+## export RF model to PMML
 
-saveXML(pmml(fit), file=paste(dat_folder, "sample.xml", sep="/"))
+saveXML(pmml(fit), file=paste(dat_folder, "sample.rf.xml", sep="/"))
