@@ -4,7 +4,7 @@
  * Project and contact information: http://www.concurrentinc.com/
  */
 
-package pattern;
+package pattern.datafield;
 
 import java.util.ArrayList;
 import javax.xml.xpath.XPathConstants;
@@ -16,6 +16,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import cascading.tuple.Tuple;
+import pattern.PatternException;
+import pattern.XPathReader;
 
 
 public class CategoricalDataField extends DataField

@@ -26,10 +26,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
-public class RandomForestTest
+public class RandomForestClassifierTest
   {
   /** Field LOG */
-  private static final Logger LOG = LoggerFactory.getLogger( RandomForestTest.class );
+  private static final Logger LOG = LoggerFactory.getLogger( RandomForestClassifierTest.class );
 
   /**
    * evaluate sample model + data from temp files
@@ -42,7 +42,7 @@ public class RandomForestTest
     String pmml_file = makeFile( "rf_test", ".xml", pmml_text );
     String data_file = makeFile( "rf_test", ".tsv", data_text );
 
-    RandomForest model = (RandomForest) ClassifierFactory.getClassifier( pmml_file );
+    RandomForestClassifier model = (RandomForestClassifier) ClassifierFactory.getClassifier( pmml_file );
     eval_data( data_file, model );
     }
 
@@ -93,7 +93,7 @@ public class RandomForestTest
    * @throws IOException
    * @throws PatternException
    */
-  protected void eval_data( String data_file, RandomForest model ) throws IOException, PatternException
+  protected void eval_data( String data_file, RandomForestClassifier model ) throws IOException, PatternException
     {
     FileReader fr = new FileReader( data_file );
     BufferedReader br = new BufferedReader( fr );

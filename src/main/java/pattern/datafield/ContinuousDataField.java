@@ -4,13 +4,15 @@
  * Project and contact information: http://www.concurrentinc.com/
  */
 
-package pattern;
+package pattern.datafield;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import cascading.tuple.Tuple;
+import pattern.PatternException;
+import pattern.XPathReader;
 
 
 public class ContinuousDataField extends DataField

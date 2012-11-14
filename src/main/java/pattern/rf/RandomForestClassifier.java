@@ -23,18 +23,17 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import cascading.tuple.Tuple;
 import pattern.Classifier;
-import pattern.DataField;
 import pattern.PatternException;
 import pattern.XPathReader;
+import pattern.datafield.DataField;
 
-import cascading.tuple.Tuple;
 
-
-public class RandomForest extends Classifier implements Serializable
+public class RandomForestClassifier extends Classifier implements Serializable
   {
   /** Field LOG */
-  private static final Logger LOG = LoggerFactory.getLogger( RandomForest.class );
+  private static final Logger LOG = LoggerFactory.getLogger( RandomForestClassifier.class );
 
   public List<String> predicates = new ArrayList<String>();
   public List<Tree> forest = new ArrayList<Tree>();
@@ -48,7 +47,7 @@ public class RandomForest extends Classifier implements Serializable
    * @param reader
    * @throws PatternException
    */
-  public RandomForest( XPathReader reader ) throws PatternException
+  public RandomForestClassifier( XPathReader reader ) throws PatternException
     {
     this.reader = reader;
     schema.parseDictionary( reader );

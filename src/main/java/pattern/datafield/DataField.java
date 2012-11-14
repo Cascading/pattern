@@ -4,7 +4,7 @@
  * Project and contact information: http://www.concurrentinc.com/
  */
 
-package pattern;
+package pattern.datafield;
 
 import java.io.Serializable;
 
@@ -12,6 +12,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import cascading.tuple.Tuple;
+import pattern.PatternException;
+import pattern.XPathReader;
 
 
 public abstract class DataField implements Serializable

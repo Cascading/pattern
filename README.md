@@ -11,6 +11,19 @@ Currently supported algorithms for PMML include:
 
  * [Random Forest](http://en.wikipedia.org/wiki/Random_forest)
 
+This is intended to complement other ML libraries atop Cascading, such as the excellent
+[Scalding Matrix API](https://github.com/twitter/scalding/wiki/Matrix-API-Reference).
+
+
+Project Status
+--------------
+
+One struggles with the notion of calling this an _alpha_ release.
+More like a _petroglyph_ release; very very early.
+
+We wanted to get the code "out there" early, to initiate a dialog and
+collect feedback about using PMML and Cascading together.
+
 
 Build Instructions
 ------------------

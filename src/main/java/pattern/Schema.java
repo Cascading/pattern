@@ -19,6 +19,8 @@ import org.w3c.dom.NodeList;
 
 import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
+import pattern.datafield.DataField;
+import pattern.datafield.DataFieldFactory;
 
 
 public class Schema extends LinkedHashMap<String, DataField> implements Serializable

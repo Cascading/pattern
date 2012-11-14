@@ -4,11 +4,14 @@
  * Project and contact information: http://www.concurrentinc.com/
  */
 
-package pattern;
+package pattern.datafield;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
+
+import pattern.PatternException;
+import pattern.XPathReader;
 
 
 public class DataFieldFactory
