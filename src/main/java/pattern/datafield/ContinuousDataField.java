@@ -44,10 +44,18 @@ public class ContinuousDataField extends DataField
     String value = node.getAttribute( "value" );
     String eval = null;
 
-    if( operator.equals( "greaterThan" ) )
-      eval = name + " > " + value;
+    if( operator.equals( "equal" ) )
+      eval = name + " == " + value;
+    else if( operator.equals( "notEqual" ) )
+      eval = name + " != " + value;
+    else if( operator.equals( "lessThan" ) )
+      eval = name + " < " + value;
     else if( operator.equals( "lessOrEqual" ) )
       eval = name + " <= " + value;
+    else if( operator.equals( "greaterThan" ) )
+      eval = name + " > " + value;
+    else if( operator.equals( "greaterOrEqual" ) )
+      eval = name + " >= " + value;
     else
       throw new PatternException( "unknown operator: " + operator );
 

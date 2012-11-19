@@ -1,6 +1,7 @@
 build/
-output/
 dot/
+etc/
+output/
 .gradle
 *.class
 *.log
