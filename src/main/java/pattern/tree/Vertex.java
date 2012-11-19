@@ -4,7 +4,7 @@
  * Project and contact information: http://www.concurrentinc.com/
  */
 
-package pattern.rf;
+package pattern.tree;
 
 import java.io.Serializable;
 

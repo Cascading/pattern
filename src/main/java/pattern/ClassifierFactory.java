@@ -8,7 +8,7 @@ package pattern;
 
 import javax.xml.xpath.XPathConstants;
 
-import pattern.rf.RandomForestClassifier;
+import pattern.tree.TreeClassifier;
 
 
 public class ClassifierFactory
@@ -29,7 +29,7 @@ public class ClassifierFactory
     String model_type = (String) reader.read( expr, XPathConstants.STRING );
 
     if( "classification".equals( model_type ) )
-      classifier = new RandomForestClassifier( reader );
+      classifier = new TreeClassifier( reader );
     else
       throw new PatternException( "unsupported model type: " + model_type );
 

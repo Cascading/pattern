@@ -4,7 +4,7 @@
  * Project and contact information: http://www.concurrentinc.com/
  */
 
-package pattern.rf;
+package pattern.tree;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,10 +26,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
-public class RandomForestClassifierTest
+public class TreeClassifierTest
   {
   /** Field LOG */
-  private static final Logger LOG = LoggerFactory.getLogger( RandomForestClassifierTest.class );
+  private static final Logger LOG = LoggerFactory.getLogger( TreeClassifierTest.class );
 
   /**
    * evaluate sample model + data from temp files
@@ -39,10 +39,10 @@ public class RandomForestClassifierTest
   @Test
   public void testMain() throws Exception
     {
-    String pmml_file = makeFile( "rf_test", ".xml", pmml_text );
-    String data_file = makeFile( "rf_test", ".tsv", data_text );
+    String pmml_file = makeFile( "tree_test", ".xml", pmml_text );
+    String data_file = makeFile( "tree_test", ".tsv", data_text );
 
-    RandomForestClassifier model = (RandomForestClassifier) ClassifierFactory.getClassifier( pmml_file );
+    TreeClassifier model = (TreeClassifier) ClassifierFactory.getClassifier( pmml_file );
     eval_data( data_file, model );
     }
 
@@ -93,7 +93,7 @@ public class RandomForestClassifierTest
    * @throws IOException
    * @throws PatternException
    */
-  protected void eval_data( String data_file, RandomForestClassifier model ) throws IOException, PatternException
+  protected void eval_data( String data_file, TreeClassifier model ) throws IOException, PatternException
     {
     FileReader fr = new FileReader( data_file );
     BufferedReader br = new BufferedReader( fr );
@@ -135,7 +135,7 @@ public class RandomForestClassifierTest
 	  fail( sb.toString() );
           }
 
-        assertEquals( "RandomForest", predicted, label );
+        assertEquals( "Tree", predicted, label );
         }
       }
 

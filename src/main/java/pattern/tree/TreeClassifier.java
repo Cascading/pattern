@@ -4,7 +4,7 @@
  * Project and contact information: http://www.concurrentinc.com/
  */
 
-package pattern.rf;
+package pattern.tree;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -30,10 +30,10 @@ import pattern.XPathReader;
 import pattern.datafield.DataField;
 
 
-public class RandomForestClassifier extends Classifier implements Serializable
+public class TreeClassifier extends Classifier implements Serializable
   {
   /** Field LOG */
-  private static final Logger LOG = LoggerFactory.getLogger( RandomForestClassifier.class );
+  private static final Logger LOG = LoggerFactory.getLogger( TreeClassifier.class );
 
   public List<String> predicates = new ArrayList<String>();
   public List<Tree> forest = new ArrayList<Tree>();
@@ -47,7 +47,7 @@ public class RandomForestClassifier extends Classifier implements Serializable
    * @param reader
    * @throws PatternException
    */
-  public RandomForestClassifier( XPathReader reader ) throws PatternException
+  public TreeClassifier( XPathReader reader ) throws PatternException
     {
     this.reader = reader;
     schema.parseDictionary( reader );
