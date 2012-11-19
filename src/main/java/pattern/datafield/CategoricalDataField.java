@@ -86,7 +86,7 @@ public class CategoricalDataField extends DataField
       bits.set( categories.indexOf( s ) );
 
     if( operator.equals( "isIn" ) )
-      eval = String.format( "pattern.PortableBitSet.isIn( \"%s\", %s )", bits.toString(), name );
+      eval = String.format( "pattern.datafield.PortableBitSet.isIn( \"%s\", %s )", bits.toString(), name );
     else
       throw new PatternException( "unknown operator: " + operator );
 
