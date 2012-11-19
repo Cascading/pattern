@@ -8,6 +8,9 @@ package pattern;
 
 import java.util.Properties;
 
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+
 import cascading.flow.Flow;
 import cascading.flow.FlowDef;
 import cascading.flow.hadoop.HadoopFlowConnector;
@@ -36,9 +39,9 @@ public class Main
     String pmmlPath = args[ 0 ];
     String ordersPath = args[ 1 ];
     String classifyPath = args[ 2 ];
-    String measurePath = args[ 3 ];
-    String trapPath = args[ 4 ];
+    String trapPath = args[ 3 ];
 
+    // set up the config properties
     Properties properties = new Properties();
     AppProps.setApplicationJarClass( properties, Main.class );
     HadoopFlowConnector flowConnector = new HadoopFlowConnector( properties );
@@ -46,42 +49,74 @@ public class Main
     // create source and sink taps
     Tap ordersTap = new Hfs( new TextDelimited( true, "\t" ), ordersPath );
     Tap classifyTap = new Hfs( new TextDelimited( true, "\t" ), classifyPath );
-    Tap measureTap = new Hfs( new TextDelimited( true, "\t" ), measurePath );
     Tap trapTap = new Hfs( new TextDelimited( true, "\t" ), trapPath );
+    Tap measureTap = null;
 
-    // define a "Classifier" model from PMML to evaluate the orders
+    // handle command line options
+    OptionParser optParser = new OptionParser();
+    optParser.accepts( "measure" ).withRequiredArg();
+    optParser.accepts( "debug" );
+    optParser.accepts( "assert" );
+
+    OptionSet options = optParser.parse( args );
+
+    // define a "Classifier" model from the PMML description
     Classifier model = ClassifierFactory.getClassifier( pmmlPath );
-    Pipe classifyPipe = new Each( new Pipe( "classify" ), model.getFields(), new ClassifierFunction( new Fields( "score" ), model ), Fields.ALL );
+    ClassifierFunction classFunc = new ClassifierFunction( new Fields( "score" ), model );
+    Pipe classifyPipe = new Each( new Pipe( "classify" ), model.getFields(), classFunc, Fields.ALL );
 
-    // verify the model results vs. what R predicted
-    Pipe verifyPipe = new Pipe( "verify", classifyPipe );
-    String expression = "predicted == score";
-    ExpressionFunction matchExpression = new ExpressionFunction( new Fields( "match" ), expression, Integer.class );
-    verifyPipe = new Each( verifyPipe, Fields.ALL, matchExpression, Fields.ALL );
-    verifyPipe = new Each( verifyPipe, DebugLevel.VERBOSE, new Debug( true ) );
+    // optionally: measure model results vs. what was predicted during model creation
+    Pipe measurePipe = null;
+    Pipe verifyPipe = null;
 
-    AssertMatches assertMatches = new AssertMatches( ".*true" );
-    verifyPipe = new Each( verifyPipe, AssertionLevel.STRICT, assertMatches );
+    if( options.hasArgument( "measure" ) )
+      {
+      String measurePath = (String) options.valuesOf( "measure" ).get( 0 );
+      measureTap = new Hfs( new TextDelimited( true, "\t" ), measurePath );
 
-    // calculate a confusion matrix for the model results
-    Pipe measurePipe = new Pipe( "measure", verifyPipe );
-    measurePipe = new GroupBy( measurePipe, new Fields( "label", "score" ) );
-    measurePipe = new Every( measurePipe, Fields.ALL, new Count(), Fields.ALL );
+      // add a stream assertion which implements a full regression test
+      verifyPipe = new Pipe( "verify", classifyPipe );
+      String expression = "predicted == score";
+      ExpressionFunction matchExpression = new ExpressionFunction( new Fields( "match" ), expression, Integer.class );
+      verifyPipe = new Each( verifyPipe, Fields.ALL, matchExpression, Fields.ALL );
+      verifyPipe = new Each( verifyPipe, DebugLevel.VERBOSE, new Debug( true ) );
+
+      AssertMatches assertMatches = new AssertMatches( ".*true" );
+      verifyPipe = new Each( verifyPipe, AssertionLevel.STRICT, assertMatches );
+
+      // calculate a confusion matrix for the model results
+      measurePipe = new Pipe( "measure", verifyPipe );
+      measurePipe = new GroupBy( measurePipe, new Fields( "label", "score" ) );
+      measurePipe = new Every( measurePipe, Fields.ALL, new Count(), Fields.ALL );
+      }
 
     // connect the taps, pipes, etc., into a flow
     FlowDef flowDef = FlowDef.flowDef().setName( "classify" )
       .addSource( classifyPipe, ordersTap )
       .addTrap( classifyPipe, trapTap )
-      .addSink( classifyPipe, classifyTap )
-      .addTrap( verifyPipe, trapTap )
-      .addTailSink( measurePipe, measureTap )
       ;
 
+    if( measureTap == null )
+      flowDef.addTailSink( classifyPipe, classifyTap );
+    else
+      {
+      flowDef.addSink( classifyPipe, classifyTap )
+        .addTrap( verifyPipe, trapTap )
+        .addTailSink( measurePipe, measureTap )
+        ;
+      }
+
     // set to DebugLevel.VERBOSE for trace, or DebugLevel.NONE in production
-    flowDef.setDebugLevel( DebugLevel.NONE );
+    if( options.hasArgument( "debug" ) )
+      flowDef.setDebugLevel( DebugLevel.VERBOSE );
+    else
+      flowDef.setDebugLevel( DebugLevel.NONE );
 
     // set to AssertionLevel.STRICT for all assertions, or AssertionLevel.NONE in production
-    flowDef.setAssertionLevel( AssertionLevel.STRICT );
+    if( options.hasArgument( "assert" ) )
+      flowDef.setAssertionLevel( AssertionLevel.STRICT );
+    else
+      flowDef.setAssertionLevel( AssertionLevel.NONE );
 
     // write a DOT file and run the flow
     Flow classifyFlow = flowConnector.connect( flowDef );

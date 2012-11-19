@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'eclipse'
 
 archivesBaseName = 'pattern'
 
@@ -17,12 +18,16 @@ repositories {
   mavenRepo name: 'conjars', url: 'http://conjars.org/repo/'
 }
 
-dependencies {
-  compile( 'cascading:cascading-core:2.1.0' )
-  compile( 'cascading:cascading-hadoop:2.1.0' )
+ext.cascadingVersion = '2.1.+'
+ext.cascadingChanging = cascadingVersion.endsWith( ' -dev' );
 
-  testCompile( 'org.apache.hadoop:hadoop-core:1.0.3' )
-  testCompile( 'org.apache.hadoop:hadoop-test:1.0.3' )
+dependencies {
+  compile( group: 'cascading', name: 'cascading-core', version: cascadingVersion, changing: cascadingChanging )
+  compile( group: 'cascading', name: 'cascading-hadoop', version: cascadingVersion, changing: cascadingChanging )
+  compile( 'net.sf.jopt-simple:jopt-simple:4.3' )
+
+  testCompile( 'org.apache.hadoop:hadoop-core:1.0.+' )
+  testCompile( 'org.apache.hadoop:hadoop-test:1.0.+' )
   testCompile( 'junit:junit:4.8.+' )
 
   compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
