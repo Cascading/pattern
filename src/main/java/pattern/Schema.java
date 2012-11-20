@@ -32,15 +32,14 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
   public DataField label_field;
 
   /**
-   * Parse the data dictionary from PMML
+   * Parse the data dictionary from PMML.
    *
-   * @param reader
+   * @param pmml PMML model
    * @throws PatternException
    */
-  public void parseDictionary( XPathReader reader ) throws PatternException
+  public void parseDictionary( PMML pmml ) throws PatternException
     {
-    String expr = "/PMML/DataDictionary/DataField";
-    NodeList node_list = (NodeList) reader.read( expr, XPathConstants.NODESET );
+    NodeList node_list = (NodeList) pmml.getDataDictionary();
 
     for( int i = 0; i < node_list.getLength(); i++ )
       {
@@ -54,17 +53,23 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
 
         if( !containsKey( name ) )
           {
-          DataField df = DataFieldFactory.getDataField( reader, node, name, op_type, data_type );
+          DataField df = DataFieldFactory.getDataField( pmml.getReader(), node, name, op_type, data_type );
           put( name, df );
           LOG.debug( "PMML add DataField: " + df );
           }
         }
       }
+    }
 
-    // determine the active tuple fields for the input schema
-
-    expr = "/PMML/MiningModel/MiningSchema/MiningField";
-    node_list = (NodeList) reader.read( expr, XPathConstants.NODESET );
+  /**
+   * Determine the active tuple fields for the input schema.
+   *
+   * @param pmml PMML model
+   * @throws PatternException
+   */
+  public void parseMiningSchema( PMML pmml ) throws PatternException
+    {
+    NodeList node_list = (NodeList) pmml.getMiningSchema();
 
     for( int i = 0; i < node_list.getLength(); i++ )
       {

@@ -26,7 +26,7 @@ import org.w3c.dom.NodeList;
 import cascading.tuple.Tuple;
 import pattern.Classifier;
 import pattern.PatternException;
-import pattern.XPathReader;
+import pattern.PMML;
 import pattern.datafield.DataField;
 
 
@@ -44,14 +44,13 @@ public class TreeClassifier extends Classifier implements Serializable
   protected Map<String, Integer> votes;
 
   /**
-   * @param reader
+   * @param pmml PMML model
    * @throws PatternException
    */
-  public TreeClassifier( XPathReader reader ) throws PatternException
+  public TreeClassifier( PMML pmml ) throws PatternException
     {
-    this.reader = reader;
-    schema.parseDictionary( reader );
-    buildForest();
+    schema = pmml.getSchema();
+    buildForest( pmml );
     }
 
   /**
@@ -175,12 +174,13 @@ public class TreeClassifier extends Classifier implements Serializable
   /**
    * Generate a serializable graph representation for each tree.
    *
+   * @param pmml PMML model
    * @throws PatternException
    */
-  protected void buildForest() throws PatternException
+  protected void buildForest( PMML pmml ) throws PatternException
     {
     String expr = "/PMML/MiningModel/Segmentation/Segment";
-    NodeList node_list = (NodeList) reader.read( expr, XPathConstants.NODESET );
+    NodeList node_list = (NodeList) pmml.getReader().read( expr, XPathConstants.NODESET );
 
     for( int i = 0; i < node_list.getLength(); i++ )
       {
@@ -190,7 +190,7 @@ public class TreeClassifier extends Classifier implements Serializable
         {
         String id = ( (Element) node ).getAttribute( "id" );
         String node_expr = "./TreeModel/Node[1]";
-        NodeList root_node = (NodeList) reader.read( node, node_expr, XPathConstants.NODESET );
+        NodeList root_node = (NodeList) pmml.getReader().read( node, node_expr, XPathConstants.NODESET );
 
         Tree tree = new Tree( id );
         forest.add( tree );
@@ -198,7 +198,7 @@ public class TreeClassifier extends Classifier implements Serializable
         Element root = (Element) root_node.item( 0 );
         Vertex vertex = makeVertex( root, tree.getGraph() );
         tree.setRoot( vertex );
-        buildNode( root, vertex, tree.getGraph() );
+        buildNode( pmml, root, vertex, tree.getGraph() );
         }
       }
     }
@@ -218,12 +218,13 @@ public class TreeClassifier extends Classifier implements Serializable
     }
 
   /**
+   * @param pmml PMML model
    * @param node
    * @param vertex
    * @param graph
    * @throws PatternException
    */
-  protected void buildNode( Element node, Vertex vertex, DirectedGraph<Vertex, Edge> graph ) throws PatternException
+  protected void buildNode( PMML pmml, Element node, Vertex vertex, DirectedGraph<Vertex, Edge> graph ) throws PatternException
     {
     NodeList child_nodes = node.getChildNodes();
 
@@ -235,7 +236,7 @@ public class TreeClassifier extends Classifier implements Serializable
         {
         if( "SimplePredicate".equals( child.getNodeName() ) || "SimpleSetPredicate".equals( child.getNodeName() ) )
           {
-          Integer predicate_id = makePredicate( (Element) child );
+          Integer predicate_id = makePredicate( pmml, (Element) child );
 
           if( node.hasAttribute( "score" ) )
             {
@@ -251,21 +252,22 @@ public class TreeClassifier extends Classifier implements Serializable
           Vertex child_vertex = makeVertex( (Element) child, graph );
           Edge edge = graph.addEdge( vertex, child_vertex );
 
-          buildNode( (Element) child, child_vertex, graph );
+          buildNode( pmml, (Element) child, child_vertex, graph );
           }
         }
       }
     }
 
   /**
+   * @param pmml PMML model
    * @param node
    * @return Integer
    * @throws PatternException
    */
-  protected Integer makePredicate( Element node ) throws PatternException
+  protected Integer makePredicate( PMML pmml, Element node ) throws PatternException
     {
     String field = node.getAttribute( "field" );
-    String eval = schema.get( field ).getEval( reader, node );
+    String eval = schema.get( field ).getEval( pmml.getReader(), node );
 
     if( !predicates.contains( eval ) )
       predicates.add( eval );

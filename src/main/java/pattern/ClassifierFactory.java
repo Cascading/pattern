@@ -6,8 +6,6 @@
 
 package pattern;
 
-import javax.xml.xpath.XPathConstants;
-
 import pattern.tree.TreeClassifier;
 
 
@@ -22,16 +20,14 @@ public class ClassifierFactory
    */
   public static Classifier getClassifier( String pmml_file ) throws PatternException
     {
-    XPathReader reader = new XPathReader( pmml_file );
+    PMML pmml = new PMML( pmml_file );
+    PMML.Models model_type = pmml.getModelType();
     Classifier classifier = null;
 
-    String expr = "/PMML/MiningModel/@functionName";
-    String model_type = (String) reader.read( expr, XPathConstants.STRING );
-
-    if( "classification".equals( model_type ) )
-      classifier = new TreeClassifier( reader );
+    if( PMML.Models.TREE.equals( model_type ) )
+      classifier = new TreeClassifier( pmml );
     else
-      throw new PatternException( "unsupported model type: " + model_type );
+      throw new PatternException( "unsupported model type: " + model_type.name() );
 
     return classifier;
     }

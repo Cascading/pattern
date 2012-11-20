@@ -20,8 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import pattern.PatternException;
-
 
 public class XPathReader
   {

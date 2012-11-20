@@ -14,9 +14,7 @@ import cascading.tuple.Tuple;
 
 public abstract class Classifier implements Serializable
   {
-  public Schema schema = new Schema();
-
-  protected transient XPathReader reader;
+  public Schema schema;
 
   /**
    * Prepare to classify with this model. Called immediately before
