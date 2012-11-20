@@ -33,8 +33,7 @@ public class PMML
   public PMML( String pmml_file ) throws PatternException
     {
     reader = new XPathReader( pmml_file );
-    schema.parseDictionary( this );
-    schema.parseMiningSchema( this );
+    schema.parseDictionary( this, getNodeList( "/PMML/DataDictionary/DataField" ) );
     }
 
   /**
@@ -73,24 +72,13 @@ public class PMML
     }
 
   /**
-   * Extract an XML node list for the DataDictionary.
+   * Extract an XML node list based on an XPath expression.
    *
+   * @param expr XPath expression to evaluate
    * @return NodeList
    */
-  public NodeList getDataDictionary()
+  public NodeList getNodeList( String expr )
     {
-    String expr = "/PMML/DataDictionary/DataField";
-    return (NodeList) reader.read( expr, XPathConstants.NODESET );
-    }
-
-  /**
-   * Extract an XML node list for the MiningSchema.
-   *
-   * @return NodeList
-   */
-  public NodeList getMiningSchema()
-    {
-    String expr = "/PMML/MiningModel/MiningSchema/MiningField";
     return (NodeList) reader.read( expr, XPathConstants.NODESET );
     }
   }

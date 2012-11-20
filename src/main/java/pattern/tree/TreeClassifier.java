@@ -50,7 +50,27 @@ public class TreeClassifier extends Classifier implements Serializable
   public TreeClassifier( PMML pmml ) throws PatternException
     {
     schema = pmml.getSchema();
-    buildForest( pmml );
+
+    // test for different tree structure (decision tree vs. forest)
+    NodeList node_list = pmml.getNodeList( "//TreeModel[1]/.." );
+    Node parent = node_list.item( 0 );
+
+    if( "Segment".equals( parent.getNodeName() ) )
+      {
+      schema.parseMiningSchema( pmml.getNodeList( "/PMML/MiningModel/MiningSchema/MiningField" ) );
+
+      String expr = "/PMML/MiningModel/Segmentation/Segment";
+      buildForest( pmml, pmml.getNodeList( expr ) );
+      }
+    else
+      {
+      schema.parseMiningSchema( pmml.getNodeList( "/PMML/TreeModel/MiningSchema/MiningField" ) );
+
+      String id = "default";
+      NodeList root_node = pmml.getNodeList( "//TreeModel[1]" );
+
+      buildTree( pmml, (Element) root_node.item( 0 ), id );
+      }
     }
 
   /**
@@ -172,16 +192,14 @@ public class TreeClassifier extends Classifier implements Serializable
     }
 
   /**
-   * Generate a serializable graph representation for each tree.
+   * Generate a serializable graph representation for a list of trees.
    *
    * @param pmml PMML model
+   * @param node_list
    * @throws PatternException
    */
-  protected void buildForest( PMML pmml ) throws PatternException
+  protected void buildForest( PMML pmml, NodeList node_list ) throws PatternException
     {
-    String expr = "/PMML/MiningModel/Segmentation/Segment";
-    NodeList node_list = (NodeList) pmml.getReader().read( expr, XPathConstants.NODESET );
-
     for( int i = 0; i < node_list.getLength(); i++ )
       {
       Node node = node_list.item( i );
@@ -192,15 +210,28 @@ public class TreeClassifier extends Classifier implements Serializable
         String node_expr = "./TreeModel/Node[1]";
         NodeList root_node = (NodeList) pmml.getReader().read( node, node_expr, XPathConstants.NODESET );
 
-        Tree tree = new Tree( id );
-        forest.add( tree );
-
-        Element root = (Element) root_node.item( 0 );
-        Vertex vertex = makeVertex( root, tree.getGraph() );
-        tree.setRoot( vertex );
-        buildNode( pmml, root, vertex, tree.getGraph() );
+	buildTree( pmml, (Element) root_node.item( 0 ), id );
         }
       }
+    }
+
+  /**
+   * Generate a serializable graph representation for a tree.
+   *
+   * @param pmml PMML model
+   * @param root root XML node
+   * @param id tree identifier
+   * @throws PatternException
+   */
+  protected void buildTree( PMML pmml, Element root, String id ) throws PatternException
+    {
+    Tree tree = new Tree( id );
+    forest.add( tree );
+
+    Vertex vertex = makeVertex( root, tree.getGraph() );
+    tree.setRoot( vertex );
+
+    buildNode( pmml, root, vertex, tree.getGraph() );
     }
 
   /**

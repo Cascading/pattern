@@ -35,12 +35,11 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
    * Parse the data dictionary from PMML.
    *
    * @param pmml PMML model
+   * @param node_list list of DataField nodes in the DataDictionary.
    * @throws PatternException
    */
-  public void parseDictionary( PMML pmml ) throws PatternException
+  public void parseDictionary( PMML pmml, NodeList node_list ) throws PatternException
     {
-    NodeList node_list = (NodeList) pmml.getDataDictionary();
-
     for( int i = 0; i < node_list.getLength(); i++ )
       {
       Node node = node_list.item( i );
@@ -64,13 +63,11 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
   /**
    * Determine the active tuple fields for the input schema.
    *
-   * @param pmml PMML model
+   * @param node_list list of DataField nodes in the DataDictionary.
    * @throws PatternException
    */
-  public void parseMiningSchema( PMML pmml ) throws PatternException
+  public void parseMiningSchema( NodeList node_list ) throws PatternException
     {
-    NodeList node_list = (NodeList) pmml.getMiningSchema();
-
     for( int i = 0; i < node_list.getLength(); i++ )
       {
       Node node = node_list.item( i );
