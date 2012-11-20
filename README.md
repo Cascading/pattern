@@ -83,6 +83,20 @@ Now when you run that Cascading app, provide a reference to
 An architectural diagram for common use case patterns is shown in
 `docs/pattern.graffle` which is an OmniGraffle document.
 
+Examples
+--------
+
+Check in the `src/r/rattle_pmml.R` source code for examples of
+predictive models created in R, then exported using _Rattle_.
+These examples use the popular _Iris_ data set.
+
+ * Random Forest (rf)
+ * recursive partition classification tree (rpart)
+ * single hidden-layer neural network (nnet)
+ * linear regression model (lm)
+ * logistic regression model (glm)
+ * support vector machine (ksvm)
+ * k-means clustering (kmeans)
 
 PMML Resources
 --------------
