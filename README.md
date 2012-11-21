@@ -4,8 +4,8 @@ cascading.pattern
 _Pattern_ sub-project for http://Cascading.org/ which uses flows as
 containers for machine learning models, importing
 [PMML](http://en.wikipedia.org/wiki/Predictive_Model_Markup_Language)
-model descriptions from _R_, _SAS_, _Weka_, _RapidMiner_, _SQL
-Server_, etc.
+model descriptions from _R_, _SAS_, _Weka_, _RapidMiner_, _KNIME_,
+_SQL Server_, etc.
 
 Current support for PMML includes:
 
@@ -90,13 +90,15 @@ Check in the `src/r/rattle_pmml.R` source code for examples of
 predictive models created in R, then exported using _Rattle_.
 These examples use the popular _Iris_ data set.
 
- * Random Forest (rf)
+ * random forest (rf)
  * recursive partition classification tree (rpart)
  * single hidden-layer neural network (nnet)
- * linear regression model (lm)
- * logistic regression model (glm)
+ * multinomial model (multinom)
+ * linear regression (lm)
+ * logistic regression (glm)
  * support vector machine (ksvm)
  * k-means clustering (kmeans)
+ * hierarchical clustering (hclust)
 
 PMML Resources
 --------------

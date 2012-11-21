@@ -3,6 +3,7 @@
 #install.packages("randomForest")
 #install.packages("rpart.plot")
 #install.packages("nnet")
+#install.packages("kernlab")
 
 require(graphics)
 library(pmml)
@@ -10,6 +11,7 @@ library(randomForest)
 library(rpart)
 library(rpart.plot)
 library(nnet)
+library(kernlab)
 
 dat_folder <- './data'
 
@@ -20,7 +22,8 @@ idx <- sample(150, 100)
 iris_train <- iris[idx,]
 iris_test <- iris[-idx,]
 
-## train a RandomForest model
+## train a Random Forest model
+## example: http://mkseo.pe.kr/stats/?p=220
 
 f <- as.formula("as.factor(Species) ~ .")
 fit <- randomForest(f, data=iris, proximity=TRUE, ntree=100)
@@ -32,7 +35,8 @@ MDSplot(fit, iris$Species)
 
 saveXML(pmml(fit), file=paste(dat_folder, "iris.rf.xml", sep="/"))
 
-## train an "rpart" recursive partition classification tree
+## train a Recursive Partition classification tree
+## example: http://www.r-bloggers.com/example-9-10-more-regression-trees-and-recursive-partitioning-with-partykit/
 
 f <- as.formula("Species ~ .")
 fit <- rpart(f, data=iris_train)
@@ -43,7 +47,8 @@ prp(fit, extra=1, uniform=F, branch=1, yesno=F, border.col=0, xsep="/")
 
 saveXML(pmml(fit), file=paste(dat_folder, "iris.rpart.xml", sep="/"))
 
-## train a single hidden-layer neural network
+## train a single hidden-layer Neural Network
+## example: http://statisticsr.blogspot.com/2008/10/notes-for-nnet.html
 
 samp <- c(sample(1:50,25), sample(51:100,25), sample(101:150,25))
 
@@ -59,7 +64,19 @@ print(table(ird$species[-samp], predict(fit, ird[-samp,], type = "class")))
 
 saveXML(pmml(fit), file=paste(dat_folder, "iris.nn.xml", sep="/"))
 
-## train a linear regression model
+## train a Multinomial Regression model
+## example: http://www.jameskeirstead.ca/r/how-to-multinomial-regression-models-in-r/
+
+f <- as.formula("Species ~ .")
+fit <- multinom(f, data=iris_train)
+
+print(summary(fit))
+print(table(iris_test$Species, predict(fit, iris_test)))
+
+saveXML(pmml(fit, dataset=iris_train), file=paste(dat_folder, "iris.multinom.xml", sep="/"))
+
+## train a Linear Regression model
+## example: http://www2.warwick.ac.uk/fac/sci/moac/people/students/peter_cock/r/iris_lm/
 
 f <- as.formula("Sepal.Length ~ .")
 fit <- lm(f, data=iris_train)
@@ -72,23 +89,39 @@ plot(iris$Petal.Length, iris$Petal.Width, pch=21, bg=c("red","green3","blue")[un
 
 saveXML(pmml(fit), file=paste(dat_folder, "iris.lm.xml", sep="/"))
 
-## train a general linear regression model
+## train a General Linear Regression model (in this case, Logistic Regression)
+## example: http://www.stat.cmu.edu/~cshalizi/490/clustering/clustering01.r
 
-td <- cbind(iris_train, data.frame(isSetosa=(iris_train$Species == 'setosa')))
-head(td)
+cols=c(1,2)
+plot(iris[,cols],type="n")
+points(iris[iris$Species=="setosa",cols],col=1,pch="*")
+points(iris[iris$Species=="versicolor",cols],col=2,pch="*")
+points(iris[iris$Species=="virginica",cols],col=3,pch="*")
 
-f <- isSetosa ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
-fit <- glm(f, data=td, family="binomial")
+cols=c(3,4)
+plot(iris[,cols],type="n")
+points(iris[iris$Species=="setosa",cols],col=1,pch="*")
+points(iris[iris$Species=="versicolor",cols],col=2,pch="*")
+points(iris[iris$Species=="virginica",cols],col=3,pch="*")
 
-prob <- predict(fit, newdata=iris_test, type='response')
-round(prob, 3)
+myiris <- cbind(iris,setosa=ifelse(iris$Species=="setosa",1,0))
+myiris <- cbind(myiris,versicolor=ifelse(iris$Species=="versicolor",1,0))
+myiris <- cbind(myiris,virginica=ifelse(iris$Species=="virginica",1,0))
+myiris <- myiris[,-5] # drop the old labels
+
+f <- as.formula("setosa ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width")
+fit <- glm(f, family=binomial, data=myiris)
 
 print(summary(fit))
 plot(fit)
 
+fitted.iris <- round(fitted(fit))
+print(table(cbind(fitted.iris, myiris$setosa)))
+
 saveXML(pmml(fit), file=paste(dat_folder, "iris.glm.xml", sep="/"))
 
-## train a support vector machine
+## train a Support Vector Machine model
+## example: https://support.zementis.com/entries/21176632-what-types-of-svm-models-built-in-r-can-i-export-to-pmml
 
 f <- as.formula("Species ~ .")
 fit <- ksvm(f, data=iris_train, type="C-bsvc", kernel=rbfdot(sigma=0.1), C=10, prob.model=TRUE)
@@ -98,7 +131,8 @@ print(table(iris_test$Species, predict(fit, iris_test)))
 
 saveXML(pmml(fit, dataset=iris_train), file=paste(dat_folder, "iris.svm.xml", sep="/"))
 
-## train a k-means clustering model
+## train a K-Means clustering model
+## example: http://mkseo.pe.kr/stats/?p=15
 
 ds <- iris[,-5]
 fit <- kmeans(ds, 3)
@@ -109,9 +143,22 @@ table(fit$cluster, iris$Species)
 
 saveXML(pmml(fit), file=paste(dat_folder, "iris.kmeans.xml", sep="/"))
 
-## train a hierarchical clustering model (DOES NOT WORK!)
+## train a Hierarchical Clustering model
+## example: http://mkseo.pe.kr/stats/?p=15
 
-fit <- hclust(dist(iris_train[,1:4]))
-plot(fit)
+i = as.matrix(iris[,-5])
+fit <- hclust(dist(i), method = "average")
 
-saveXML(pmml(fit, data=iris_train), file=paste(dat_folder, "iris.hc.xml", sep="/"))
+initial <- tapply(i, list(rep(cutree(fit, 3), ncol(i)), col(i)), mean)
+dimnames(initial) <- list(NULL, dimnames(i)[[2]])
+
+kls = cutree(fit, 3)
+print(fit)
+plclust(fit)
+table(iris$Species, kls)
+
+saveXML(pmml(fit, data=iris, centers=initial), file=paste(dat_folder, "iris.hc.xml", sep="/"))
+
+## TODO:
+## pmml.rules
+## pmml.rsf
