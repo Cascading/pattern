@@ -10,7 +10,9 @@ import java.io.Serializable;
 
 import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
-import pattern.tree.TreeModel;
+import pattern.model.Model;
+import pattern.model.MiningModel;
+import pattern.model.tree.TreeModel;
 
 
 public class Classifier implements Serializable
@@ -30,7 +32,7 @@ public class Classifier implements Serializable
     PMML.Models model_type = pmml.parseModelType();
 
     if( PMML.Models.MINING.equals( model_type ) )
-      model = new Segmentation( pmml );
+      model = new MiningModel( pmml );
     else if( PMML.Models.TREE.equals( model_type ) )
       model = new TreeModel( pmml );
     else

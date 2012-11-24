@@ -4,11 +4,12 @@
  * Project and contact information: http://www.concurrentinc.com/
  */
 
-package pattern;
+package pattern.model;
 
 import java.io.Serializable;
 
 import cascading.tuple.Tuple;
+import pattern.PatternException;
 import pattern.Schema;
 
 

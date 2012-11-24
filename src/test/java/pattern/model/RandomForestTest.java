@@ -4,7 +4,7 @@
  * Project and contact information: http://www.concurrentinc.com/
  */
 
-package pattern.tree;
+package pattern.model;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,7 +18,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pattern.Classifier;
-import pattern.Segmentation;
 import pattern.PatternException;
 
 import cascading.tuple.Tuple;
@@ -27,10 +26,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
-public class TreeClassifierTest
+public class RandomForestTest
   {
   /** Field LOG */
-  private static final Logger LOG = LoggerFactory.getLogger( TreeClassifierTest.class );
+  private static final Logger LOG = LoggerFactory.getLogger( RandomForestTest.class );
 
   /**
    * evaluate sample model + data from temp files
@@ -40,8 +39,8 @@ public class TreeClassifierTest
   @Test
   public void testMain() throws Exception
     {
-    String pmml_file = makeFile( "tree_test", ".xml", pmml_text );
-    String data_file = makeFile( "tree_test", ".tsv", data_text );
+    String pmml_file = makeFile( "rf_test", ".xml", pmml_text );
+    String data_file = makeFile( "rf_test", ".tsv", data_text );
 
     Classifier classifier = new Classifier( pmml_file );
     eval_data( data_file, classifier );
@@ -129,7 +128,7 @@ public class TreeClassifierTest
 
           sb.append( String.format( "regression: classifier label [ %s ] does not match predicted [ %s ]\n", label, predicted ) )
             .append( line ).append( "\n" )
-            .append( "votes: " ).append( ((Segmentation) classifier.model).votes );
+            .append( "votes: " ).append( ((MiningModel) classifier.model).votes );
 
 	  fail( sb.toString() );
           }

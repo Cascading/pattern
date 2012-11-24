@@ -4,7 +4,7 @@
  * Project and contact information: http://www.concurrentinc.com/
  */
 
-package pattern.tree;
+package pattern.model.tree;
 
 import java.io.Serializable;
 
@@ -13,25 +13,25 @@ public class Vertex implements Serializable
   public String id;
   public String score = null;
 
-  /** @param id  */
+  /** @param id vertex ID  */
   public Vertex( String id )
     {
     this.id = id;
     }
 
-  /** @param score  */
+  /** @param score evaluated model score  */
   public void setScore( String score )
     {
     this.score = score;
     }
 
-  /** @return  */
+  /** @return String  */
   public String getScore()
     {
     return score;
     }
 
-  /** @return  */
+  /** @return String  */
   @Override
   public String toString()
     {

@@ -4,7 +4,7 @@
  * Project and contact information: http://www.concurrentinc.com/
  */
 
-package pattern.tree;
+package pattern.model.tree;
 
 import java.io.Serializable;
 import javax.xml.xpath.XPathConstants;
@@ -17,10 +17,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import cascading.tuple.Tuple;
-import pattern.Model;
 import pattern.PatternException;
 import pattern.PMML;
 import pattern.Schema;
+import pattern.model.Model;
 
 
 public class TreeModel extends Model implements Serializable

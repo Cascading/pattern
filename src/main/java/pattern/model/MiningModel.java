@@ -4,7 +4,7 @@
  * Project and contact information: http://www.concurrentinc.com/
  */
 
-package pattern;
+package pattern.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,16 +20,19 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import cascading.tuple.Tuple;
-import pattern.tree.Context;
-import pattern.tree.Edge;
-import pattern.tree.Tree;
-import pattern.tree.TreeModel;
+import pattern.PatternException;
+import pattern.PMML;
+import pattern.model.Model;
+import pattern.model.tree.Context;
+import pattern.model.tree.Edge;
+import pattern.model.tree.Tree;
+import pattern.model.tree.TreeModel;
 
 
-public class Segmentation extends Model implements Serializable
+public class MiningModel extends Model implements Serializable
   {
   /** Field LOG */
-  private static final Logger LOG = LoggerFactory.getLogger( Segmentation.class );
+  private static final Logger LOG = LoggerFactory.getLogger( MiningModel.class );
 
   public Context context;
   public List<Model> segments = new ArrayList<Model>();
@@ -39,7 +42,7 @@ public class Segmentation extends Model implements Serializable
    * @param pmml PMML model
    * @throws PatternException
    */
-  public Segmentation( PMML pmml ) throws PatternException
+  public MiningModel( PMML pmml ) throws PatternException
     {
     this.schema = pmml.getSchema();
     this.context = new Context();

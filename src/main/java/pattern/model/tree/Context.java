@@ -4,7 +4,7 @@
  * Project and contact information: http://www.concurrentinc.com/
  */
 
-package pattern.tree;
+package pattern.model.tree;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
