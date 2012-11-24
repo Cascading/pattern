@@ -17,7 +17,8 @@ import java.util.HashMap;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pattern.ClassifierFactory;
+import pattern.Classifier;
+import pattern.Segmentation;
 import pattern.PatternException;
 
 import cascading.tuple.Tuple;
@@ -42,8 +43,8 @@ public class TreeClassifierTest
     String pmml_file = makeFile( "tree_test", ".xml", pmml_text );
     String data_file = makeFile( "tree_test", ".tsv", data_text );
 
-    TreeModel model = (TreeModel) ClassifierFactory.getClassifier( pmml_file );
-    eval_data( data_file, model );
+    Classifier classifier = new Classifier( pmml_file );
+    eval_data( data_file, classifier );
     }
 
   /**
@@ -93,7 +94,7 @@ public class TreeClassifierTest
    * @throws IOException
    * @throws PatternException
    */
-  protected void eval_data( String data_file, TreeModel model ) throws IOException, PatternException
+  protected void eval_data( String data_file, Classifier classifier ) throws IOException, PatternException
     {
     FileReader fr = new FileReader( data_file );
     BufferedReader br = new BufferedReader( fr );
@@ -104,8 +105,8 @@ public class TreeClassifierTest
       {
       if( count++ > 0 )
         {
-        // for each tuple in the reference data, knowing that "label"
-        // is in the first field...
+        // for each tuple in the reference data, assuming that the
+        // predicted "label" is in the last field...
 
         String[] test_vector = line.split( "\\t" );
         String predicted = test_vector[ test_vector.length - 1 ];
@@ -113,16 +114,14 @@ public class TreeClassifierTest
         Tuple values = new Tuple();
         int i = 1;
 
-        for( String key : model.schema.keySet() )
+        for( String key : classifier.model.schema.keySet() )
           values.addString( test_vector[ i++ ] );
 
         // compare classifier label vs. predicted
 
-        model.prepare();
-        model.evalPredicates( values );
+        classifier.prepare();
 
-        HashMap<String, Integer> votes = new HashMap<String, Integer>();
-        String label = model.tallyVotes( votes );
+        String label = classifier.classifyTuple( values );
 
         if( !predicted.equals( label ) )
           {
@@ -130,7 +129,7 @@ public class TreeClassifierTest
 
           sb.append( String.format( "regression: classifier label [ %s ] does not match predicted [ %s ]\n", label, predicted ) )
             .append( line ).append( "\n" )
-            .append( "votes: " ).append( votes );
+            .append( "votes: " ).append( ((Segmentation) classifier.model).votes );
 
 	  fail( sb.toString() );
           }

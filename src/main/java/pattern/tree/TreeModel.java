@@ -7,15 +7,8 @@
 package pattern.tree;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javax.xml.xpath.XPathConstants;
 
-import org.codehaus.commons.compiler.CompileException;
-import org.codehaus.janino.ExpressionEvaluator;
 import org.jgrapht.DirectedGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,56 +17,62 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import cascading.tuple.Tuple;
-import pattern.Classifier;
+import pattern.Model;
 import pattern.PatternException;
 import pattern.PMML;
-import pattern.datafield.DataField;
+import pattern.Schema;
 
 
-public class TreeModel extends Classifier implements Serializable
+public class TreeModel extends Model implements Serializable
   {
   /** Field LOG */
   private static final Logger LOG = LoggerFactory.getLogger( TreeModel.class );
 
-  public List<String> predicates = new ArrayList<String>();
-  protected List<Tree> segments = new ArrayList<Tree>();
+  public Schema schema;
+  public Context context;
 
-  protected Object[] param_values;
-  protected Boolean[] pred_eval;
-  protected ExpressionEvaluator[] ee_list;
-
-  protected Map<String, Integer> votes;
+  public Tree tree;
 
   /**
    * @param pmml PMML model
+   * @param context tree context
    * @throws PatternException
    */
   public TreeModel( PMML pmml ) throws PatternException
     {
-    schema = pmml.getSchema();
+    this.schema = pmml.getSchema();
+    this.context = new Context();
 
-    // test for different tree structure (decision tree vs. forest)
-    NodeList node_list = pmml.getNodeList( "//TreeModel[1]/.." );
-    Node parent = node_list.item( 0 );
+    schema.parseMiningSchema( pmml.getNodeList( "/PMML/TreeModel/MiningSchema/MiningField" ) );
+    tree = new Tree( "default" );
 
-    if( "Segment".equals( parent.getNodeName() ) )
-      {
-      schema.parseMiningSchema( pmml.getNodeList( "/PMML/MiningModel/MiningSchema/MiningField" ) );
+    String node_expr = "./TreeModel/Node[1]";
+    NodeList root_node = pmml.getNodeList( node_expr );
 
-      String expr = "/PMML/MiningModel/Segmentation/Segment";
-      buildForest( pmml, pmml.getNodeList( expr ) );
-      }
-    else
-      {
-      schema.parseMiningSchema( pmml.getNodeList( "/PMML/TreeModel/MiningSchema/MiningField" ) );
+    buildTree( pmml, (Element) root_node.item( 0 ), tree );
+    }
 
-      Tree tree = new Tree( "default" );
-      segments.add( tree );
+  /**
+   * Constructor for a TreeModel as part of an ensemble, such as in
+   * Random Forest.
+   *
+   * @param pmml PMML model
+   * @param parent parent node in the XML
+   * @param context tree context
+   * @throws PatternException
+   */
+  public TreeModel( PMML pmml, Node parent, Context context ) throws PatternException
+    {
+    this.schema = pmml.getSchema();
+    this.context = context;
 
-      NodeList root_node = pmml.getNodeList( "//TreeModel[1]" );
+    String id = ( (Element) parent ).getAttribute( "id" );
+    tree = new Tree( id );
 
-      buildTree( pmml, (Element) root_node.item( 0 ), tree );
-      }
+    String node_expr = "./TreeModel/Node[1]";
+    NodeList root_node = (NodeList) pmml.getReader().read( parent, node_expr, XPathConstants.NODESET );
+
+    buildTree( pmml, (Element) root_node.item( 0 ), tree );
     }
 
   /**
@@ -84,152 +83,31 @@ public class TreeModel extends Classifier implements Serializable
   @Override
   public void prepare()
     {
-    // handle the loop-invariant preparations here,
-    // in lieu of incurring overhead for each tuple
-
-    String[] param_names = schema.getParamNames();
-    Class[] param_types = schema.getParamTypes();
-
-    pred_eval = new Boolean[ predicates.size() ];
-    ee_list = new ExpressionEvaluator[ predicates.size() ];
-
-    for( int i = 0; i < predicates.size(); i++ )
-      try
-        {
-          LOG.debug( "eval: " + predicates.get( i ) );
-          ee_list[ i ] = new ExpressionEvaluator( predicates.get( i ), boolean.class, param_names, param_types, new Class[ 0 ], null );
-        }
-      catch( NullPointerException exception )
-        {
-        String message = String.format( "predicate [ %s ] failed", predicates.get( i ) );
-        LOG.error( message, exception );
-        throw new PatternException( message, exception );
-        }
-      catch( CompileException exception )
-        {
-        String message = String.format( "predicate [ %s ] did not compile", predicates.get( i ) );
-        LOG.error( message, exception );
-        throw new PatternException( message, exception );
-        }
-
-    param_values = new Object[ schema.size() ];
-    votes = new HashMap<String, Integer>();
+    context.prepare( schema );
     }
 
   /**
    * Classify an input tuple, returning the predicted label.
    *
-   * @param values
+   * @param values tuple values
    * @return String
    * @throws PatternException
    */
   @Override
   public String classifyTuple( Tuple values ) throws PatternException
     {
-    evalPredicates( values );
-    votes.clear();
-
-    return tallyVotes( votes );
-    }
-
-  /**
-   * Map from an input tuple to an array of predicate values for the segments.
-   *
-   * @param values
-   * @throws PatternException
-   */
-  protected void evalPredicates( Tuple values ) throws PatternException
-    {
-    schema.setParamValues( values, param_values );
-
-    for( int i = 0; i < predicates.size(); i++ )
-      try
-        {
-        pred_eval[ i ] = new Boolean( ee_list[ i ].evaluate( param_values ).toString() );
-        }
-      catch( InvocationTargetException exception )
-        {
-        String message = String.format( "predicate [ %s ] did not evaluate", predicates.get( i ) );
-        LOG.error( message, exception );
-        throw new PatternException( message, exception );
-        }
-    }
-
-  /**
-   * Tally the vote for each tree in the forest, to determine the winning label.
-   *
-   * @param votes
-   * @return String
-   */
-  protected String tallyVotes( Map<String, Integer> votes )
-    {
-    String label = null;
-    Integer winning_vote = 0;
-
-    // tally the vote for each tree in the forest
-
-    for( Tree tree : segments )
-      {
-      label = tree.traverse( pred_eval );
-
-      if( !votes.containsKey( label ) )
-        winning_vote = 1;
-      else
-        winning_vote = votes.get( label ) + 1;
-
-      votes.put( label, winning_vote );
-      }
-
-    // determine the winning label
-
-    for( String key : votes.keySet() )
-      {
-      if( votes.get( key ) > winning_vote )
-        {
-        label = key;
-        winning_vote = votes.get( key );
-        }
-      }
-
-    return label;
-    }
-
-  /**
-   * Generate a serializable graph representation for a list of trees.
-   *
-   * @param pmml PMML model
-   * @param node_list
-   * @throws PatternException
-   */
-  protected void buildForest( PMML pmml, NodeList node_list ) throws PatternException
-    {
-    for( int i = 0; i < node_list.getLength(); i++ )
-      {
-      Node node = node_list.item( i );
-
-      if( node.getNodeType() == Node.ELEMENT_NODE )
-        {
-        String id = ( (Element) node ).getAttribute( "id" );
-        Tree tree = new Tree( id );
-        segments.add( tree );
-
-        String node_expr = "./TreeModel/Node[1]";
-        NodeList root_node = (NodeList) pmml.getReader().read( node, node_expr, XPathConstants.NODESET );
-
-        buildTree( pmml, (Element) root_node.item( 0 ), tree );
-        }
-      }
+    return "null";
     }
 
   /**
    * Generate a serializable graph representation for a tree.
    *
    * @param pmml PMML model
-   * @param root root XML node
+   * @param root root node in the XML
    * @param tree serializable tree structure
    * @throws PatternException
    */
-  protected void buildTree( PMML pmml, Element root, Tree tree ) throws PatternException
+  public void buildTree( PMML pmml, Element root, Tree tree ) throws PatternException
     {
     Vertex vertex = makeVertex( root, tree.getGraph() );
     tree.setRoot( vertex );
@@ -238,24 +116,10 @@ public class TreeModel extends Classifier implements Serializable
     }
 
   /**
-   * @param node
-   * @param graph
-   * @return Vertex
-   */
-  protected Vertex makeVertex( Element node, DirectedGraph<Vertex, Edge> graph )
-    {
-    String id = ( node ).getAttribute( "id" );
-    Vertex vertex = new Vertex( id );
-    graph.addVertex( vertex );
-
-    return vertex;
-    }
-
-  /**
    * @param pmml PMML model
-   * @param node
-   * @param vertex
-   * @param graph
+   * @param node predicate node in the XML
+   * @param vertex tree vertex
+   * @param graph serializable graph
    * @throws PatternException
    */
   protected void buildNode( PMML pmml, Element node, Vertex vertex, DirectedGraph<Vertex, Edge> graph ) throws PatternException
@@ -270,7 +134,7 @@ public class TreeModel extends Classifier implements Serializable
         {
         if( "SimplePredicate".equals( child.getNodeName() ) || "SimpleSetPredicate".equals( child.getNodeName() ) )
           {
-          Integer predicate_id = makePredicate( pmml, (Element) child );
+          Integer predicate_id = context.makePredicate( schema, pmml.getReader(), (Element) child );
 
           if( node.hasAttribute( "score" ) )
             {
@@ -293,22 +157,17 @@ public class TreeModel extends Classifier implements Serializable
     }
 
   /**
-   * @param pmml PMML model
-   * @param node
-   * @return Integer
-   * @throws PatternException
+   * @param node predicate node in the XML
+   * @param graph serializable graph
+   * @return Vertex
    */
-  protected Integer makePredicate( PMML pmml, Element node ) throws PatternException
+  protected Vertex makeVertex( Element node, DirectedGraph<Vertex, Edge> graph )
     {
-    String field = node.getAttribute( "field" );
-    String eval = schema.get( field ).getEval( pmml.getReader(), node );
+    String id = ( node ).getAttribute( "id" );
+    Vertex vertex = new Vertex( id );
+    graph.addVertex( vertex );
 
-    if( !predicates.contains( eval ) )
-      predicates.add( eval );
-
-    Integer predicate_id = predicates.indexOf( eval );
-
-    return predicate_id;
+    return vertex;
     }
 
   /** @return String  */
@@ -323,30 +182,8 @@ public class TreeModel extends Classifier implements Serializable
     buf.append( "\n" );
     buf.append( "---------" );
     buf.append( "\n" );
-    buf.append( segments );
+    buf.append( tree );
     buf.append( "\n" );
-    buf.append( "---------" );
-    buf.append( "\n" );
-
-    for( Tree tree : segments )
-      {
-      buf.append( tree );
-      buf.append( tree.getRoot() );
-
-      for( Edge edge : tree.getGraph().edgeSet() )
-        buf.append( edge );
-
-      buf.append( "\n" );
-      }
-
-    buf.append( "---------" );
-    buf.append( "\n" );
-
-    for( String predicate : predicates )
-      {
-      buf.append( "expr[ " + predicates.indexOf( predicate ) + " ]: " + predicate );
-      buf.append( "\n" );
-      }
 
     return buf.toString();
     }

@@ -22,7 +22,7 @@ public class PMML
   protected Schema schema = new Schema();
 
   /** Implemented model types */
-  public enum Models { UNKNOWN, TREE };
+  public enum Models { UNKNOWN, MINING, TREE };
 
   /**
    * Parse the XML in the PMML description.
@@ -37,13 +37,20 @@ public class PMML
     }
 
   /**
-   * Getter for the XML document reader.
+   * Parse the model type.
    *
-   * @return XPathReader
+   * @return Models
    */
-  public XPathReader getReader()
+  public Models parseModelType()
     {
-    return reader;
+    Models model_type = Models.UNKNOWN;
+
+    if( reader.read( "/PMML/MiningModel[functionName='classification'][1]", XPathConstants.STRING ) != null )
+      return Models.MINING;
+    else if( reader.read( "//TreeModel[functionName='classification'][1]", XPathConstants.STRING ) != null )
+      return Models.TREE;
+
+    return model_type;
     }
 
   /**
@@ -57,18 +64,13 @@ public class PMML
     }
 
   /**
-   * Extract the model type.
+   * Getter for the XML document reader.
    *
-   * @return Models
+   * @return XPathReader
    */
-  public Models getModelType()
+  public XPathReader getReader()
     {
-    Models model_type = Models.UNKNOWN;
-
-    if( reader.read( "//TreeModel[functionName='classification'][1]", XPathConstants.STRING ) != null )
-      return Models.TREE;
-
-    return model_type;
+    return reader;
     }
 
   /**

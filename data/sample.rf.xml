@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://www.dmg.org/v4-0/pmml-4-0.xsd">
- <Header copyright="Copyright (c) 2012 ceteri" description="Random Forest Tree Model">
-  <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
+ <Header copyright="Copyright (c) 2012 Concurrent, Inc." description="Random Forest Tree Model">
+  <Extension name="user" value="pnathan" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
   <Timestamp>2012-10-22 19:39:28</Timestamp>
  </Header>

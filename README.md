@@ -54,8 +54,8 @@ Also, the _confusion matrix_ shown in `output/measure/part*` should
 match the one logged in `model.log` from baseline generated in _R_.
 
 
-Usage
------
+Use in Cascading Apps
+---------------------
 
 Alternatively, if you want to re-use this assembly for your own
 Cascading app, remove the parts related to `verifyPipe` and
@@ -69,13 +69,14 @@ then generate PMML as a file called `sample.rf.xml`:
     saveXML(pmml(fit), file="sample.rf.xml")
 
 
-Then to use the PMML file in your Java code, referenced as a command
-line argument called `pmmlPath`:
+Then use the PMML file in your Cascading app, such as the following
+example where it is referenced as a command line argument called
+`pmmlPath`:
 
     // define a "Classifier" model from PMML to evaluate the orders
-    Classifier model = ClassifierFactory.getClassifier( pmmlPath );
-    ClassifierFunction classFunc = new ClassifierFunction( new Fields( "score" ), model );
-    Pipe classifyPipe = new Each( new Pipe( "classify" ), model.getFields(), classFunc, Fields.ALL );
+    Classifier classifier = new Classifier( pmmlPath );
+    ClassifierFunction classFunc = new ClassifierFunction( new Fields( "score" ), classifier );
+    Pipe classifyPipe = new Each( new Pipe( "classify" ), classifier.getFields(), classFunc, Fields.ALL );
 
 Now when you run that Cascading app, provide a reference to
 `sample.rf.xml` for the `pmmlPath` argument.

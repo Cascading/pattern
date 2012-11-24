@@ -61,9 +61,9 @@ public class Main
     OptionSet options = optParser.parse( args );
 
     // define a "Classifier" model from the PMML description
-    Classifier model = ClassifierFactory.getClassifier( pmmlPath );
-    ClassifierFunction classFunc = new ClassifierFunction( new Fields( "score" ), model );
-    Pipe classifyPipe = new Each( new Pipe( "classify" ), model.getFields(), classFunc, Fields.ALL );
+    Classifier classifier = new Classifier( pmmlPath );
+    ClassifierFunction classFunc = new ClassifierFunction( new Fields( "score" ), classifier );
+    Pipe classifyPipe = new Each( new Pipe( "classify" ), classifier.getFields(), classFunc, Fields.ALL );
 
     // optionally: measure model results vs. what was predicted during model creation
     Pipe measurePipe = null;

@@ -18,7 +18,7 @@ import cascading.tuple.TupleEntry;
 
 public class ClassifierFunction extends BaseOperation<ClassifierFunction.Context> implements Function<ClassifierFunction.Context>
   {
-  public Classifier model;
+  public Classifier classifier;
 
   /** Class Context is used to hold intermediate values. */
   protected static class Context
@@ -35,12 +35,12 @@ public class ClassifierFunction extends BaseOperation<ClassifierFunction.Context
 
   /**
    * @param fieldDeclaration
-   * @param model
+   * @param classifier
    */
-  public ClassifierFunction( Fields fieldDeclaration, Classifier model )
+  public ClassifierFunction( Fields fieldDeclaration, Classifier classifier )
     {
     super( 1, fieldDeclaration );
-    this.model = model;
+    this.classifier = classifier;
     }
 
   /**
@@ -52,7 +52,7 @@ public class ClassifierFunction extends BaseOperation<ClassifierFunction.Context
     {
     super.prepare( flowProcess, operationCall );
     operationCall.setContext( new ClassifierFunction.Context() );
-    model.prepare();
+    classifier.prepare();
     }
 
   /**
@@ -63,7 +63,7 @@ public class ClassifierFunction extends BaseOperation<ClassifierFunction.Context
   public void operate( FlowProcess flowProcess, FunctionCall<ClassifierFunction.Context> functionCall )
     {
     TupleEntry argument = functionCall.getArguments();
-    String label = model.classifyTuple( argument.getTuple() );
+    String label = classifier.classifyTuple( argument.getTuple() );
 
     functionCall.getOutputCollector().add( functionCall.getContext().result( label ) );
     }
