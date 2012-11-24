@@ -15,7 +15,7 @@ import pattern.Schema;
 
 public abstract class Model implements Serializable
   {
-  public Schema schema;
+  public Schema schema = null;
 
   /**
    * Prepare to classify with this model. Called immediately before

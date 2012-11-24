@@ -34,7 +34,7 @@ public class MiningModel extends Model implements Serializable
   /** Field LOG */
   private static final Logger LOG = LoggerFactory.getLogger( MiningModel.class );
 
-  public Context context;
+  public Context context = null;
   public List<Model> segments = new ArrayList<Model>();
   public Map<String, Integer> votes = new HashMap<String, Integer>();
 
@@ -58,7 +58,7 @@ public class MiningModel extends Model implements Serializable
 
       if( node.getNodeType() == Node.ELEMENT_NODE )
         {
-        TreeModel tree_model = new TreeModel( pmml, node, context );
+        TreeModel tree_model = new TreeModel( pmml, context, node );
         segments.add( tree_model );
         }
       }
@@ -125,6 +125,22 @@ public class MiningModel extends Model implements Serializable
     {
     StringBuilder buf = new StringBuilder();
 
+    if( schema != null )
+      {
+      buf.append( schema );
+      buf.append( "\n" );
+      buf.append( "---------" );
+      buf.append( "\n" );
+      }
+
+    if( context != null )
+      {
+      buf.append( context );
+      buf.append( "\n" );
+      buf.append( "---------" );
+      buf.append( "\n" );
+      }
+
     buf.append( "segments: " );
     buf.append( segments );
     buf.append( "---------" );
@@ -132,13 +148,7 @@ public class MiningModel extends Model implements Serializable
 
     for( Model model : segments )
       {
-      Tree tree = ((TreeModel) model).tree;
-      buf.append( tree );
-      buf.append( tree.getRoot() );
-
-      for( Edge edge : tree.getGraph().edgeSet() )
-        buf.append( edge );
-
+      buf.append( ((TreeModel) model).tree );
       buf.append( "\n" );
       }
 

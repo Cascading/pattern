@@ -28,20 +28,20 @@ public class TreeModel extends Model implements Serializable
   /** Field LOG */
   private static final Logger LOG = LoggerFactory.getLogger( TreeModel.class );
 
-  public Schema schema;
-  public Context context;
-
+  public Context context = null;
   public Tree tree;
 
   /**
+   * Constructor for a TreeModel as a standalone classifier (PMML
+   * versions 1-3).
+   *
    * @param pmml PMML model
-   * @param context tree context
    * @throws PatternException
    */
   public TreeModel( PMML pmml ) throws PatternException
     {
-    this.schema = pmml.getSchema();
-    this.context = new Context();
+    schema = pmml.getSchema();
+    context = new Context();
 
     schema.parseMiningSchema( pmml.getNodeList( "/PMML/TreeModel/MiningSchema/MiningField" ) );
     tree = new Tree( "default" );
@@ -49,30 +49,27 @@ public class TreeModel extends Model implements Serializable
     String node_expr = "./TreeModel/Node[1]";
     NodeList root_node = pmml.getNodeList( node_expr );
 
-    buildTree( pmml, (Element) root_node.item( 0 ), tree );
+    buildTree( pmml, context, (Element) root_node.item( 0 ), tree );
     }
 
   /**
-   * Constructor for a TreeModel as part of an ensemble, such as in
-   * Random Forest.
+   * Constructor for a TreeModel as part of an ensemble (PMML verion
+   * 4+), such as in Random Forest.
    *
    * @param pmml PMML model
-   * @param parent parent node in the XML
    * @param context tree context
+   * @param parent parent node in the XML
    * @throws PatternException
    */
-  public TreeModel( PMML pmml, Node parent, Context context ) throws PatternException
+  public TreeModel( PMML pmml, Context context, Node parent ) throws PatternException
     {
-    this.schema = pmml.getSchema();
-    this.context = context;
-
     String id = ( (Element) parent ).getAttribute( "id" );
     tree = new Tree( id );
 
     String node_expr = "./TreeModel/Node[1]";
     NodeList root_node = (NodeList) pmml.getReader().read( parent, node_expr, XPathConstants.NODESET );
 
-    buildTree( pmml, (Element) root_node.item( 0 ), tree );
+    buildTree( pmml, context, (Element) root_node.item( 0 ), tree );
     }
 
   /**
@@ -96,6 +93,7 @@ public class TreeModel extends Model implements Serializable
   @Override
   public String classifyTuple( Tuple values ) throws PatternException
     {
+    // TODO
     return "null";
     }
 
@@ -103,26 +101,28 @@ public class TreeModel extends Model implements Serializable
    * Generate a serializable graph representation for a tree.
    *
    * @param pmml PMML model
+   * @param shared_context tree context
    * @param root root node in the XML
    * @param tree serializable tree structure
    * @throws PatternException
    */
-  public void buildTree( PMML pmml, Element root, Tree tree ) throws PatternException
+  public void buildTree( PMML pmml, Context shared_context, Element root, Tree tree ) throws PatternException
     {
     Vertex vertex = makeVertex( root, tree.getGraph() );
     tree.setRoot( vertex );
 
-    buildNode( pmml, root, vertex, tree.getGraph() );
+    buildNode( pmml, shared_context, root, vertex, tree.getGraph() );
     }
 
   /**
    * @param pmml PMML model
+   * @param shared_context tree context
    * @param node predicate node in the XML
    * @param vertex tree vertex
    * @param graph serializable graph
    * @throws PatternException
    */
-  protected void buildNode( PMML pmml, Element node, Vertex vertex, DirectedGraph<Vertex, Edge> graph ) throws PatternException
+  protected void buildNode( PMML pmml, Context shared_context, Element node, Vertex vertex, DirectedGraph<Vertex, Edge> graph ) throws PatternException
     {
     NodeList child_nodes = node.getChildNodes();
 
@@ -134,7 +134,7 @@ public class TreeModel extends Model implements Serializable
         {
         if( "SimplePredicate".equals( child.getNodeName() ) || "SimpleSetPredicate".equals( child.getNodeName() ) )
           {
-          Integer predicate_id = context.makePredicate( schema, pmml.getReader(), (Element) child );
+          Integer predicate_id = shared_context.makePredicate( pmml.getSchema(), pmml.getReader(), (Element) child );
 
           if( node.hasAttribute( "score" ) )
             {
@@ -150,7 +150,7 @@ public class TreeModel extends Model implements Serializable
           Vertex child_vertex = makeVertex( (Element) child, graph );
           Edge edge = graph.addEdge( vertex, child_vertex );
 
-          buildNode( pmml, (Element) child, child_vertex, graph );
+          buildNode( pmml, shared_context, (Element) child, child_vertex, graph );
           }
         }
       }
@@ -176,13 +176,28 @@ public class TreeModel extends Model implements Serializable
     {
     StringBuilder buf = new StringBuilder();
 
-    buf.append( "---------" );
-    buf.append( "\n" );
-    buf.append( schema );
-    buf.append( "\n" );
-    buf.append( "---------" );
-    buf.append( "\n" );
+    if( schema != null )
+      {
+      buf.append( schema );
+      buf.append( "\n" );
+      buf.append( "---------" );
+      buf.append( "\n" );
+      }
+
+    if( context != null )
+      {
+      buf.append( context );
+      buf.append( "\n" );
+      buf.append( "---------" );
+      buf.append( "\n" );
+      }
+
     buf.append( tree );
+    buf.append( tree.getRoot() );
+
+    for( Edge edge : tree.getGraph().edgeSet() )
+      buf.append( edge );
+
     buf.append( "\n" );
 
     return buf.toString();
