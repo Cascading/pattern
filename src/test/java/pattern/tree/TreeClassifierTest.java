@@ -42,7 +42,7 @@ public class TreeClassifierTest
     String pmml_file = makeFile( "tree_test", ".xml", pmml_text );
     String data_file = makeFile( "tree_test", ".tsv", data_text );
 
-    TreeClassifier model = (TreeClassifier) ClassifierFactory.getClassifier( pmml_file );
+    TreeModel model = (TreeModel) ClassifierFactory.getClassifier( pmml_file );
     eval_data( data_file, model );
     }
 
@@ -93,7 +93,7 @@ public class TreeClassifierTest
    * @throws IOException
    * @throws PatternException
    */
-  protected void eval_data( String data_file, TreeClassifier model ) throws IOException, PatternException
+  protected void eval_data( String data_file, TreeModel model ) throws IOException, PatternException
     {
     FileReader fr = new FileReader( data_file );
     BufferedReader br = new BufferedReader( fr );

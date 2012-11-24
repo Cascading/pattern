@@ -6,7 +6,7 @@
 
 package pattern;
 
-import pattern.tree.TreeClassifier;
+import pattern.tree.TreeModel;
 
 
 public class ClassifierFactory
@@ -25,7 +25,7 @@ public class ClassifierFactory
     Classifier classifier = null;
 
     if( PMML.Models.TREE.equals( model_type ) )
-      classifier = new TreeClassifier( pmml );
+      classifier = new TreeModel( pmml );
     else
       throw new PatternException( "unsupported model type: " + model_type.name() );
 

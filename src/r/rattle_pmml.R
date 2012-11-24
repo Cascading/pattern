@@ -11,6 +11,7 @@ library(randomForest)
 library(rpart)
 library(rpart.plot)
 library(nnet)
+library(XML)
 library(kernlab)
 
 dat_folder <- './data'
@@ -22,33 +23,55 @@ idx <- sample(150, 100)
 iris_train <- iris[idx,]
 iris_test <- iris[-idx,]
 
+
 ## train a Random Forest model
 ## example: http://mkseo.pe.kr/stats/?p=220
+print("model: Random Forest")
 
 f <- as.formula("as.factor(Species) ~ .")
-fit <- randomForest(f, data=iris, proximity=TRUE, ntree=100)
+fit <- randomForest(f, data=iris_train, proximity=TRUE, ntree=100)
 
 print(fit$importance)
 print(fit)
-plot(fit, log="y")
-MDSplot(fit, iris$Species)
+print(table(iris_test$Species, predict(fit, iris_test, type="class")))
 
+op <- par(mfrow = c(2, 1))
+plot(fit, log="y", main="Random Forest")
+MDSplot(fit, iris$Species)
+par(op)
+
+out <- iris
+out$predict <- predict(fit, out, type="class")
+
+write.table(out, file=paste(dat_folder, "iris.rf.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
 saveXML(pmml(fit), file=paste(dat_folder, "iris.rf.xml", sep="/"))
+
 
 ## train a Recursive Partition classification tree
 ## example: http://www.r-bloggers.com/example-9-10-more-regression-trees-and-recursive-partitioning-with-partykit/
+print("model: Recursive Partition")
 
 f <- as.formula("Species ~ .")
 fit <- rpart(f, data=iris_train)
 
 print(fit)
+print(summary(fit))
 print(table(iris_test$Species, predict(fit, iris_test, type="class")))
-prp(fit, extra=1, uniform=F, branch=1, yesno=F, border.col=0, xsep="/")
 
+op <- par(mfrow = c(2, 1))
+prp(fit, extra=1, uniform=F, branch=1, yesno=F, border.col=0, xsep="/", main="Recursive Partition")
+par(op)
+
+out <- iris
+out$predict <- predict(fit, out, type="class")
+
+write.table(out, file=paste(dat_folder, "iris.rpart.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
 saveXML(pmml(fit), file=paste(dat_folder, "iris.rpart.xml", sep="/"))
+
 
 ## train a single hidden-layer Neural Network
 ## example: http://statisticsr.blogspot.com/2008/10/notes-for-nnet.html
+print("model: Neural Network")
 
 samp <- c(sample(1:50,25), sample(51:100,25), sample(101:150,25))
 
@@ -62,10 +85,16 @@ print(fit)
 print(summary(fit))
 print(table(ird$species[-samp], predict(fit, ird[-samp,], type = "class")))
 
+out <- ird
+out$predict <- predict(fit, ird, type="class")
+
+write.table(out, file=paste(dat_folder, "iris.nn.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
 saveXML(pmml(fit), file=paste(dat_folder, "iris.nn.xml", sep="/"))
+
 
 ## train a Multinomial Regression model
 ## example: http://www.jameskeirstead.ca/r/how-to-multinomial-regression-models-in-r/
+print("model: Multinomial Regression")
 
 f <- as.formula("Species ~ .")
 fit <- multinom(f, data=iris_train)
@@ -73,25 +102,100 @@ fit <- multinom(f, data=iris_train)
 print(summary(fit))
 print(table(iris_test$Species, predict(fit, iris_test)))
 
+out <- iris
+out$predict <- predict(fit, iris, type="class")
+
+write.table(out, file=paste(dat_folder, "iris.multinom.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
 saveXML(pmml(fit, dataset=iris_train), file=paste(dat_folder, "iris.multinom.xml", sep="/"))
+
 
 ## train a Linear Regression model
 ## example: http://www2.warwick.ac.uk/fac/sci/moac/people/students/peter_cock/r/iris_lm/
+print("model: Linear Regression")
 
 f <- as.formula("Sepal.Length ~ .")
 fit <- lm(f, data=iris_train)
 
 print(summary(fit))
-plot(predict(fit))
-plot(fit)
+print(table(round(iris_test$Sepal.Length), round(predict(fit, iris_test))))
 
+op <- par(mfrow = c(3, 2))
 plot(iris$Petal.Length, iris$Petal.Width, pch=21, bg=c("red","green3","blue")[unclass(iris$Species)], main="Edgar Anderson's Iris Data", xlab="Petal length", ylab="Petal width")
+plot(predict(fit), main="Linear Regression")
+plot(fit)
+par(op)
 
+out <- iris
+out$predict <- predict(fit, iris)
+
+write.table(out, file=paste(dat_folder, "iris.lm.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
 saveXML(pmml(fit), file=paste(dat_folder, "iris.lm.xml", sep="/"))
+
+
+## train a K-Means clustering model
+## example: http://mkseo.pe.kr/stats/?p=15
+print("model: K-Means Clustering")
+
+ds <- iris[,-5]
+fit <- kmeans(ds, 3)
+
+print(fit)
+print(summary(fit))
+print(table(fit$cluster, iris$Species))
+
+op <- par(mfrow = c(1, 1))
+plot(iris$Sepal.Length, iris$Sepal.Width, pch = 23, bg = c("blue", "red", "green")[fit$cluster], main="K-Means Clustering")
+points(fit$centers[,c(1,2)], col=1:3, pch=8, cex=2)
+par(op)
+
+out <- iris
+out$predict <- fit$cluster
+
+write.table(out, file=paste(dat_folder, "iris.kmeans.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
+saveXML(pmml(fit), file=paste(dat_folder, "iris.kmeans.xml", sep="/"))
+
+
+## train a Hierarchical Clustering model
+## example: http://mkseo.pe.kr/stats/?p=15
+print("model: Hierarchical Clustering")
+
+i = as.matrix(iris[,-5])
+fit <- hclust(dist(i), method = "average")
+
+initial <- tapply(i, list(rep(cutree(fit, 3), ncol(i)), col(i)), mean)
+dimnames(initial) <- list(NULL, dimnames(i)[[2]])
+kls = cutree(fit, 3)
+
+print(fit)
+print(table(iris$Species, kls))
+
+op <- par(mfrow = c(1, 1))
+plclust(fit, main="Hierarchical Clustering")
+par(op)
+
+out <- iris
+out$predict <- kls
+
+write.table(out, file=paste(dat_folder, "iris.hc.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
+saveXML(pmml(fit, data=iris, centers=initial), file=paste(dat_folder, "iris.hc.xml", sep="/"))
+
 
 ## train a General Linear Regression model (in this case, Logistic Regression)
 ## example: http://www.stat.cmu.edu/~cshalizi/490/clustering/clustering01.r
+print("model: Logistic Regression")
 
+myiris <- cbind(iris,setosa=ifelse(iris$Species=="setosa",1,0))
+myiris <- cbind(myiris,versicolor=ifelse(iris$Species=="versicolor",1,0))
+myiris <- cbind(myiris,virginica=ifelse(iris$Species=="virginica",1,0))
+myiris <- myiris[,-5] # drop the old labels
+
+f <- as.formula("setosa ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width")
+fit <- glm(f, family=binomial, data=myiris)
+
+print(summary(fit))
+print(table(cbind(round(fitted(fit)), myiris$setosa)))
+
+op <- par(mfrow = c(3, 2))
 cols=c(1,2)
 plot(iris[,cols],type="n")
 points(iris[iris$Species=="setosa",cols],col=1,pch="*")
@@ -104,60 +208,32 @@ points(iris[iris$Species=="setosa",cols],col=1,pch="*")
 points(iris[iris$Species=="versicolor",cols],col=2,pch="*")
 points(iris[iris$Species=="virginica",cols],col=3,pch="*")
 
-myiris <- cbind(iris,setosa=ifelse(iris$Species=="setosa",1,0))
-myiris <- cbind(myiris,versicolor=ifelse(iris$Species=="versicolor",1,0))
-myiris <- cbind(myiris,virginica=ifelse(iris$Species=="virginica",1,0))
-myiris <- myiris[,-5] # drop the old labels
-
-f <- as.formula("setosa ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width")
-fit <- glm(f, family=binomial, data=myiris)
-
-print(summary(fit))
 plot(fit)
+par(op)
 
-fitted.iris <- round(fitted(fit))
-print(table(cbind(fitted.iris, myiris$setosa)))
+out <- iris
+out$predict <- round(fitted(fit))
 
+write.table(out, file=paste(dat_folder, "iris.glm.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
 saveXML(pmml(fit), file=paste(dat_folder, "iris.glm.xml", sep="/"))
+
 
 ## train a Support Vector Machine model
 ## example: https://support.zementis.com/entries/21176632-what-types-of-svm-models-built-in-r-can-i-export-to-pmml
+print("model: Support Vector Machine")
 
 f <- as.formula("Species ~ .")
-fit <- ksvm(f, data=iris_train, type="C-bsvc", kernel=rbfdot(sigma=0.1), C=10, prob.model=TRUE)
+fit <- ksvm(f, data=iris_train, kernel="rbfdot", prob.model=TRUE)
 
 print(fit)
 print(table(iris_test$Species, predict(fit, iris_test)))
 
+out <- iris
+out$predict <- predict(fit, iris)
+
+write.table(out, file=paste(dat_folder, "iris.svm.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
 saveXML(pmml(fit, dataset=iris_train), file=paste(dat_folder, "iris.svm.xml", sep="/"))
 
-## train a K-Means clustering model
-## example: http://mkseo.pe.kr/stats/?p=15
-
-ds <- iris[,-5]
-fit <- kmeans(ds, 3)
-
-plot(iris$Sepal.Length, iris$Sepal.Width, pch = 23, bg = c("blue", "red", "green")[fit$cluster])
-points(fit$centers[,c(1,2)], col=1:3, pch=8, cex=2)
-table(fit$cluster, iris$Species)
-
-saveXML(pmml(fit), file=paste(dat_folder, "iris.kmeans.xml", sep="/"))
-
-## train a Hierarchical Clustering model
-## example: http://mkseo.pe.kr/stats/?p=15
-
-i = as.matrix(iris[,-5])
-fit <- hclust(dist(i), method = "average")
-
-initial <- tapply(i, list(rep(cutree(fit, 3), ncol(i)), col(i)), mean)
-dimnames(initial) <- list(NULL, dimnames(i)[[2]])
-
-kls = cutree(fit, 3)
-print(fit)
-plclust(fit)
-table(iris$Species, kls)
-
-saveXML(pmml(fit, data=iris, centers=initial), file=paste(dat_folder, "iris.hc.xml", sep="/"))
 
 ## TODO:
 ## pmml.rules

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://www.dmg.org/v4-0/pmml-4-0.xsd">
+ <Header copyright="Copyright (c) 2012 ceteri" description="Generalized Linear Regression Model">
+  <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
+  <Application name="Rattle/PMML" version="1.2.30"/>
+  <Timestamp>2012-11-24 08:29:02</Timestamp>
+ </Header>
+ <DataDictionary numberOfFields="5">
+  <DataField name="setosa" optype="continuous" dataType="double"/>
+  <DataField name="Sepal.Length" optype="continuous" dataType="double"/>
+  <DataField name="Sepal.Width" optype="continuous" dataType="double"/>
+  <DataField name="Petal.Length" optype="continuous" dataType="double"/>
+  <DataField name="Petal.Width" optype="continuous" dataType="double"/>
+ </DataDictionary>
+ <GeneralRegressionModel modelName="General_Regression_Model" modelType="generalizedLinear" functionName="regression" algorithmName="glm" distribution="binomial" linkFunction="logit">
+  <MiningSchema>
+   <MiningField name="setosa" usageType="predicted"/>
+   <MiningField name="Sepal.Length" usageType="active"/>
+   <MiningField name="Sepal.Width" usageType="active"/>
+   <MiningField name="Petal.Length" usageType="active"/>
+   <MiningField name="Petal.Width" usageType="active"/>
+  </MiningSchema>
+  <ParameterList>
+   <Parameter name="p0" label="(Intercept)"/>
+   <Parameter name="p1" label="Sepal.Length"/>
+   <Parameter name="p2" label="Sepal.Width"/>
+   <Parameter name="p3" label="Petal.Length"/>
+   <Parameter name="p4" label="Petal.Width"/>
+  </ParameterList>
+  <FactorList/>
+  <CovariateList>
+   <Predictor name="Sepal.Length"/>
+   <Predictor name="Sepal.Width"/>
+   <Predictor name="Petal.Length"/>
+   <Predictor name="Petal.Width"/>
+  </CovariateList>
+  <PPMatrix>
+   <PPCell value="1" predictorName="Sepal.Length" parameterName="p1"/>
+   <PPCell value="1" predictorName="Sepal.Width" parameterName="p2"/>
+   <PPCell value="1" predictorName="Petal.Length" parameterName="p3"/>
+   <PPCell value="1" predictorName="Petal.Width" parameterName="p4"/>
+  </PPMatrix>
+  <ParamMatrix>
+   <PCell parameterName="p0" df="1" beta="-16.9456960387809"/>
+   <PCell parameterName="p1" df="1" beta="11.7592159418536"/>
+   <PCell parameterName="p2" df="1" beta="7.84157781514097"/>
+   <PCell parameterName="p3" df="1" beta="-20.0880078273996"/>
+   <PCell parameterName="p4" df="1" beta="-21.6076488529538"/>
+  </ParamMatrix>
+ </GeneralRegressionModel>
+</PMML>

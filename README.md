@@ -37,7 +37,7 @@ Forest_ algorithm. This baseline includes a reference data set
 (simulated ecommerce orders) plus a predictive model in PMML:
 
     ./src/py/pmml_orders.py 200 > data/orders.tsv
-    R --vanilla --slave < src/r/pmml_models.R > model.log
+    R --vanilla < src/r/pmml_models.R > model.log
 
 To build _Pattern_ and then run the baseline regression test:
 
@@ -83,22 +83,27 @@ Now when you run that Cascading app, provide a reference to
 An architectural diagram for common use case patterns is shown in
 `docs/pattern.graffle` which is an OmniGraffle document.
 
-Examples
---------
+Example Models
+--------------
 
-Check in the `src/r/rattle_pmml.R` source code for examples of
-predictive models created in R, then exported using _Rattle_.
-These examples use the popular _Iris_ data set.
+Check the `src/r/rattle_pmml.R` script for examples of predictive
+models which are created in R, then exported using _Rattle_.
+These examples use the popular
+[Iris](http://en.wikipedia.org/wiki/Iris_flower_data_set) data set.
 
  * random forest (rf)
  * recursive partition classification tree (rpart)
  * single hidden-layer neural network (nnet)
  * multinomial model (multinom)
  * linear regression (lm)
- * logistic regression (glm)
- * support vector machine (ksvm)
  * k-means clustering (kmeans)
  * hierarchical clustering (hclust)
+ * logistic regression (glm)
+ * support vector machine (ksvm)
+
+To execute the R script:
+
+    R --vanilla < src/r/rattle_pmml.R
 
 PMML Resources
 --------------
