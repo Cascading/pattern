@@ -50,6 +50,29 @@ write.table(out, file=paste(dat_folder, "iris.rf.tsv", sep="/"), quote=FALSE, se
 saveXML(pmml(fit), file=paste(dat_folder, "iris.rf.xml", sep="/"))
 
 
+## train a Linear Regression predictive model
+## example: http://www2.warwick.ac.uk/fac/sci/moac/people/students/peter_cock/r/iris_lm/
+print("model: Linear Regression - predictive model")
+
+f <- as.formula("sepal_length ~ .")
+fit <- lm(f, data=iris_train)
+
+print(summary(fit))
+print(table(round(iris_test$sepal_length), round(predict(fit, iris_test))))
+
+op <- par(mfrow = c(3, 2))
+plot(predict(fit), main="Linear Regression")
+plot(iris_full$petal_length, iris_full$petal_width, pch=21, bg=c("red", "green3", "blue")[unclass(iris_full$species)], main="Edgar Anderson's Iris Data", xlab="petal length", ylab="petal width")
+plot(fit)
+par(op)
+
+out <- iris_full
+out$predict <- predict(fit, out)
+
+write.table(out, file=paste(dat_folder, "iris.lm_p.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
+saveXML(pmml(fit), file=paste(dat_folder, "iris.lm_p.xml", sep="/"))
+
+
 ## train a Recursive Partition classification tree
 ## example: http://www.r-bloggers.com/example-9-10-more-regression-trees-and-recursive-partitioning-with-partykit/
 print("model: Recursive Partition")
@@ -110,29 +133,6 @@ out$predict <- predict(fit, out, type="class")
 
 write.table(out, file=paste(dat_folder, "iris.multinom.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
 saveXML(pmml(fit, dataset=iris_train), file=paste(dat_folder, "iris.multinom.xml", sep="/"))
-
-
-## train a Linear Regression model
-## example: http://www2.warwick.ac.uk/fac/sci/moac/people/students/peter_cock/r/iris_lm/
-print("model: Linear Regression")
-
-f <- as.formula("sepal_length ~ .")
-fit <- lm(f, data=iris_train)
-
-print(summary(fit))
-print(table(round(iris_test$sepal_length), round(predict(fit, iris_test))))
-
-op <- par(mfrow = c(3, 2))
-plot(predict(fit), main="Linear Regression")
-plot(iris_full$petal_length, iris_full$petal_width, pch=21, bg=c("red","green3","blue")[unclass(iris_full$species)], main="Edgar Anderson's Iris Data", xlab="Petal length", ylab="Petal width")
-plot(fit)
-par(op)
-
-out <- iris_full
-out$predict <- predict(fit, out)
-
-write.table(out, file=paste(dat_folder, "iris.lm.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
-saveXML(pmml(fit), file=paste(dat_folder, "iris.lm.xml", sep="/"))
 
 
 ## train a K-Means clustering model

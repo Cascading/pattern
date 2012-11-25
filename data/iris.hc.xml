@@ -3,7 +3,7 @@
  <Header copyright="Copyright (c) 2012 ceteri" description="Hierarchical cluster model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2012-11-24 16:51:48</Timestamp>
+  <Timestamp>2012-11-24 17:44:36</Timestamp>
  </Header>
  <DataDictionary numberOfFields="4">
   <DataField name="sepal_length" optype="continuous" dataType="double"/>

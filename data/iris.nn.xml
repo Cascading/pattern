@@ -3,7 +3,7 @@
  <Header copyright="Copyright (c) 2012 ceteri" description="Neural Network PMML Model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2012-11-24 16:51:48</Timestamp>
+  <Timestamp>2012-11-24 17:44:36</Timestamp>
  </Header>
  <DataDictionary numberOfFields="5">
   <DataField name="species" optype="categorical" dataType="string">
@@ -53,31 +53,31 @@
    </NeuralInput>
   </NeuralInputs>
   <NeuralLayer numberOfNeurons="2">
-   <Neuron id="5" bias="-6.88937396007038">
-    <Con from="1" weight="-3.57432499751853"/>
-    <Con from="2" weight="-1.85178063334768"/>
-    <Con from="3" weight="4.01658456630423"/>
-    <Con from="4" weight="8.85678181878629"/>
+   <Neuron id="5" bias="-14.9311214817612">
+    <Con from="1" weight="-0.821572602108038"/>
+    <Con from="2" weight="-5.01357236039034"/>
+    <Con from="3" weight="2.52220843247644"/>
+    <Con from="4" weight="12.4274279477272"/>
    </Neuron>
-   <Neuron id="6" bias="-0.392616034482397">
-    <Con from="1" weight="-0.666118222967582"/>
-    <Con from="2" weight="-1.80549243953762"/>
-    <Con from="3" weight="3.01248868771925"/>
-    <Con from="4" weight="1.26676704867493"/>
+   <Neuron id="6" bias="0.403241520778334">
+    <Con from="1" weight="0.53906981221015"/>
+    <Con from="2" weight="1.79246227228473"/>
+    <Con from="3" weight="-2.78907745079649"/>
+    <Con from="4" weight="-1.15823491752023"/>
    </Neuron>
   </NeuralLayer>
   <NeuralLayer numberOfNeurons="3" activationFunction="identity" normalizationMethod="softmax">
-   <Neuron id="7" bias="5.63733917661001">
-    <Con from="5" weight="-1.62974732492594"/>
-    <Con from="6" weight="-8.2253021302513"/>
+   <Neuron id="7" bias="-1.96541361973315">
+    <Con from="5" weight="-2.65207702777904"/>
+    <Con from="6" weight="8.76057906992115"/>
    </Neuron>
-   <Neuron id="8" bias="-2.24671206389108">
-    <Con from="5" weight="-9.19906596226356"/>
-    <Con from="6" weight="8.44097862989709"/>
+   <Neuron id="8" bias="6.89155797949598">
+    <Con from="5" weight="-11.7781844483795"/>
+    <Con from="6" weight="-8.28555570343218"/>
    </Neuron>
-   <Neuron id="9" bias="-3.40053814926697">
-    <Con from="5" weight="10.8333299101883"/>
-    <Con from="6" weight="-0.216362545529889"/>
+   <Neuron id="9" bias="-4.92614413380856">
+    <Con from="5" weight="14.4302646699713"/>
+    <Con from="6" weight="-0.475024427322028"/>
    </Neuron>
   </NeuralLayer>
   <NeuralOutputs numberOfOutputs="3">
