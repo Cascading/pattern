@@ -3,42 +3,42 @@
  <Header copyright="Copyright (c) 2012 ceteri" description="Generalized Linear Regression Model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2012-11-24 08:29:02</Timestamp>
+  <Timestamp>2012-11-24 16:51:48</Timestamp>
  </Header>
  <DataDictionary numberOfFields="5">
   <DataField name="setosa" optype="continuous" dataType="double"/>
-  <DataField name="Sepal.Length" optype="continuous" dataType="double"/>
-  <DataField name="Sepal.Width" optype="continuous" dataType="double"/>
-  <DataField name="Petal.Length" optype="continuous" dataType="double"/>
-  <DataField name="Petal.Width" optype="continuous" dataType="double"/>
+  <DataField name="sepal_length" optype="continuous" dataType="double"/>
+  <DataField name="sepal_width" optype="continuous" dataType="double"/>
+  <DataField name="petal_length" optype="continuous" dataType="double"/>
+  <DataField name="petal_width" optype="continuous" dataType="double"/>
  </DataDictionary>
  <GeneralRegressionModel modelName="General_Regression_Model" modelType="generalizedLinear" functionName="regression" algorithmName="glm" distribution="binomial" linkFunction="logit">
   <MiningSchema>
    <MiningField name="setosa" usageType="predicted"/>
-   <MiningField name="Sepal.Length" usageType="active"/>
-   <MiningField name="Sepal.Width" usageType="active"/>
-   <MiningField name="Petal.Length" usageType="active"/>
-   <MiningField name="Petal.Width" usageType="active"/>
+   <MiningField name="sepal_length" usageType="active"/>
+   <MiningField name="sepal_width" usageType="active"/>
+   <MiningField name="petal_length" usageType="active"/>
+   <MiningField name="petal_width" usageType="active"/>
   </MiningSchema>
   <ParameterList>
    <Parameter name="p0" label="(Intercept)"/>
-   <Parameter name="p1" label="Sepal.Length"/>
-   <Parameter name="p2" label="Sepal.Width"/>
-   <Parameter name="p3" label="Petal.Length"/>
-   <Parameter name="p4" label="Petal.Width"/>
+   <Parameter name="p1" label="sepal_length"/>
+   <Parameter name="p2" label="sepal_width"/>
+   <Parameter name="p3" label="petal_length"/>
+   <Parameter name="p4" label="petal_width"/>
   </ParameterList>
   <FactorList/>
   <CovariateList>
-   <Predictor name="Sepal.Length"/>
-   <Predictor name="Sepal.Width"/>
-   <Predictor name="Petal.Length"/>
-   <Predictor name="Petal.Width"/>
+   <Predictor name="sepal_length"/>
+   <Predictor name="sepal_width"/>
+   <Predictor name="petal_length"/>
+   <Predictor name="petal_width"/>
   </CovariateList>
   <PPMatrix>
-   <PPCell value="1" predictorName="Sepal.Length" parameterName="p1"/>
-   <PPCell value="1" predictorName="Sepal.Width" parameterName="p2"/>
-   <PPCell value="1" predictorName="Petal.Length" parameterName="p3"/>
-   <PPCell value="1" predictorName="Petal.Width" parameterName="p4"/>
+   <PPCell value="1" predictorName="sepal_length" parameterName="p1"/>
+   <PPCell value="1" predictorName="sepal_width" parameterName="p2"/>
+   <PPCell value="1" predictorName="petal_length" parameterName="p3"/>
+   <PPCell value="1" predictorName="petal_width" parameterName="p4"/>
   </PPMatrix>
   <ParamMatrix>
    <PCell parameterName="p0" df="1" beta="-16.9456960387809"/>

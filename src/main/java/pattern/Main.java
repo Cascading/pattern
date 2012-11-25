@@ -76,8 +76,8 @@ public class Main
 
       // add a stream assertion which implements a full regression test
       verifyPipe = new Pipe( "verify", classifyPipe );
-      String expression = "predicted == score";
-      ExpressionFunction matchExpression = new ExpressionFunction( new Fields( "match" ), expression, Integer.class );
+      String expression = "predict.equals( score )";
+      ExpressionFunction matchExpression = new ExpressionFunction( new Fields( "match" ), expression, String.class );
       verifyPipe = new Each( verifyPipe, Fields.ALL, matchExpression, Fields.ALL );
       verifyPipe = new Each( verifyPipe, DebugLevel.VERBOSE, new Debug( true ) );
 
@@ -86,7 +86,7 @@ public class Main
 
       // calculate a confusion matrix for the model results
       measurePipe = new Pipe( "measure", verifyPipe );
-      measurePipe = new GroupBy( measurePipe, new Fields( "label", "score" ) );
+      measurePipe = new GroupBy( measurePipe, new Fields( "predict", "score" ) );
       measurePipe = new Every( measurePipe, Fields.ALL, new Count(), Fields.ALL );
       }
 

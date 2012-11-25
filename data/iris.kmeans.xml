@@ -3,28 +3,28 @@
  <Header copyright="Copyright (c) 2012 ceteri" description="KMeans cluster model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2012-11-24 08:29:02</Timestamp>
+  <Timestamp>2012-11-24 16:51:48</Timestamp>
  </Header>
  <DataDictionary numberOfFields="4">
-  <DataField name="Sepal.Length" optype="continuous" dataType="double"/>
-  <DataField name="Sepal.Width" optype="continuous" dataType="double"/>
-  <DataField name="Petal.Length" optype="continuous" dataType="double"/>
-  <DataField name="Petal.Width" optype="continuous" dataType="double"/>
+  <DataField name="sepal_length" optype="continuous" dataType="double"/>
+  <DataField name="sepal_width" optype="continuous" dataType="double"/>
+  <DataField name="petal_length" optype="continuous" dataType="double"/>
+  <DataField name="petal_width" optype="continuous" dataType="double"/>
  </DataDictionary>
  <ClusteringModel modelName="KMeans_Model" functionName="clustering" algorithmName="KMeans: Hartigan and Wong" modelClass="centerBased" numberOfClusters="3">
   <MiningSchema>
-   <MiningField name="Sepal.Length" usageType="active"/>
-   <MiningField name="Sepal.Width" usageType="active"/>
-   <MiningField name="Petal.Length" usageType="active"/>
-   <MiningField name="Petal.Width" usageType="active"/>
+   <MiningField name="sepal_length" usageType="active"/>
+   <MiningField name="sepal_width" usageType="active"/>
+   <MiningField name="petal_length" usageType="active"/>
+   <MiningField name="petal_width" usageType="active"/>
   </MiningSchema>
   <ComparisonMeasure kind="distance">
    <squaredEuclidean/>
   </ComparisonMeasure>
-  <ClusteringField field="Sepal.Length" compareFunction="absDiff"/>
-  <ClusteringField field="Sepal.Width" compareFunction="absDiff"/>
-  <ClusteringField field="Petal.Length" compareFunction="absDiff"/>
-  <ClusteringField field="Petal.Width" compareFunction="absDiff"/>
+  <ClusteringField field="sepal_length" compareFunction="absDiff"/>
+  <ClusteringField field="sepal_width" compareFunction="absDiff"/>
+  <ClusteringField field="petal_length" compareFunction="absDiff"/>
+  <ClusteringField field="petal_width" compareFunction="absDiff"/>
   <Cluster name="1" size="62">
    <Array n="4" type="real">5.90161290322581 2.74838709677419 4.39354838709678 1.43387096774194</Array>
   </Cluster>

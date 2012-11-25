@@ -3,6 +3,7 @@ dot/
 etc/
 output/
 .gradle
+Rplots.pdf
 *.class
 *.log
 *~

@@ -19,28 +19,31 @@ dat_folder <- './data'
 ## split data into test and train sets
 
 data(iris)
+iris_full <- iris
+colnames(iris_full) <- c("sepal_length", "sepal_width", "petal_length", "petal_width", "species")
+
 idx <- sample(150, 100)
-iris_train <- iris[idx,]
-iris_test <- iris[-idx,]
+iris_train <- iris_full[idx,]
+iris_test <- iris_full[-idx,]
 
 
 ## train a Random Forest model
 ## example: http://mkseo.pe.kr/stats/?p=220
 print("model: Random Forest")
 
-f <- as.formula("as.factor(Species) ~ .")
-fit <- randomForest(f, data=iris_train, proximity=TRUE, ntree=100)
+f <- as.formula("as.factor(species) ~ .")
+fit <- randomForest(f, data=iris_train, proximity=TRUE, ntree=50)
 
 print(fit$importance)
 print(fit)
-print(table(iris_test$Species, predict(fit, iris_test, type="class")))
+print(table(iris_test$species, predict(fit, iris_test, type="class")))
 
 op <- par(mfrow = c(2, 1))
 plot(fit, log="y", main="Random Forest")
-MDSplot(fit, iris$Species)
+MDSplot(fit, iris_full$species)
 par(op)
 
-out <- iris
+out <- iris_full
 out$predict <- predict(fit, out, type="class")
 
 write.table(out, file=paste(dat_folder, "iris.rf.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
@@ -51,18 +54,18 @@ saveXML(pmml(fit), file=paste(dat_folder, "iris.rf.xml", sep="/"))
 ## example: http://www.r-bloggers.com/example-9-10-more-regression-trees-and-recursive-partitioning-with-partykit/
 print("model: Recursive Partition")
 
-f <- as.formula("Species ~ .")
+f <- as.formula("species ~ .")
 fit <- rpart(f, data=iris_train)
 
 print(fit)
 print(summary(fit))
-print(table(iris_test$Species, predict(fit, iris_test, type="class")))
+print(table(iris_test$species, predict(fit, iris_test, type="class")))
 
 op <- par(mfrow = c(2, 1))
 prp(fit, extra=1, uniform=F, branch=1, yesno=F, border.col=0, xsep="/", main="Recursive Partition")
 par(op)
 
-out <- iris
+out <- iris_full
 out$predict <- predict(fit, out, type="class")
 
 write.table(out, file=paste(dat_folder, "iris.rpart.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
@@ -96,14 +99,14 @@ saveXML(pmml(fit), file=paste(dat_folder, "iris.nn.xml", sep="/"))
 ## example: http://www.jameskeirstead.ca/r/how-to-multinomial-regression-models-in-r/
 print("model: Multinomial Regression")
 
-f <- as.formula("Species ~ .")
+f <- as.formula("species ~ .")
 fit <- multinom(f, data=iris_train)
 
 print(summary(fit))
-print(table(iris_test$Species, predict(fit, iris_test)))
+print(table(iris_test$species, predict(fit, iris_test)))
 
-out <- iris
-out$predict <- predict(fit, iris, type="class")
+out <- iris_full
+out$predict <- predict(fit, out, type="class")
 
 write.table(out, file=paste(dat_folder, "iris.multinom.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
 saveXML(pmml(fit, dataset=iris_train), file=paste(dat_folder, "iris.multinom.xml", sep="/"))
@@ -113,20 +116,20 @@ saveXML(pmml(fit, dataset=iris_train), file=paste(dat_folder, "iris.multinom.xml
 ## example: http://www2.warwick.ac.uk/fac/sci/moac/people/students/peter_cock/r/iris_lm/
 print("model: Linear Regression")
 
-f <- as.formula("Sepal.Length ~ .")
+f <- as.formula("sepal_length ~ .")
 fit <- lm(f, data=iris_train)
 
 print(summary(fit))
-print(table(round(iris_test$Sepal.Length), round(predict(fit, iris_test))))
+print(table(round(iris_test$sepal_length), round(predict(fit, iris_test))))
 
 op <- par(mfrow = c(3, 2))
-plot(iris$Petal.Length, iris$Petal.Width, pch=21, bg=c("red","green3","blue")[unclass(iris$Species)], main="Edgar Anderson's Iris Data", xlab="Petal length", ylab="Petal width")
 plot(predict(fit), main="Linear Regression")
+plot(iris_full$petal_length, iris_full$petal_width, pch=21, bg=c("red","green3","blue")[unclass(iris_full$species)], main="Edgar Anderson's Iris Data", xlab="Petal length", ylab="Petal width")
 plot(fit)
 par(op)
 
-out <- iris
-out$predict <- predict(fit, iris)
+out <- iris_full
+out$predict <- predict(fit, out)
 
 write.table(out, file=paste(dat_folder, "iris.lm.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
 saveXML(pmml(fit), file=paste(dat_folder, "iris.lm.xml", sep="/"))
@@ -136,19 +139,19 @@ saveXML(pmml(fit), file=paste(dat_folder, "iris.lm.xml", sep="/"))
 ## example: http://mkseo.pe.kr/stats/?p=15
 print("model: K-Means Clustering")
 
-ds <- iris[,-5]
+ds <- iris_full[,-5]
 fit <- kmeans(ds, 3)
 
 print(fit)
 print(summary(fit))
-print(table(fit$cluster, iris$Species))
+print(table(fit$cluster, iris_full$species))
 
 op <- par(mfrow = c(1, 1))
-plot(iris$Sepal.Length, iris$Sepal.Width, pch = 23, bg = c("blue", "red", "green")[fit$cluster], main="K-Means Clustering")
-points(fit$centers[,c(1,2)], col=1:3, pch=8, cex=2)
+plot(iris_full$sepal_length, iris_full$sepal_width, pch = 23, bg = c("blue", "red", "green")[fit$cluster], main="K-Means Clustering")
+points(fit$centers[,c(1, 2)], col=1:3, pch=8, cex=2)
 par(op)
 
-out <- iris
+out <- iris_full
 out$predict <- fit$cluster
 
 write.table(out, file=paste(dat_folder, "iris.kmeans.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
@@ -159,7 +162,7 @@ saveXML(pmml(fit), file=paste(dat_folder, "iris.kmeans.xml", sep="/"))
 ## example: http://mkseo.pe.kr/stats/?p=15
 print("model: Hierarchical Clustering")
 
-i = as.matrix(iris[,-5])
+i = as.matrix(iris_full[,-5])
 fit <- hclust(dist(i), method = "average")
 
 initial <- tapply(i, list(rep(cutree(fit, 3), ncol(i)), col(i)), mean)
@@ -167,13 +170,13 @@ dimnames(initial) <- list(NULL, dimnames(i)[[2]])
 kls = cutree(fit, 3)
 
 print(fit)
-print(table(iris$Species, kls))
+print(table(iris_full$species, kls))
 
 op <- par(mfrow = c(1, 1))
 plclust(fit, main="Hierarchical Clustering")
 par(op)
 
-out <- iris
+out <- iris_full
 out$predict <- kls
 
 write.table(out, file=paste(dat_folder, "iris.hc.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
@@ -184,34 +187,34 @@ saveXML(pmml(fit, data=iris, centers=initial), file=paste(dat_folder, "iris.hc.x
 ## example: http://www.stat.cmu.edu/~cshalizi/490/clustering/clustering01.r
 print("model: Logistic Regression")
 
-myiris <- cbind(iris,setosa=ifelse(iris$Species=="setosa",1,0))
-myiris <- cbind(myiris,versicolor=ifelse(iris$Species=="versicolor",1,0))
-myiris <- cbind(myiris,virginica=ifelse(iris$Species=="virginica",1,0))
+myiris <- cbind(iris_full, setosa=ifelse(iris_full$species=="setosa", 1, 0))
+myiris <- cbind(myiris, versicolor=ifelse(iris_full$species=="versicolor", 1, 0))
+myiris <- cbind(myiris, virginica=ifelse(iris_full$species=="virginica", 1, 0))
 myiris <- myiris[,-5] # drop the old labels
 
-f <- as.formula("setosa ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width")
+f <- as.formula("setosa ~ sepal_length + sepal_width + petal_length + petal_width")
 fit <- glm(f, family=binomial, data=myiris)
 
 print(summary(fit))
 print(table(cbind(round(fitted(fit)), myiris$setosa)))
 
 op <- par(mfrow = c(3, 2))
-cols=c(1,2)
-plot(iris[,cols],type="n")
-points(iris[iris$Species=="setosa",cols],col=1,pch="*")
-points(iris[iris$Species=="versicolor",cols],col=2,pch="*")
-points(iris[iris$Species=="virginica",cols],col=3,pch="*")
+cols=c(1, 2)
+plot(iris_full[,cols], type="n")
+points(iris_full[iris_full$species=="setosa", cols], col=1, pch="*")
+points(iris_full[iris_full$species=="versicolor", cols], col=2, pch="*")
+points(iris_full[iris_full$species=="virginica", cols], col=3, pch="*")
 
-cols=c(3,4)
-plot(iris[,cols],type="n")
-points(iris[iris$Species=="setosa",cols],col=1,pch="*")
-points(iris[iris$Species=="versicolor",cols],col=2,pch="*")
-points(iris[iris$Species=="virginica",cols],col=3,pch="*")
+cols=c(3, 4)
+plot(iris_full[,cols], type="n")
+points(iris_full[iris_full$species=="setosa", cols], col=1, pch="*")
+points(iris_full[iris_full$species=="versicolor", cols], col=2, pch="*")
+points(iris_full[iris_full$species=="virginica", cols], col=3, pch="*")
 
 plot(fit)
 par(op)
 
-out <- iris
+out <- iris_full
 out$predict <- round(fitted(fit))
 
 write.table(out, file=paste(dat_folder, "iris.glm.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
@@ -222,14 +225,14 @@ saveXML(pmml(fit), file=paste(dat_folder, "iris.glm.xml", sep="/"))
 ## example: https://support.zementis.com/entries/21176632-what-types-of-svm-models-built-in-r-can-i-export-to-pmml
 print("model: Support Vector Machine")
 
-f <- as.formula("Species ~ .")
+f <- as.formula("species ~ .")
 fit <- ksvm(f, data=iris_train, kernel="rbfdot", prob.model=TRUE)
 
 print(fit)
-print(table(iris_test$Species, predict(fit, iris_test)))
+print(table(iris_test$species, predict(fit, iris_test)))
 
-out <- iris
-out$predict <- predict(fit, iris)
+out <- iris_full
+out$predict <- predict(fit, out)
 
 write.table(out, file=paste(dat_folder, "iris.svm.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
 saveXML(pmml(fit, dataset=iris_train), file=paste(dat_folder, "iris.svm.xml", sep="/"))

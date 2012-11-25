@@ -3,28 +3,28 @@
  <Header copyright="Copyright (c) 2012 ceteri" description="Hierarchical cluster model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2012-11-24 08:29:02</Timestamp>
+  <Timestamp>2012-11-24 16:51:48</Timestamp>
  </Header>
  <DataDictionary numberOfFields="4">
-  <DataField name="Sepal.Length" optype="continuous" dataType="double"/>
-  <DataField name="Sepal.Width" optype="continuous" dataType="double"/>
-  <DataField name="Petal.Length" optype="continuous" dataType="double"/>
-  <DataField name="Petal.Width" optype="continuous" dataType="double"/>
+  <DataField name="sepal_length" optype="continuous" dataType="double"/>
+  <DataField name="sepal_width" optype="continuous" dataType="double"/>
+  <DataField name="petal_length" optype="continuous" dataType="double"/>
+  <DataField name="petal_width" optype="continuous" dataType="double"/>
  </DataDictionary>
  <ClusteringModel modelName="HClust_Model" functionName="clustering" algorithmName="HClust" modelClass="centerBased" numberOfClusters="3">
   <MiningSchema>
-   <MiningField name="Sepal.Length" usageType="active"/>
-   <MiningField name="Sepal.Width" usageType="active"/>
-   <MiningField name="Petal.Length" usageType="active"/>
-   <MiningField name="Petal.Width" usageType="active"/>
+   <MiningField name="sepal_length" usageType="active"/>
+   <MiningField name="sepal_width" usageType="active"/>
+   <MiningField name="petal_length" usageType="active"/>
+   <MiningField name="petal_width" usageType="active"/>
   </MiningSchema>
   <ComparisonMeasure kind="distance">
    <squaredEuclidean/>
   </ComparisonMeasure>
-  <ClusteringField field="Sepal.Length"/>
-  <ClusteringField field="Sepal.Width"/>
-  <ClusteringField field="Petal.Length"/>
-  <ClusteringField field="Petal.Width"/>
+  <ClusteringField field="sepal_length"/>
+  <ClusteringField field="sepal_width"/>
+  <ClusteringField field="petal_length"/>
+  <ClusteringField field="petal_width"/>
   <Cluster name="1">
    <Array n="4" type="real">5.006 3.428 1.462 0.246</Array>
   </Cluster>

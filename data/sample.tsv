@@ -1,4 +1,4 @@
-label	var0	var1	var2	order_id	predicted
+label	var0	var1	var2	order_id	predict
 1	0	1	0	6f8e1014	1
 0	0	0	1	6f8ea22e	0
 1	0	1	0	6f8ea435	1

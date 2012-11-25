@@ -40,7 +40,7 @@ print(fit$importance)
 print(fit)
 
 predicted <- predict(fit, data)
-data$predicted <- predicted
+data$predict <- predicted
 confuse <- table(pred = predicted, true = data[,1])
 print(confuse)
 

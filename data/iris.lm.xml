@@ -3,34 +3,34 @@
  <Header copyright="Copyright (c) 2012 ceteri" description="Linear Regression Model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2012-11-24 08:29:02</Timestamp>
+  <Timestamp>2012-11-24 16:51:48</Timestamp>
  </Header>
  <DataDictionary numberOfFields="5">
-  <DataField name="Sepal.Length" optype="continuous" dataType="double"/>
-  <DataField name="Sepal.Width" optype="continuous" dataType="double"/>
-  <DataField name="Petal.Length" optype="continuous" dataType="double"/>
-  <DataField name="Petal.Width" optype="continuous" dataType="double"/>
-  <DataField name="Species" optype="categorical" dataType="string">
+  <DataField name="sepal_length" optype="continuous" dataType="double"/>
+  <DataField name="sepal_width" optype="continuous" dataType="double"/>
+  <DataField name="petal_length" optype="continuous" dataType="double"/>
+  <DataField name="petal_width" optype="continuous" dataType="double"/>
+  <DataField name="species" optype="categorical" dataType="string">
    <Value value="setosa"/>
    <Value value="versicolor"/>
    <Value value="virginica"/>
   </DataField>
  </DataDictionary>
- <RegressionModel modelName="Linear_Regression_Model" functionName="regression" algorithmName="least squares" targetFieldName="Sepal.Length">
+ <RegressionModel modelName="Linear_Regression_Model" functionName="regression" algorithmName="least squares" targetFieldName="sepal_length">
   <MiningSchema>
-   <MiningField name="Sepal.Length" usageType="predicted"/>
-   <MiningField name="Sepal.Width" usageType="active"/>
-   <MiningField name="Petal.Length" usageType="active"/>
-   <MiningField name="Petal.Width" usageType="active"/>
-   <MiningField name="Species" usageType="active"/>
+   <MiningField name="sepal_length" usageType="predicted"/>
+   <MiningField name="sepal_width" usageType="active"/>
+   <MiningField name="petal_length" usageType="active"/>
+   <MiningField name="petal_width" usageType="active"/>
+   <MiningField name="species" usageType="active"/>
   </MiningSchema>
-  <RegressionTable intercept="2.3079404568029">
-   <NumericPredictor name="Sepal.Width" exponent="1" coefficient="0.474914547545184"/>
-   <NumericPredictor name="Petal.Length" exponent="1" coefficient="0.778131947537511"/>
-   <NumericPredictor name="Petal.Width" exponent="1" coefficient="-0.345272559064337"/>
-   <CategoricalPredictor name="Species" value="setosa" coefficient="0"/>
-   <CategoricalPredictor name="Species" value="versicolor" coefficient="-0.529496822417794"/>
-   <CategoricalPredictor name="Species" value="virginica" coefficient="-0.712800897023037"/>
+  <RegressionTable intercept="2.15577321280583">
+   <NumericPredictor name="sepal_width" exponent="1" coefficient="0.54410269343324"/>
+   <NumericPredictor name="petal_length" exponent="1" coefficient="0.727270208108788"/>
+   <NumericPredictor name="petal_width" exponent="1" coefficient="-0.311897992380313"/>
+   <CategoricalPredictor name="species" value="setosa" coefficient="0"/>
+   <CategoricalPredictor name="species" value="versicolor" coefficient="-0.429285746571203"/>
+   <CategoricalPredictor name="species" value="virginica" coefficient="-0.585804911869745"/>
   </RegressionTable>
  </RegressionModel>
 </PMML>
