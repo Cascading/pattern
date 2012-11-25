@@ -260,7 +260,7 @@ itemFrequencyPlot(Groceries, support = 0.05, cex.names=0.8)
 
 rules_high_lift <- head(sort(rules, by="confidence"), 10)
 
-WRITE(Groceries, file=paste(dat_folder, "groc.arules.tsv", sep="/"), sep="\t")
+#WRITE(Groceries, file=paste(dat_folder, "groc.arules.csv", sep="/"), sep=",")
 saveXML(pmml(rules_high_lift), file=paste(dat_folder, "groc.arules.xml", sep="/"))
 
 
