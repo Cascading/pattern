@@ -3,7 +3,7 @@
  <Header copyright="Copyright (c) 2012 ceteri" description="RPart Decision Tree Model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2012-11-24 17:44:36</Timestamp>
+  <Timestamp>2012-11-24 23:05:22</Timestamp>
  </Header>
  <DataDictionary numberOfFields="5">
   <DataField name="species" optype="categorical" dataType="string">
@@ -32,51 +32,51 @@
   </Output>
   <Node id="1" score="setosa" recordCount="100" defaultChild="3">
    <True/>
-   <ScoreDistribution value="setosa" recordCount="35" confidence="0.35"/>
-   <ScoreDistribution value="versicolor" recordCount="31" confidence="0.31"/>
-   <ScoreDistribution value="virginica" recordCount="34" confidence="0.34"/>
-   <Node id="2" score="setosa" recordCount="35">
+   <ScoreDistribution value="setosa" recordCount="36" confidence="0.36"/>
+   <ScoreDistribution value="versicolor" recordCount="32" confidence="0.32"/>
+   <ScoreDistribution value="virginica" recordCount="32" confidence="0.32"/>
+   <Node id="2" score="setosa" recordCount="36">
     <CompoundPredicate booleanOperator="surrogate">
-     <SimplePredicate field="petal_length" operator="lessThan" value="2.45"/>
+     <SimplePredicate field="petal_length" operator="lessThan" value="2.6"/>
      <SimplePredicate field="petal_width" operator="lessThan" value="0.75"/>
-     <SimplePredicate field="sepal_length" operator="lessThan" value="5.55"/>
-     <SimplePredicate field="sepal_width" operator="greaterOrEqual" value="3.25"/>
+     <SimplePredicate field="sepal_length" operator="lessThan" value="5.45"/>
+     <SimplePredicate field="sepal_width" operator="greaterOrEqual" value="3.35"/>
     </CompoundPredicate>
-    <ScoreDistribution value="setosa" recordCount="35" confidence="1"/>
+    <ScoreDistribution value="setosa" recordCount="36" confidence="1"/>
     <ScoreDistribution value="versicolor" recordCount="0" confidence="0"/>
     <ScoreDistribution value="virginica" recordCount="0" confidence="0"/>
    </Node>
-   <Node id="3" score="virginica" recordCount="65" defaultChild="7">
+   <Node id="3" score="versicolor" recordCount="64" defaultChild="7">
     <CompoundPredicate booleanOperator="surrogate">
-     <SimplePredicate field="petal_length" operator="greaterOrEqual" value="2.45"/>
+     <SimplePredicate field="petal_length" operator="greaterOrEqual" value="2.6"/>
      <SimplePredicate field="petal_width" operator="greaterOrEqual" value="0.75"/>
-     <SimplePredicate field="sepal_length" operator="greaterOrEqual" value="5.55"/>
-     <SimplePredicate field="sepal_width" operator="lessThan" value="3.25"/>
+     <SimplePredicate field="sepal_length" operator="greaterOrEqual" value="5.45"/>
+     <SimplePredicate field="sepal_width" operator="lessThan" value="3.35"/>
     </CompoundPredicate>
     <ScoreDistribution value="setosa" recordCount="0" confidence="0"/>
-    <ScoreDistribution value="versicolor" recordCount="31" confidence="0.476923076923077"/>
-    <ScoreDistribution value="virginica" recordCount="34" confidence="0.523076923076923"/>
-    <Node id="6" score="versicolor" recordCount="32">
+    <ScoreDistribution value="versicolor" recordCount="32" confidence="0.5"/>
+    <ScoreDistribution value="virginica" recordCount="32" confidence="0.5"/>
+    <Node id="6" score="versicolor" recordCount="35">
      <CompoundPredicate booleanOperator="surrogate">
-      <SimplePredicate field="petal_width" operator="lessThan" value="1.75"/>
-      <SimplePredicate field="petal_length" operator="lessThan" value="4.75"/>
-      <SimplePredicate field="sepal_length" operator="lessThan" value="6.25"/>
+      <SimplePredicate field="petal_width" operator="lessThan" value="1.7"/>
+      <SimplePredicate field="petal_length" operator="lessThan" value="4.95"/>
+      <SimplePredicate field="sepal_length" operator="lessThan" value="6.15"/>
       <SimplePredicate field="sepal_width" operator="lessThan" value="2.95"/>
      </CompoundPredicate>
      <ScoreDistribution value="setosa" recordCount="0" confidence="0"/>
-     <ScoreDistribution value="versicolor" recordCount="30" confidence="0.9375"/>
-     <ScoreDistribution value="virginica" recordCount="2" confidence="0.0625"/>
+     <ScoreDistribution value="versicolor" recordCount="32" confidence="0.914285714285714"/>
+     <ScoreDistribution value="virginica" recordCount="3" confidence="0.0857142857142857"/>
     </Node>
-    <Node id="7" score="virginica" recordCount="33">
+    <Node id="7" score="virginica" recordCount="29">
      <CompoundPredicate booleanOperator="surrogate">
-      <SimplePredicate field="petal_width" operator="greaterOrEqual" value="1.75"/>
-      <SimplePredicate field="petal_length" operator="greaterOrEqual" value="4.75"/>
-      <SimplePredicate field="sepal_length" operator="greaterOrEqual" value="6.25"/>
+      <SimplePredicate field="petal_width" operator="greaterOrEqual" value="1.7"/>
+      <SimplePredicate field="petal_length" operator="greaterOrEqual" value="4.95"/>
+      <SimplePredicate field="sepal_length" operator="greaterOrEqual" value="6.15"/>
       <SimplePredicate field="sepal_width" operator="greaterOrEqual" value="2.95"/>
      </CompoundPredicate>
      <ScoreDistribution value="setosa" recordCount="0" confidence="0"/>
-     <ScoreDistribution value="versicolor" recordCount="1" confidence="0.0303030303030303"/>
-     <ScoreDistribution value="virginica" recordCount="32" confidence="0.96969696969697"/>
+     <ScoreDistribution value="versicolor" recordCount="0" confidence="0"/>
+     <ScoreDistribution value="virginica" recordCount="29" confidence="1"/>
     </Node>
    </Node>
   </Node>

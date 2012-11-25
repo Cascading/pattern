@@ -1,9 +1,11 @@
 ## uncomment the following lines to install required libraries
-#install.packages("pmml")
+#install.packages"pmml")
 #install.packages("randomForest")
 #install.packages("rpart.plot")
 #install.packages("nnet")
 #install.packages("kernlab")
+#install.packages("arules")
+#install.packages("arulesViz")
 
 require(graphics)
 library(pmml)
@@ -13,6 +15,8 @@ library(rpart.plot)
 library(nnet)
 library(XML)
 library(kernlab)
+library(arules)
+library(arulesViz)
 
 dat_folder <- './data'
 
@@ -238,6 +242,27 @@ write.table(out, file=paste(dat_folder, "iris.svm.tsv", sep="/"), quote=FALSE, s
 saveXML(pmml(fit, dataset=iris_train), file=paste(dat_folder, "iris.svm.xml", sep="/"))
 
 
+## train an Association Rules model
+## example: http://jmlr.csail.mit.edu/papers/volume12/hahsler11a/hahsler11a.pdf
+print("model: Association Rules")
+
+data("Groceries")
+rules <- apriori(Groceries, parameter = list(supp = 0.001, conf = 0.8))
+
+print(rules)
+print(summary(rules))
+rules_high_lift <- head(sort(rules, by="lift"), 4)
+print(inspect(rules_high_lift))
+
+#plot(rules, control=list(jitter=2))
+plot(rules_high_lift, method="graph", control=list(type="items"))
+itemFrequencyPlot(Groceries, support = 0.05, cex.names=0.8)
+
+rules_high_lift <- head(sort(rules, by="confidence"), 10)
+
+WRITE(Groceries, file=paste(dat_folder, "groc.arules.tsv", sep="/"), sep="\t")
+saveXML(pmml(rules_high_lift), file=paste(dat_folder, "groc.arules.xml", sep="/"))
+
+
 ## TODO:
-## pmml.rules
 ## pmml.rsf

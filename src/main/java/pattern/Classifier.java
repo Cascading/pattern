@@ -62,12 +62,12 @@ public class Classifier implements Serializable
     }
 
   /**
-   * Returns a Fields data structure.
+   * Returns a Fields data structure naming the input tuple fields.
    *
    * @return
    */
-  public Fields getFields()
+  public Fields getInputFields()
     {
-    return model.schema.getFields();
+    return model.schema.getInputFields();
     }
   }

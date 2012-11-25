@@ -63,9 +63,10 @@ public class Main
     // define a "Classifier" model from the PMML description
     Classifier classifier = new Classifier( pmmlPath );
     ClassifierFunction classFunc = new ClassifierFunction( new Fields( "score" ), classifier );
-    Pipe classifyPipe = new Each( new Pipe( "classify" ), classifier.getFields(), classFunc, Fields.ALL );
+    Pipe classifyPipe = new Each( new Pipe( "classify" ), classifier.getInputFields(), classFunc, Fields.ALL );
 
-    // optionally: measure model results vs. what was predicted during model creation
+    // optionally: measure model results vs. what was predicted during
+    // model creation
     Pipe measurePipe = null;
     Pipe verifyPipe = null;
 
@@ -74,7 +75,8 @@ public class Main
       String measurePath = (String) options.valuesOf( "measure" ).get( 0 );
       measureTap = new Hfs( new TextDelimited( true, "\t" ), measurePath );
 
-      // add a stream assertion which implements a full regression test
+      // add a stream assertion which implements a full regression
+      // test
       verifyPipe = new Pipe( "verify", classifyPipe );
       String expression = "predict.equals( score )";
       ExpressionFunction matchExpression = new ExpressionFunction( new Fields( "match" ), expression, String.class );
@@ -106,13 +108,15 @@ public class Main
         ;
       }
 
-    // set to DebugLevel.VERBOSE for trace, or DebugLevel.NONE in production
+    // set to DebugLevel.VERBOSE for trace, or DebugLevel.NONE
+    // in production
     if( options.hasArgument( "debug" ) )
       flowDef.setDebugLevel( DebugLevel.VERBOSE );
     else
       flowDef.setDebugLevel( DebugLevel.NONE );
 
-    // set to AssertionLevel.STRICT for all assertions, or AssertionLevel.NONE in production
+    // set to AssertionLevel.STRICT for all assertions, or
+    // AssertionLevel.NONE in production
     if( options.hasArgument( "assert" ) )
       flowDef.setAssertionLevel( AssertionLevel.STRICT );
     else

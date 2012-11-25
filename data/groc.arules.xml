@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://www.dmg.org/v4-0/pmml-4-0.xsd">
+ <Header copyright="Copyright (c) 2012 ceteri" description="arules association rules model">
+  <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
+  <Application name="Rattle/PMML" version="1.2.30"/>
+  <Timestamp>2012-11-24 23:05:23</Timestamp>
+ </Header>
+ <DataDictionary numberOfFields="2">
+  <DataField name="transaction" optype="categorical" dataType="string"/>
+  <DataField name="item" optype="categorical" dataType="string"/>
+ </DataDictionary>
+ <AssociationModel functionName="associationRules" numberOfTransactions="9835" numberOfItems="169" minimumSupport="0.001" minimumConfidence="0.8" numberOfItemsets="12" numberOfRules="10">
+  <MiningSchema>
+   <MiningField name="transaction"/>
+   <MiningField name="item"/>
+  </MiningSchema>
+  <Item id="1" value="frankfurter"/>
+  <Item id="2" value="sausage"/>
+  <Item id="3" value="liver loaf"/>
+  <Item id="4" value="ham"/>
+  <Item id="5" value="meat"/>
+  <Item id="6" value="finished products"/>
+  <Item id="7" value="organic sausage"/>
+  <Item id="8" value="chicken"/>
+  <Item id="9" value="turkey"/>
+  <Item id="10" value="pork"/>
+  <Item id="11" value="beef"/>
+  <Item id="12" value="hamburger meat"/>
+  <Item id="13" value="fish"/>
+  <Item id="14" value="citrus fruit"/>
+  <Item id="15" value="tropical fruit"/>
+  <Item id="16" value="pip fruit"/>
+  <Item id="17" value="grapes"/>
+  <Item id="18" value="berries"/>
+  <Item id="19" value="nuts/prunes"/>
+  <Item id="20" value="root vegetables"/>
+  <Item id="21" value="onions"/>
+  <Item id="22" value="herbs"/>
+  <Item id="23" value="other vegetables"/>
+  <Item id="24" value="packaged fruit/vegetables"/>
+  <Item id="25" value="whole milk"/>
+  <Item id="26" value="butter"/>
+  <Item id="27" value="curd"/>
+  <Item id="28" value="dessert"/>
+  <Item id="29" value="butter milk"/>
+  <Item id="30" value="yogurt"/>
+  <Item id="31" value="whipped/sour cream"/>
+  <Item id="32" value="beverages"/>
+  <Item id="33" value="UHT-milk"/>
+  <Item id="34" value="condensed milk"/>
+  <Item id="35" value="cream"/>
+  <Item id="36" value="soft cheese"/>
+  <Item id="37" value="sliced cheese"/>
+  <Item id="38" value="hard cheese"/>
+  <Item id="39" value="cream cheese "/>
+  <Item id="40" value="processed cheese"/>
+  <Item id="41" value="spread cheese"/>
+  <Item id="42" value="curd cheese"/>
+  <Item id="43" value="specialty cheese"/>
+  <Item id="44" value="mayonnaise"/>
+  <Item id="45" value="salad dressing"/>
+  <Item id="46" value="tidbits"/>
+  <Item id="47" value="frozen vegetables"/>
+  <Item id="48" value="frozen fruits"/>
+  <Item id="49" value="frozen meals"/>
+  <Item id="50" value="frozen fish"/>
+  <Item id="51" value="frozen chicken"/>
+  <Item id="52" value="ice cream"/>
+  <Item id="53" value="frozen dessert"/>
+  <Item id="54" value="frozen potato products"/>
+  <Item id="55" value="domestic eggs"/>
+  <Item id="56" value="rolls/buns"/>
+  <Item id="57" value="white bread"/>
+  <Item id="58" value="brown bread"/>
+  <Item id="59" value="pastry"/>
+  <Item id="60" value="roll products "/>
+  <Item id="61" value="semi-finished bread"/>
+  <Item id="62" value="zwieback"/>
+  <Item id="63" value="potato products"/>
+  <Item id="64" value="flour"/>
+  <Item id="65" value="salt"/>
+  <Item id="66" value="rice"/>
+  <Item id="67" value="pasta"/>
+  <Item id="68" value="vinegar"/>
+  <Item id="69" value="oil"/>
+  <Item id="70" value="margarine"/>
+  <Item id="71" value="specialty fat"/>
+  <Item id="72" value="sugar"/>
+  <Item id="73" value="artif. sweetener"/>
+  <Item id="74" value="honey"/>
+  <Item id="75" value="mustard"/>
+  <Item id="76" value="ketchup"/>
+  <Item id="77" value="spices"/>
+  <Item id="78" value="soups"/>
+  <Item id="79" value="ready soups"/>
+  <Item id="80" value="Instant food products"/>
+  <Item id="81" value="sauces"/>
+  <Item id="82" value="cereals"/>
+  <Item id="83" value="organic products"/>
+  <Item id="84" value="baking powder"/>
+  <Item id="85" value="preservation products"/>
+  <Item id="86" value="pudding powder"/>
+  <Item id="87" value="canned vegetables"/>
+  <Item id="88" value="canned fruit"/>
+  <Item id="89" value="pickled vegetables"/>
+  <Item id="90" value="specialty vegetables"/>
+  <Item id="91" value="jam"/>
+  <Item id="92" value="sweet spreads"/>
+  <Item id="93" value="meat spreads"/>
+  <Item id="94" value="canned fish"/>
+  <Item id="95" value="dog food"/>
+  <Item id="96" value="cat food"/>
+  <Item id="97" value="pet care"/>
+  <Item id="98" value="baby food"/>
+  <Item id="99" value="coffee"/>
+  <Item id="100" value="instant coffee"/>
+  <Item id="101" value="tea"/>
+  <Item id="102" value="cocoa drinks"/>
+  <Item id="103" value="bottled water"/>
+  <Item id="104" value="soda"/>
+  <Item id="105" value="misc. beverages"/>
+  <Item id="106" value="fruit/vegetable juice"/>
+  <Item id="107" value="syrup"/>
+  <Item id="108" value="bottled beer"/>
+  <Item id="109" value="canned beer"/>
+  <Item id="110" value="brandy"/>
+  <Item id="111" value="whisky"/>
+  <Item id="112" value="liquor"/>
+  <Item id="113" value="rum"/>
+  <Item id="114" value="liqueur"/>
+  <Item id="115" value="liquor (appetizer)"/>
+  <Item id="116" value="white wine"/>
+  <Item id="117" value="red/blush wine"/>
+  <Item id="118" value="prosecco"/>
+  <Item id="119" value="sparkling wine"/>
+  <Item id="120" value="salty snack"/>
+  <Item id="121" value="popcorn"/>
+  <Item id="122" value="nut snack"/>
+  <Item id="123" value="snack products"/>
+  <Item id="124" value="long life bakery product"/>
+  <Item id="125" value="waffles"/>
+  <Item id="126" value="cake bar"/>
+  <Item id="127" value="chewing gum"/>
+  <Item id="128" value="chocolate"/>
+  <Item id="129" value="cooking chocolate"/>
+  <Item id="130" value="specialty chocolate"/>
+  <Item id="131" value="specialty bar"/>
+  <Item id="132" value="chocolate marshmallow"/>
+  <Item id="133" value="candy"/>
+  <Item id="134" value="seasonal products"/>
+  <Item id="135" value="detergent"/>
+  <Item id="136" value="softener"/>
+  <Item id="137" value="decalcifier"/>
+  <Item id="138" value="dish cleaner"/>
+  <Item id="139" value="abrasive cleaner"/>
+  <Item id="140" value="cleaner"/>
+  <Item id="141" value="toilet cleaner"/>
+  <Item id="142" value="bathroom cleaner"/>
+  <Item id="143" value="hair spray"/>
+  <Item id="144" value="dental care"/>
+  <Item id="145" value="male cosmetics"/>
+  <Item id="146" value="make up remover"/>
+  <Item id="147" value="skin care"/>
+  <Item id="148" value="female sanitary products"/>
+  <Item id="149" value="baby cosmetics"/>
+  <Item id="150" value="soap"/>
+  <Item id="151" value="rubbing alcohol"/>
+  <Item id="152" value="hygiene articles"/>
+  <Item id="153" value="napkins"/>
+  <Item id="154" value="dishes"/>
+  <Item id="155" value="cookware"/>
+  <Item id="156" value="kitchen utensil"/>
+  <Item id="157" value="cling film/bags"/>
+  <Item id="158" value="kitchen towels"/>
+  <Item id="159" value="house keeping products"/>
+  <Item id="160" value="candles"/>
+  <Item id="161" value="light bulbs"/>
+  <Item id="162" value="sound storage medium"/>
+  <Item id="163" value="newspapers"/>
+  <Item id="164" value="photo/film"/>
+  <Item id="165" value="pot plants"/>
+  <Item id="166" value="flower soil/fertilizer"/>
+  <Item id="167" value="flower (seeds)"/>
+  <Item id="168" value="shopping bags"/>
+  <Item id="169" value="bags"/>
+  <Itemset id="1" numberOfItems="2">
+   <ItemRef itemRef="66"/>
+   <ItemRef itemRef="72"/>
+  </Itemset>
+  <Itemset id="2" numberOfItems="2">
+   <ItemRef itemRef="94"/>
+   <ItemRef itemRef="152"/>
+  </Itemset>
+  <Itemset id="3" numberOfItems="3">
+   <ItemRef itemRef="20"/>
+   <ItemRef itemRef="26"/>
+   <ItemRef itemRef="66"/>
+  </Itemset>
+  <Itemset id="4" numberOfItems="3">
+   <ItemRef itemRef="20"/>
+   <ItemRef itemRef="31"/>
+   <ItemRef itemRef="64"/>
+  </Itemset>
+  <Itemset id="5" numberOfItems="3">
+   <ItemRef itemRef="26"/>
+   <ItemRef itemRef="36"/>
+   <ItemRef itemRef="55"/>
+  </Itemset>
+  <Itemset id="6" numberOfItems="3">
+   <ItemRef itemRef="14"/>
+   <ItemRef itemRef="20"/>
+   <ItemRef itemRef="36"/>
+  </Itemset>
+  <Itemset id="7" numberOfItems="3">
+   <ItemRef itemRef="16"/>
+   <ItemRef itemRef="26"/>
+   <ItemRef itemRef="152"/>
+  </Itemset>
+  <Itemset id="8" numberOfItems="3">
+   <ItemRef itemRef="20"/>
+   <ItemRef itemRef="31"/>
+   <ItemRef itemRef="152"/>
+  </Itemset>
+  <Itemset id="9" numberOfItems="3">
+   <ItemRef itemRef="16"/>
+   <ItemRef itemRef="20"/>
+   <ItemRef itemRef="152"/>
+  </Itemset>
+  <Itemset id="10" numberOfItems="3">
+   <ItemRef itemRef="39"/>
+   <ItemRef itemRef="55"/>
+   <ItemRef itemRef="72"/>
+  </Itemset>
+  <Itemset id="11" numberOfItems="1">
+   <ItemRef itemRef="25"/>
+  </Itemset>
+  <Itemset id="12" numberOfItems="1">
+   <ItemRef itemRef="23"/>
+  </Itemset>
+  <AssociationRule support="0.00122013218098627" confidence="1" lift="3.91364902506964" antecedent="1" consequent="11"/>
+  <AssociationRule support="0.00111845449923742" confidence="1" lift="3.91364902506964" antecedent="2" consequent="11"/>
+  <AssociationRule support="0.00101677681748856" confidence="1" lift="3.91364902506964" antecedent="3" consequent="11"/>
+  <AssociationRule support="0.00172852058973055" confidence="1" lift="3.91364902506964" antecedent="4" consequent="11"/>
+  <AssociationRule support="0.00101677681748856" confidence="1" lift="3.91364902506964" antecedent="5" consequent="11"/>
+  <AssociationRule support="0.00101677681748856" confidence="1" lift="5.16815554387809" antecedent="6" consequent="12"/>
+  <AssociationRule support="0.00101677681748856" confidence="1" lift="3.91364902506964" antecedent="7" consequent="11"/>
+  <AssociationRule support="0.00101677681748856" confidence="1" lift="3.91364902506964" antecedent="8" consequent="11"/>
+  <AssociationRule support="0.00101677681748856" confidence="1" lift="3.91364902506964" antecedent="9" consequent="11"/>
+  <AssociationRule support="0.00111845449923742" confidence="1" lift="3.91364902506964" antecedent="10" consequent="11"/>
+ </AssociationModel>
+</PMML>

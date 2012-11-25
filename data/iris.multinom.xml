@@ -3,7 +3,7 @@
  <Header copyright="Copyright (c) 2012 ceteri" description="Multinomial Logistic Model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2012-11-24 17:44:36</Timestamp>
+  <Timestamp>2012-11-24 23:05:22</Timestamp>
  </Header>
  <DataDictionary numberOfFields="5">
   <DataField name="species" optype="categorical" dataType="string">
@@ -30,17 +30,17 @@
    <OutputField name="Probability_versicolor" optype="continuous" dataType="double" feature="probability" value="versicolor"/>
    <OutputField name="Probability_virginica" optype="continuous" dataType="double" feature="probability" value="virginica"/>
   </Output>
-  <RegressionTable intercept="74.6806913800713" targetCategory="versicolor">
-   <NumericPredictor name="sepal_length" exponent="1" coefficient="-23.6467894748412"/>
-   <NumericPredictor name="sepal_width" exponent="1" coefficient="-17.9096977238341"/>
-   <NumericPredictor name="petal_length" exponent="1" coefficient="37.1150583203425"/>
-   <NumericPredictor name="petal_width" exponent="1" coefficient="-1.07184997763142"/>
+  <RegressionTable intercept="115.15739896345" targetCategory="versicolor">
+   <NumericPredictor name="sepal_length" exponent="1" coefficient="-21.1835717708807"/>
+   <NumericPredictor name="sepal_width" exponent="1" coefficient="-26.6471415122239"/>
+   <NumericPredictor name="petal_length" exponent="1" coefficient="32.2083703941746"/>
+   <NumericPredictor name="petal_width" exponent="1" coefficient="-11.7096733098976"/>
   </RegressionTable>
-  <RegressionTable intercept="-118.037914262389" targetCategory="virginica">
-   <NumericPredictor name="sepal_length" exponent="1" coefficient="-74.2264886530409"/>
-   <NumericPredictor name="sepal_width" exponent="1" coefficient="-70.4219474708704"/>
-   <NumericPredictor name="petal_length" exponent="1" coefficient="140.484843510235"/>
-   <NumericPredictor name="petal_width" exponent="1" coefficient="88.1063642693118"/>
+  <RegressionTable intercept="-123.987481039252" targetCategory="virginica">
+   <NumericPredictor name="sepal_length" exponent="1" coefficient="-12.8819229861873"/>
+   <NumericPredictor name="sepal_width" exponent="1" coefficient="-56.2462495113822"/>
+   <NumericPredictor name="petal_length" exponent="1" coefficient="62.0581560894612"/>
+   <NumericPredictor name="petal_width" exponent="1" coefficient="60.5046826776399"/>
   </RegressionTable>
   <RegressionTable intercept="0.0" targetCategory="setosa"/>
  </RegressionModel>

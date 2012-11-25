@@ -97,11 +97,11 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
     }
 
   /**
-   * Returns a Fields data structure.
+   * Returns a Fields data structure naming the input tuple fields.
    *
    * @return Fields
    */
-  public Fields getFields()
+  public Fields getInputFields()
     {
     Fields fields = new Fields();
 
