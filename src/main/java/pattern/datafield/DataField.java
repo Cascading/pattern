@@ -44,12 +44,12 @@ public abstract class DataField implements Serializable
   public abstract Class getClassType();
 
   /**
-   * @return
+   * @return Object
    * @throws PatternException
    */
   public abstract Object getValue( Tuple values, int i ) throws PatternException;
 
-  /** @return  */
+  /** @return Object */
   @Override
   public String toString()
     {

@@ -7,8 +7,10 @@
 package pattern;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.xml.xpath.XPathConstants;
 
 import org.slf4j.Logger;
@@ -77,7 +79,7 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
         String name = ( (Element) node ).getAttribute( "name" );
         String usage_type = ( (Element) node ).getAttribute( "usageType" );
 
-	LOG.debug( String.format( "PMML use DataField: %s:%s", name, usage_type ) );
+        LOG.info( String.format( "DataField: %s:%s", name, usage_type ) );
 
         if( containsKey( name ) )
           {
@@ -86,7 +88,7 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
           else if( !"active".equals( usage_type ) )
             remove( name );
           }
-	else
+        else
           {
           String message = String.format( "unknown DataField referenced in PMML [ %s ]", name );
           LOG.error( message );
@@ -156,5 +158,25 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
       DataField df = iter.next();
       param_values[ i ] = df.getValue( values, i );
       }
+    }
+
+  /**
+   * Returns a Map of names/values for each field in the Tuple.
+   * @param values
+   * @return Map<String, Object>
+   * @throws PatternException
+   */
+  public Map<String, Object> getParamMap( Tuple values ) throws PatternException
+    {
+    HashMap<String, Object> param_map = new HashMap<String, Object>();
+    Iterator<DataField> iter = values().iterator();
+
+    for( int i = 0; i < size(); i++ )
+      {
+      DataField df = iter.next();
+      param_map.put( df.name, df.getValue( values, i ) );
+      }
+
+    return param_map;
     }
   }

@@ -10,6 +10,8 @@ import javax.xml.xpath.XPathConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
@@ -22,7 +24,10 @@ public class PMML
   protected Schema schema = new Schema();
 
   /** Implemented model types */
-  public enum Models { UNKNOWN, MINING, TREE };
+  public enum Models { UNKNOWN, MINING, TREE, REGRESSION };
+
+  public Models model_type = Models.UNKNOWN;
+  public String version;
 
   /**
    * Parse the XML in the PMML description.
@@ -33,6 +38,13 @@ public class PMML
   public PMML( String pmml_file ) throws PatternException
     {
     reader = new XPathReader( pmml_file );
+
+    version = ( (Element) getNodeList( "/PMML" ).item( 0 ) ).getAttribute( "version" );
+    model_type = parseModelType();
+
+    LOG.info( String.format( "Model: %s", model_type.name() ) );
+    LOG.info( String.format( "Version: %s", version ) );
+
     schema.parseDictionary( this, getNodeList( "/PMML/DataDictionary/DataField" ) );
     }
 
@@ -45,10 +57,12 @@ public class PMML
     {
     Models model_type = Models.UNKNOWN;
 
-    if( reader.read( "/PMML/MiningModel[functionName='classification'][1]", XPathConstants.STRING ) != null )
+    if( reader.read( "/PMML/MiningModel", XPathConstants.NODE ) != null )
       return Models.MINING;
-    else if( reader.read( "//TreeModel[functionName='classification'][1]", XPathConstants.STRING ) != null )
+    else if( reader.read( "/PMML/TreeModel", XPathConstants.NODE ) != null )
       return Models.TREE;
+    else if( reader.read( "/PMML/RegressionModel", XPathConstants.NODE ) != null )
+      return Models.REGRESSION;
 
     return model_type;
     }
