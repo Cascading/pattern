@@ -9,7 +9,8 @@ _SQL Server_, etc.
 
 Current support for PMML includes:
 
- * [Random Forest](http://en.wikipedia.org/wiki/Random_forest) in [PMML 4.x](http://www.dmg.org/v4-0-1/GeneralStructure.html) exported from [R/Rattle](http://cran.r-project.org/web/packages/rattle/index.html)
+ * [Random Forest](http://en.wikipedia.org/wiki/Random_forest) in [PMML 4.0+](http://www.dmg.org/v4-0-1/MultipleModels.html) exported from [R/Rattle](http://cran.r-project.org/web/packages/rattle/index.html)
+ * [Linear Regression](http://en.wikipedia.org/wiki/Linear_regression) in [PMML 1.1+](http://www.dmg.org/v1-1/generalregression.html)
 
 This is intended to complement other ML libraries atop Cascading, such as the excellent
 [Scalding Matrix API](https://github.com/twitter/scalding/wiki/Matrix-API-Reference).
@@ -54,6 +55,23 @@ Also, the _confusion matrix_ shown in `output/measure/part*` should
 match the one logged in `model.log` from baseline generated in _R_.
 
 
+Classifier vs. Predictive Model
+-------------------------------
+
+An example _classifier_ is Random Forest:
+
+    gradle clean jar
+    rm -rf output
+    hadoop jar build/libs/pattern.jar data/iris.rf.xml data/iris.rf.tsv output/classify output/trap --measure output/measure
+
+
+An example _predictive model_ is Linear Regression:
+
+    gradle clean jar
+    rm -rf output
+    hadoop jar build/libs/pattern.jar data/iris.lm_p.xml data/iris.lm_p.tsv output/classify output/trap --rmse output/measure 
+
+
 Use in Cascading Apps
 ---------------------
 
@@ -67,7 +85,6 @@ then generate PMML as a file called `sample.rf.xml`:
     f <- as.formula("as.factor(label) ~ .")
     fit <- randomForest(f, data_train, ntree=50)
     saveXML(pmml(fit), file="sample.rf.xml")
-
 
 Then use the PMML file in your Cascading app, such as the following
 example where it is referenced as a command line argument called
@@ -93,14 +110,15 @@ These examples use the popular
 [Iris](http://en.wikipedia.org/wiki/Iris_flower_data_set) data set.
 
  * random forest (rf)
- * recursive partition classification tree (rpart)
- * single hidden-layer neural network (nnet)
- * multinomial model (multinom)
  * linear regression (lm)
+ * logistic regression (glm)
+ * multinomial model (multinom)
+ * single hidden-layer neural network (nnet)
  * k-means clustering (kmeans)
  * hierarchical clustering (hclust)
- * logistic regression (glm)
  * support vector machine (ksvm)
+ * recursive partition classification tree (rpart)
+ * association rules
 
 To execute the R script:
 

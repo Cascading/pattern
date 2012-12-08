@@ -45,7 +45,7 @@ public class NumericPredictor extends Predictor
     double value = (Double) param_map.get( name );
     double result =  Math.pow( value, exponent ) * coefficient;
 
-    LOG.info( String.format( "calc: %s, %e, %e, %e, %e", name, value, exponent, coefficient, result ) );
+    LOG.debug( String.format( "calc: %s, %e, %e, %e, %e", name, value, exponent, coefficient, result ) );
 
     return result;
     }

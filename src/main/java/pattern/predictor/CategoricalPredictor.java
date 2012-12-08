@@ -48,7 +48,7 @@ public class CategoricalPredictor extends Predictor
     if( value == cat )
       result = coefficient;
 
-    LOG.info( String.format( "calc: %s, %d, %d, %e", name, value, cat, result ) );
+    LOG.debug( String.format( "calc: %s, %d, %d, %e", name, value, cat, result ) );
 
     return result;
     }

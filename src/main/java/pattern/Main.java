@@ -17,6 +17,7 @@ import cascading.flow.hadoop.HadoopFlowConnector;
 import cascading.operation.AssertionLevel;
 import cascading.operation.Debug;
 import cascading.operation.DebugLevel;
+import cascading.operation.aggregator.Average;
 import cascading.operation.aggregator.Count;
 import cascading.operation.assertion.AssertMatches;
 import cascading.operation.expression.ExpressionFunction;
@@ -55,6 +56,7 @@ public class Main
     // handle command line options
     OptionParser optParser = new OptionParser();
     optParser.accepts( "measure" ).withRequiredArg();
+    optParser.accepts( "rmse" ).withRequiredArg();
     optParser.accepts( "debug" );
     optParser.accepts( "assert" );
 
@@ -91,6 +93,24 @@ public class Main
       measurePipe = new GroupBy( measurePipe, new Fields( "predict", "score" ) );
       measurePipe = new Every( measurePipe, Fields.ALL, new Count(), Fields.ALL );
       }
+    else if( options.hasArgument( "rmse" ) )
+      {
+      String measurePath = (String) options.valuesOf( "rmse" ).get( 0 );
+      measureTap = new Hfs( new TextDelimited( true, "\t" ), measurePath );
+
+      // calculate the RMSE for the model results
+      String expression = "Math.pow( predict - score, 2.0 )";
+      ExpressionFunction calcExpression = new ExpressionFunction( new Fields( "diff_sq" ), expression, Double.class );
+
+      measurePipe = new Pipe( "measure", classifyPipe );
+      measurePipe = new Each( measurePipe, Fields.ALL, calcExpression, Fields.ALL );
+      measurePipe = new GroupBy( measurePipe, new Fields( "species" ) );
+      measurePipe = new Every( measurePipe, new Fields( "diff_sq" ), new Average(), Fields.ALL );
+
+      expression = "Math.sqrt( average )";
+      calcExpression = new ExpressionFunction( new Fields( "rmse" ), expression, Double.class );
+      measurePipe = new Each( measurePipe, Fields.ALL, calcExpression, new Fields( "species", "rmse" ) );
+      }
 
     // connect the taps, pipes, etc., into a flow
     FlowDef flowDef = FlowDef.flowDef().setName( "classify" )
@@ -98,15 +118,17 @@ public class Main
       .addTrap( classifyPipe, trapTap )
       ;
 
-    if( measureTap == null )
-      flowDef.addTailSink( classifyPipe, classifyTap );
-    else
+    if( measurePipe != null )
       {
       flowDef.addSink( classifyPipe, classifyTap )
-        .addTrap( verifyPipe, trapTap )
         .addTailSink( measurePipe, measureTap )
         ;
+
+      if( verifyPipe != null )
+        flowDef.addTrap( verifyPipe, trapTap );
       }
+    else
+      flowDef.addTailSink( classifyPipe, classifyTap );
 
     // set to DebugLevel.VERBOSE for trace, or DebugLevel.NONE
     // in production

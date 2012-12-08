@@ -88,10 +88,6 @@ public class RegressionModel extends Model implements Serializable
   @Override
   public String classifyTuple( Tuple values ) throws PatternException
     {
-    LOG.info( schema.toString() );
-    LOG.info( predictors.toString() );
-    LOG.info( values.toString() );
-
     Map<String, Object> param_map = schema.getParamMap( values );
     double result = intercept;
 
@@ -101,7 +97,7 @@ public class RegressionModel extends Model implements Serializable
       result += term;
       }
 
-    LOG.info( "result: " + result );
+    LOG.debug( "result: " + result );
 
     return Double.toString( result );
     }
