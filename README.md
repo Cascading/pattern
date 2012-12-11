@@ -54,6 +54,7 @@ model. Tuples which fail that assertion get trapped into
 Also, the _confusion matrix_ shown in `output/measure/part*` should
 match the one logged in `model.log` from baseline generated in _R_.
 
+To run on Amazon AWS, take a look at the `src/sh/cloud.sh` script.
 
 Classifier vs. Predictive Model
 -------------------------------
