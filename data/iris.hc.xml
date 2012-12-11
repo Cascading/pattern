@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <PMML version="3.2" xmlns="http://www.dmg.org/PMML-3_2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-3_2 http://www.dmg.org/v3-2/pmml-3-2.xsd">
- <Header copyright="Copyright (c) 2012 ceteri" description="Hierarchical cluster model">
+ <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)" description="Hierarchical cluster model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2012-11-24 23:05:22</Timestamp>
+  <Timestamp>2012-12-11 14:15:50</Timestamp>
  </Header>
  <DataDictionary numberOfFields="4">
   <DataField name="sepal_length" optype="continuous" dataType="double"/>

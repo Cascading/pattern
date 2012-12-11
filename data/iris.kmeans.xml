@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <PMML version="3.2" xmlns="http://www.dmg.org/PMML-3_2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-3_2 http://www.dmg.org/v3-2/pmml-3-2.xsd">
- <Header copyright="Copyright (c) 2012 ceteri" description="KMeans cluster model">
+ <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)" description="KMeans cluster model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2012-11-24 23:05:22</Timestamp>
+  <Timestamp>2012-12-11 14:15:50</Timestamp>
  </Header>
  <DataDictionary numberOfFields="4">
   <DataField name="sepal_length" optype="continuous" dataType="double"/>
@@ -25,11 +25,11 @@
   <ClusteringField field="sepal_width" compareFunction="absDiff"/>
   <ClusteringField field="petal_length" compareFunction="absDiff"/>
   <ClusteringField field="petal_width" compareFunction="absDiff"/>
-  <Cluster name="1" size="62">
-   <Array n="4" type="real">5.90161290322581 2.74838709677419 4.39354838709678 1.43387096774194</Array>
-  </Cluster>
-  <Cluster name="2" size="50">
+  <Cluster name="1" size="50">
    <Array n="4" type="real">5.006 3.428 1.462 0.246</Array>
+  </Cluster>
+  <Cluster name="2" size="62">
+   <Array n="4" type="real">5.90161290322581 2.74838709677419 4.39354838709678 1.43387096774194</Array>
   </Cluster>
   <Cluster name="3" size="38">
    <Array n="4" type="real">6.85 3.07368421052632 5.74210526315789 2.07105263157895</Array>

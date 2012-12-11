@@ -1,5 +1,5 @@
 ## uncomment the following lines to install required libraries
-#install.packages"pmml")
+#install.packages("pmml")
 #install.packages("randomForest")
 #install.packages("rpart.plot")
 #install.packages("nnet")
@@ -19,6 +19,7 @@ library(arules)
 library(arulesViz)
 
 dat_folder <- './data'
+COPY <- "Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)"
 
 ## split data into test and train sets
 
@@ -51,7 +52,7 @@ out <- iris_full
 out$predict <- predict(fit, out, type="class")
 
 write.table(out, file=paste(dat_folder, "iris.rf.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
-saveXML(pmml(fit), file=paste(dat_folder, "iris.rf.xml", sep="/"))
+saveXML(pmml(fit, copyright=COPY), file=paste(dat_folder, "iris.rf.xml", sep="/"))
 
 
 ## train a Linear Regression predictive model
@@ -74,7 +75,7 @@ out <- iris_full
 out$predict <- predict(fit, out)
 
 write.table(out, file=paste(dat_folder, "iris.lm_p.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
-saveXML(pmml(fit), file=paste(dat_folder, "iris.lm_p.xml", sep="/"))
+saveXML(pmml(fit, copyright=COPY), file=paste(dat_folder, "iris.lm_p.xml", sep="/"))
 
 
 ## train a Recursive Partition classification tree
@@ -96,7 +97,7 @@ out <- iris_full
 out$predict <- predict(fit, out, type="class")
 
 write.table(out, file=paste(dat_folder, "iris.rpart.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
-saveXML(pmml(fit), file=paste(dat_folder, "iris.rpart.xml", sep="/"))
+saveXML(pmml(fit, copyright=COPY), file=paste(dat_folder, "iris.rpart.xml", sep="/"))
 
 
 ## train a single hidden-layer Neural Network
@@ -119,7 +120,7 @@ out <- ird
 out$predict <- predict(fit, ird, type="class")
 
 write.table(out, file=paste(dat_folder, "iris.nn.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
-saveXML(pmml(fit), file=paste(dat_folder, "iris.nn.xml", sep="/"))
+saveXML(pmml(fit, copyright=COPY), file=paste(dat_folder, "iris.nn.xml", sep="/"))
 
 
 ## train a Multinomial Regression model
@@ -136,7 +137,7 @@ out <- iris_full
 out$predict <- predict(fit, out, type="class")
 
 write.table(out, file=paste(dat_folder, "iris.multinom.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
-saveXML(pmml(fit, dataset=iris_train), file=paste(dat_folder, "iris.multinom.xml", sep="/"))
+saveXML(pmml(fit, dataset=iris_train, copyright=COPY), file=paste(dat_folder, "iris.multinom.xml", sep="/"))
 
 
 ## train a K-Means clustering model
@@ -159,7 +160,7 @@ out <- iris_full
 out$predict <- fit$cluster
 
 write.table(out, file=paste(dat_folder, "iris.kmeans.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
-saveXML(pmml(fit), file=paste(dat_folder, "iris.kmeans.xml", sep="/"))
+saveXML(pmml(fit, copyright=COPY), file=paste(dat_folder, "iris.kmeans.xml", sep="/"))
 
 
 ## train a Hierarchical Clustering model
@@ -184,7 +185,7 @@ out <- iris_full
 out$predict <- kls
 
 write.table(out, file=paste(dat_folder, "iris.hc.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
-saveXML(pmml(fit, data=iris, centers=initial), file=paste(dat_folder, "iris.hc.xml", sep="/"))
+saveXML(pmml(fit, data=iris, centers=initial, copyright=COPY), file=paste(dat_folder, "iris.hc.xml", sep="/"))
 
 
 ## train a General Linear Regression model (in this case, Logistic Regression)
@@ -222,7 +223,7 @@ out <- iris_full
 out$predict <- round(fitted(fit))
 
 write.table(out, file=paste(dat_folder, "iris.glm.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
-saveXML(pmml(fit), file=paste(dat_folder, "iris.glm.xml", sep="/"))
+saveXML(pmml(fit, copyright=COPY), file=paste(dat_folder, "iris.glm.xml", sep="/"))
 
 
 ## train a Support Vector Machine model
@@ -239,7 +240,7 @@ out <- iris_full
 out$predict <- predict(fit, out)
 
 write.table(out, file=paste(dat_folder, "iris.svm.tsv", sep="/"), quote=FALSE, sep="\t", row.names=FALSE)
-saveXML(pmml(fit, dataset=iris_train), file=paste(dat_folder, "iris.svm.xml", sep="/"))
+saveXML(pmml(fit, dataset=iris_train, copyright=COPY), file=paste(dat_folder, "iris.svm.xml", sep="/"))
 
 
 ## train an Association Rules model
@@ -261,7 +262,7 @@ itemFrequencyPlot(Groceries, support = 0.05, cex.names=0.8)
 rules_high_lift <- head(sort(rules, by="confidence"), 10)
 
 #WRITE(Groceries, file=paste(dat_folder, "groc.arules.csv", sep="/"), sep=",")
-saveXML(pmml(rules_high_lift), file=paste(dat_folder, "groc.arules.xml", sep="/"))
+saveXML(pmml(rules_high_lift, copyright=COPY), file=paste(dat_folder, "groc.arules.xml", sep="/"))
 
 
 ## TODO:

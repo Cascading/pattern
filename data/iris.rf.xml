@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://www.dmg.org/v4-0/pmml-4-0.xsd">
- <Header copyright="Copyright (c) 2012 ceteri" description="Random Forest Tree Model">
+ <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)" description="Random Forest Tree Model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2012-11-24 23:05:20</Timestamp>
+  <Timestamp>2012-12-11 14:15:48</Timestamp>
  </Header>
  <DataDictionary numberOfFields="5">
   <DataField name="species" optype="categorical" dataType="string">
@@ -38,33 +38,27 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
-       <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.35"/>
-        </Node>
-        <Node id="7">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.35"/>
-         <Node id="8">
-          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.65"/>
-          <Node id="10" score="versicolor">
-           <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-          </Node>
-          <Node id="11" score="virginica">
-           <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-          </Node>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+       <Node id="4" score="versicolor">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
+        <Node id="6">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.05"/>
+         <Node id="8" score="virginica">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.85"/>
          </Node>
          <Node id="9" score="versicolor">
-          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.65"/>
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="5.85"/>
          </Node>
         </Node>
-       </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+        <Node id="7" score="virginica">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="6.05"/>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -82,40 +76,34 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2">
-       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
-       <Node id="4" score="versicolor">
-        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.85"/>
-       </Node>
-       <Node id="5" score="setosa">
-        <SimplePredicate field="sepal_width" operator="greaterThan" value="2.85"/>
-       </Node>
+      <Node id="2" score="setosa">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
-       <Node id="6">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-        <Node id="8">
-         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.85"/>
-         <Node id="10" score="versicolor">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
-         </Node>
-         <Node id="11">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
-          <Node id="12" score="versicolor">
-           <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.75"/>
-          </Node>
-          <Node id="13" score="virginica">
-           <SimplePredicate field="sepal_length" operator="greaterThan" value="6.75"/>
-          </Node>
-         </Node>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
+       <Node id="4">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6"/>
+        <Node id="6" score="versicolor">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.6"/>
         </Node>
-        <Node id="9" score="setosa">
-         <SimplePredicate field="sepal_width" operator="greaterThan" value="3.85"/>
+        <Node id="7">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.6"/>
+         <Node id="10" score="virginica">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.8"/>
+         </Node>
+         <Node id="11" score="versicolor">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="5.8"/>
+         </Node>
         </Node>
        </Node>
-       <Node id="7" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+       <Node id="5">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="6"/>
+        <Node id="8" score="versicolor">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+        </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -134,33 +122,39 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.7"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.7"/>
-       <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
+       <Node id="4" score="versicolor">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
         <Node id="6">
-         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="7.1"/>
-         <Node id="8" score="versicolor">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
+         <Node id="8" score="virginica">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.65"/>
          </Node>
          <Node id="9">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-          <Node id="10" score="virginica">
-           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.65"/>
+          <SimplePredicate field="petal_length" operator="greaterThan" value="4.65"/>
+          <Node id="10">
+           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.1"/>
+           <Node id="12" score="virginica">
+            <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+           </Node>
+           <Node id="13" score="versicolor">
+            <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+           </Node>
           </Node>
           <Node id="11" score="versicolor">
-           <SimplePredicate field="sepal_width" operator="greaterThan" value="2.65"/>
+           <SimplePredicate field="sepal_width" operator="greaterThan" value="3.1"/>
           </Node>
          </Node>
         </Node>
         <Node id="7" score="virginica">
-         <SimplePredicate field="sepal_length" operator="greaterThan" value="7.1"/>
+         <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
         </Node>
-       </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
        </Node>
       </Node>
      </Node>
@@ -184,22 +178,52 @@
       <Node id="3">
        <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
        <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.75"/>
         <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
         </Node>
-        <Node id="7">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
-         <Node id="8" score="versicolor">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.45"/>
-         </Node>
-         <Node id="9" score="virginica">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="5.45"/>
-         </Node>
+        <Node id="7" score="virginica">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
         </Node>
        </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+       <Node id="5">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.75"/>
+        <Node id="8">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+         <Node id="10" score="versicolor">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
+         </Node>
+         <Node id="11">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
+          <Node id="14">
+           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.2"/>
+           <Node id="18" score="versicolor">
+            <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.95"/>
+           </Node>
+           <Node id="19" score="virginica">
+            <SimplePredicate field="sepal_length" operator="greaterThan" value="6.95"/>
+           </Node>
+          </Node>
+          <Node id="15" score="versicolor">
+           <SimplePredicate field="sepal_width" operator="greaterThan" value="3.2"/>
+          </Node>
+         </Node>
+        </Node>
+        <Node id="9">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+         <Node id="12">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.85"/>
+          <Node id="16" score="virginica">
+           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3"/>
+          </Node>
+          <Node id="17" score="versicolor">
+           <SimplePredicate field="sepal_width" operator="greaterThan" value="3"/>
+          </Node>
+         </Node>
+         <Node id="13" score="virginica">
+          <SimplePredicate field="petal_length" operator="greaterThan" value="4.85"/>
+         </Node>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -218,21 +242,51 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
        <Node id="4">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.35"/>
+        <Node id="6">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5"/>
+         <Node id="10" score="virginica">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.95"/>
+         </Node>
+         <Node id="11">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="4.95"/>
+          <Node id="14" score="versicolor">
+           <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.85"/>
+          </Node>
+          <Node id="15">
+           <SimplePredicate field="petal_length" operator="greaterThan" value="4.85"/>
+           <Node id="16" score="versicolor">
+            <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
+           </Node>
+           <Node id="17" score="virginica">
+            <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
+           </Node>
+          </Node>
+         </Node>
         </Node>
         <Node id="7" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+         <SimplePredicate field="petal_length" operator="greaterThan" value="5"/>
         </Node>
        </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+       <Node id="5">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.35"/>
+        <Node id="8">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="7.1"/>
+         <Node id="12" score="versicolor">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="5"/>
+         </Node>
+         <Node id="13" score="virginica">
+          <SimplePredicate field="petal_length" operator="greaterThan" value="5"/>
+         </Node>
+        </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="7.1"/>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -256,33 +310,33 @@
       <Node id="3">
        <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
        <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
-        <Node id="6" score="virginica">
-         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.25"/>
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+        <Node id="6" score="versicolor">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
         </Node>
-        <Node id="7" score="versicolor">
-         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.25"/>
+        <Node id="7">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+         <Node id="10" score="virginica">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.1"/>
+         </Node>
+         <Node id="11" score="versicolor">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="3.1"/>
+         </Node>
         </Node>
        </Node>
        <Node id="5">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
-        <Node id="8" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.65"/>
+        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+        <Node id="8">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
+         <Node id="12" score="virginica">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.5"/>
+         </Node>
+         <Node id="13" score="versicolor">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="6.5"/>
+         </Node>
         </Node>
-        <Node id="9">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.65"/>
-         <Node id="10">
-          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.75"/>
-          <Node id="12" score="versicolor">
-           <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-          </Node>
-          <Node id="13" score="virginica">
-           <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
-          </Node>
-         </Node>
-         <Node id="11" score="virginica">
-          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.75"/>
-         </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
         </Node>
        </Node>
       </Node>
@@ -302,39 +356,21 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.7"/>
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.7"/>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
        <Node id="4">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.35"/>
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
         <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.8"/>
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.9"/>
         </Node>
-        <Node id="7">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.8"/>
-         <Node id="10">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-          <Node id="12" score="virginica">
-           <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.5"/>
-          </Node>
-          <Node id="13" score="versicolor">
-           <SimplePredicate field="petal_width" operator="greaterThan" value="1.5"/>
-          </Node>
-         </Node>
-         <Node id="11" score="virginica">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
-         </Node>
+        <Node id="7" score="virginica">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="6.9"/>
         </Node>
        </Node>
-       <Node id="5">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.35"/>
-        <Node id="8" score="versicolor">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
-        </Node>
-        <Node id="9" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
-        </Node>
+       <Node id="5" score="virginica">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
        </Node>
       </Node>
      </Node>
@@ -352,39 +388,45 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2">
-       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.55"/>
-       <Node id="4" score="setosa">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
-       </Node>
-       <Node id="5" score="versicolor">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
-       </Node>
+      <Node id="2" score="setosa">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.55"/>
-       <Node id="6">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.05"/>
-        <Node id="8" score="setosa">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.7"/>
-        </Node>
-        <Node id="9">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="0.7"/>
-         <Node id="12" score="versicolor">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
-         </Node>
-         <Node id="13" score="virginica">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
-         </Node>
-        </Node>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
+       <Node id="4" score="versicolor">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
        </Node>
-       <Node id="7">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.05"/>
-        <Node id="10" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
+       <Node id="5">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
+        <Node id="6">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.85"/>
+         <Node id="8">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.1"/>
+          <Node id="10">
+           <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+           <Node id="14" score="virginica">
+            <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.75"/>
+           </Node>
+           <Node id="15" score="versicolor">
+            <SimplePredicate field="sepal_width" operator="greaterThan" value="2.75"/>
+           </Node>
+          </Node>
+          <Node id="11" score="virginica">
+           <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+          </Node>
+         </Node>
+         <Node id="9">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="3.1"/>
+          <Node id="12" score="versicolor">
+           <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.55"/>
+          </Node>
+          <Node id="13" score="virginica">
+           <SimplePredicate field="sepal_length" operator="greaterThan" value="6.55"/>
+          </Node>
+         </Node>
         </Node>
-        <Node id="11" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
+        <Node id="7" score="virginica">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.85"/>
         </Node>
        </Node>
       </Node>
@@ -403,34 +445,40 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2">
-       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.75"/>
-       <Node id="4" score="setosa">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
-       </Node>
-       <Node id="5" score="versicolor">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
-       </Node>
+      <Node id="2" score="setosa">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.75"/>
-       <Node id="6">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-        <Node id="8">
-         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.75"/>
-         <Node id="10" score="versicolor">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
-         </Node>
-         <Node id="11" score="virginica">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
-         </Node>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+       <Node id="4">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
+        <Node id="6" score="virginica">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.95"/>
         </Node>
-        <Node id="9" score="versicolor">
-         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.75"/>
+        <Node id="7">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="4.95"/>
+         <Node id="8">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.85"/>
+          <Node id="10" score="versicolor">
+           <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+          </Node>
+          <Node id="11">
+           <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+           <Node id="12" score="virginica">
+            <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3"/>
+           </Node>
+           <Node id="13" score="versicolor">
+            <SimplePredicate field="sepal_width" operator="greaterThan" value="3"/>
+           </Node>
+          </Node>
+         </Node>
+         <Node id="9" score="virginica">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.85"/>
+         </Node>
         </Node>
        </Node>
-       <Node id="7" score="virginica">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+       <Node id="5" score="virginica">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
        </Node>
       </Node>
      </Node>
@@ -449,21 +497,45 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
        <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.35"/>
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+        <Node id="6" score="virginica">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.95"/>
         </Node>
-        <Node id="7" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="5.35"/>
+        <Node id="7">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="4.95"/>
+         <Node id="10" score="versicolor">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
+         </Node>
+         <Node id="11">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+          <Node id="14" score="virginica">
+           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.1"/>
+          </Node>
+          <Node id="15" score="versicolor">
+           <SimplePredicate field="sepal_width" operator="greaterThan" value="3.1"/>
+          </Node>
+         </Node>
         </Node>
        </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+       <Node id="5">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+        <Node id="8">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
+         <Node id="12" score="virginica">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.75"/>
+         </Node>
+         <Node id="13" score="versicolor">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.75"/>
+         </Node>
+        </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -482,33 +554,33 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.75"/>
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.75"/>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
        <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
         <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
         </Node>
         <Node id="7">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-         <Node id="8" score="virginica">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
+         <Node id="10" score="virginica">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.25"/>
          </Node>
-         <Node id="9">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
-          <Node id="10" score="versicolor">
-           <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.45"/>
-          </Node>
-          <Node id="11" score="virginica">
-           <SimplePredicate field="petal_length" operator="greaterThan" value="5.45"/>
-          </Node>
+         <Node id="11" score="versicolor">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="6.25"/>
          </Node>
         </Node>
        </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+       <Node id="5">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+        <Node id="8" score="versicolor">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+        </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -527,26 +599,26 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
        <Node id="4" score="versicolor">
         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
        </Node>
        <Node id="5">
         <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
         <Node id="6">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-         <Node id="8" score="versicolor">
-          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.6"/>
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
+         <Node id="8" score="virginica">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.5"/>
          </Node>
-         <Node id="9" score="virginica">
-          <SimplePredicate field="sepal_length" operator="greaterThan" value="6.6"/>
+         <Node id="9" score="versicolor">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="6.5"/>
          </Node>
         </Node>
         <Node id="7" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+         <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
         </Node>
        </Node>
       </Node>
@@ -565,22 +637,28 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.7"/>
+      <Node id="2">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
+       <Node id="4" score="setosa">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
+       </Node>
+       <Node id="5" score="versicolor">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
+       </Node>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.7"/>
-       <Node id="4">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
+       <Node id="6">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+        <Node id="8" score="virginica">
+         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.75"/>
         </Node>
-        <Node id="7" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+        <Node id="9" score="versicolor">
+         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.75"/>
         </Node>
        </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+       <Node id="7" score="virginica">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
        </Node>
       </Node>
      </Node>
@@ -599,45 +677,33 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
        <Node id="4">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.15"/>
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
         <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.9"/>
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.45"/>
         </Node>
-        <Node id="7" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.9"/>
+        <Node id="7">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.45"/>
+         <Node id="8" score="versicolor">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
+         </Node>
+         <Node id="9">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
+          <Node id="10" score="virginica">
+           <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+          </Node>
+          <Node id="11" score="versicolor">
+           <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+          </Node>
+         </Node>
         </Node>
        </Node>
-       <Node id="5">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.15"/>
-        <Node id="8">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-         <Node id="10" score="versicolor">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
-         </Node>
-         <Node id="11">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
-          <Node id="12" score="versicolor">
-           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.6"/>
-          </Node>
-          <Node id="13">
-           <SimplePredicate field="sepal_width" operator="greaterThan" value="2.6"/>
-           <Node id="14" score="versicolor">
-            <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.6"/>
-           </Node>
-           <Node id="15" score="virginica">
-            <SimplePredicate field="petal_width" operator="greaterThan" value="1.6"/>
-           </Node>
-          </Node>
-         </Node>
-        </Node>
-        <Node id="9" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-        </Node>
+       <Node id="5" score="virginica">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
        </Node>
       </Node>
      </Node>
@@ -655,41 +721,29 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-       <Node id="4" score="setosa">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+      <Node id="2" score="setosa">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+       <Node id="4" score="versicolor">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
        </Node>
        <Node id="5">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
         <Node id="6">
-         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="7"/>
-         <Node id="8" score="versicolor">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.35"/>
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+         <Node id="8" score="virginica">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3"/>
          </Node>
-         <Node id="9">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.35"/>
-          <Node id="10">
-           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.65"/>
-           <Node id="12" score="versicolor">
-            <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.55"/>
-           </Node>
-           <Node id="13" score="virginica">
-            <SimplePredicate field="sepal_width" operator="greaterThan" value="2.55"/>
-           </Node>
-          </Node>
-          <Node id="11" score="versicolor">
-           <SimplePredicate field="sepal_width" operator="greaterThan" value="2.65"/>
-          </Node>
+         <Node id="9" score="versicolor">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="3"/>
          </Node>
         </Node>
         <Node id="7" score="virginica">
-         <SimplePredicate field="sepal_length" operator="greaterThan" value="7"/>
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
         </Node>
        </Node>
-      </Node>
-      <Node id="3" score="virginica">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
       </Node>
      </Node>
     </TreeModel>
@@ -707,39 +761,27 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
        <Node id="4">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.15"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.85"/>
+        <Node id="6">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.95"/>
+         <Node id="8" score="versicolor">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.35"/>
+         </Node>
+         <Node id="9" score="virginica">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.35"/>
+         </Node>
         </Node>
-        <Node id="7" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+        <Node id="7" score="versicolor">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="4.95"/>
         </Node>
        </Node>
-       <Node id="5">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.15"/>
-        <Node id="8">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.9"/>
-         <Node id="10" score="versicolor">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
-         </Node>
-         <Node id="11">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
-          <Node id="12" score="virginica">
-           <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.5"/>
-          </Node>
-          <Node id="13" score="versicolor">
-           <SimplePredicate field="sepal_length" operator="greaterThan" value="6.5"/>
-          </Node>
-         </Node>
-        </Node>
-        <Node id="9" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.9"/>
-        </Node>
+       <Node id="5" score="virginica">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="4.85"/>
        </Node>
       </Node>
      </Node>
@@ -758,39 +800,33 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.7"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.7"/>
        <Node id="4">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.25"/>
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
         <Node id="6" score="versicolor">
          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
         </Node>
         <Node id="7">
          <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
-         <Node id="10">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-          <Node id="12" score="virginica">
-           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.65"/>
-          </Node>
-          <Node id="13" score="versicolor">
-           <SimplePredicate field="sepal_width" operator="greaterThan" value="2.65"/>
-          </Node>
+         <Node id="8" score="versicolor">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
          </Node>
-         <Node id="11" score="virginica">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+         <Node id="9">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+          <Node id="10" score="virginica">
+           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.1"/>
+          </Node>
+          <Node id="11" score="versicolor">
+           <SimplePredicate field="sepal_width" operator="greaterThan" value="3.1"/>
+          </Node>
          </Node>
         </Node>
        </Node>
-       <Node id="5">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.25"/>
-        <Node id="8" score="versicolor">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
-        </Node>
-        <Node id="9" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
-        </Node>
+       <Node id="5" score="virginica">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
        </Node>
       </Node>
      </Node>
@@ -809,27 +845,39 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.7"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.7"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
        <Node id="4">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="5"/>
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
         <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.85"/>
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="7.1"/>
         </Node>
-        <Node id="7">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.85"/>
-         <Node id="8" score="versicolor">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
-         </Node>
-         <Node id="9" score="virginica">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
-         </Node>
+        <Node id="7" score="virginica">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="7.1"/>
         </Node>
        </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="5"/>
+       <Node id="5">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
+        <Node id="8">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.9"/>
+         <Node id="10" score="virginica">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+         </Node>
+         <Node id="11">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+          <Node id="12" score="versicolor">
+           <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.05"/>
+          </Node>
+          <Node id="13" score="virginica">
+           <SimplePredicate field="sepal_length" operator="greaterThan" value="6.05"/>
+          </Node>
+         </Node>
+        </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.9"/>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -848,21 +896,21 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.45"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.45"/>
        <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
         <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
         </Node>
         <Node id="7" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
         </Node>
        </Node>
        <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+        <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
        </Node>
       </Node>
      </Node>
@@ -881,16 +929,40 @@
      <Node id="1">
       <True/>
       <Node id="2">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.55"/>
        <Node id="4" score="setosa">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.85"/>
        </Node>
-       <Node id="5" score="versicolor">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
+       <Node id="5">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="0.85"/>
+        <Node id="8" score="versicolor">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.2"/>
+        </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.2"/>
+        </Node>
        </Node>
       </Node>
-      <Node id="3" score="virginica">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.55"/>
+       <Node id="6">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+        <Node id="10">
+         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.7"/>
+         <Node id="12" score="versicolor">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.4"/>
+         </Node>
+         <Node id="13" score="virginica">
+          <SimplePredicate field="petal_length" operator="greaterThan" value="5.4"/>
+         </Node>
+        </Node>
+        <Node id="11" score="setosa">
+         <SimplePredicate field="sepal_width" operator="greaterThan" value="3.7"/>
+        </Node>
+       </Node>
+       <Node id="7" score="virginica">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+       </Node>
       </Node>
      </Node>
     </TreeModel>
@@ -907,34 +979,40 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2">
-       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
-       <Node id="4" score="setosa">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
-       </Node>
-       <Node id="5" score="versicolor">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
-       </Node>
+      <Node id="2" score="setosa">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
-       <Node id="6">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+       <Node id="4">
         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-        <Node id="8" score="virginica">
-         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.25"/>
+        <Node id="6" score="versicolor">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
         </Node>
-        <Node id="9">
-         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.25"/>
-         <Node id="10" score="setosa">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.55"/>
+        <Node id="7">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
+         <Node id="10" score="versicolor">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.25"/>
          </Node>
-         <Node id="11" score="versicolor">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="2.55"/>
+         <Node id="11" score="virginica">
+          <SimplePredicate field="petal_length" operator="greaterThan" value="5.25"/>
          </Node>
         </Node>
        </Node>
-       <Node id="7" score="virginica">
+       <Node id="5">
         <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+        <Node id="8">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.05"/>
+         <Node id="12" score="virginica">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.95"/>
+         </Node>
+         <Node id="13" score="versicolor">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.95"/>
+         </Node>
+        </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="6.05"/>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -953,129 +1031,45 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.7"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.7"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
        <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-        <Node id="6">
-         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="7"/>
-         <Node id="8" score="versicolor">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.9"/>
-         </Node>
-         <Node id="9">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="4.9"/>
-          <Node id="10" score="virginica">
-           <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
-          </Node>
-          <Node id="11" score="versicolor">
-           <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
-          </Node>
-         </Node>
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
+        <Node id="6" score="virginica">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.95"/>
         </Node>
-        <Node id="7" score="virginica">
-         <SimplePredicate field="sepal_length" operator="greaterThan" value="7"/>
+        <Node id="7" score="versicolor">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="4.95"/>
         </Node>
        </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+       <Node id="5">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
+        <Node id="8">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+         <Node id="10">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.25"/>
+          <Node id="12" score="virginica">
+           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.1"/>
+          </Node>
+          <Node id="13" score="versicolor">
+           <SimplePredicate field="sepal_width" operator="greaterThan" value="3.1"/>
+          </Node>
+         </Node>
+         <Node id="11" score="versicolor">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="6.25"/>
+         </Node>
+        </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+        </Node>
        </Node>
       </Node>
      </Node>
     </TreeModel>
    </Segment>
    <Segment id="23">
-    <True/>
-    <TreeModel modelName="randomForest_Model" functionName="classification" algorithmName="randomForest" splitCharacteristic="binarySplit">
-     <MiningSchema>
-      <MiningField name="species" usageType="predicted"/>
-      <MiningField name="sepal_length" usageType="active"/>
-      <MiningField name="sepal_width" usageType="active"/>
-      <MiningField name="petal_length" usageType="active"/>
-      <MiningField name="petal_width" usageType="active"/>
-     </MiningSchema>
-     <Node id="1">
-      <True/>
-      <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
-      </Node>
-      <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
-       <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.35"/>
-        </Node>
-        <Node id="7">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.35"/>
-         <Node id="8" score="versicolor">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-         </Node>
-         <Node id="9">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-          <Node id="10" score="virginica">
-           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.65"/>
-          </Node>
-          <Node id="11">
-           <SimplePredicate field="sepal_width" operator="greaterThan" value="2.65"/>
-           <Node id="12" score="versicolor">
-            <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.6"/>
-           </Node>
-           <Node id="13" score="virginica">
-            <SimplePredicate field="sepal_length" operator="greaterThan" value="6.6"/>
-           </Node>
-          </Node>
-         </Node>
-        </Node>
-       </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
-       </Node>
-      </Node>
-     </Node>
-    </TreeModel>
-   </Segment>
-   <Segment id="24">
-    <True/>
-    <TreeModel modelName="randomForest_Model" functionName="classification" algorithmName="randomForest" splitCharacteristic="binarySplit">
-     <MiningSchema>
-      <MiningField name="species" usageType="predicted"/>
-      <MiningField name="sepal_length" usageType="active"/>
-      <MiningField name="sepal_width" usageType="active"/>
-      <MiningField name="petal_length" usageType="active"/>
-      <MiningField name="petal_width" usageType="active"/>
-     </MiningSchema>
-     <Node id="1">
-      <True/>
-      <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
-      </Node>
-      <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
-       <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-        <Node id="6">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.35"/>
-         <Node id="8" score="virginica">
-          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.25"/>
-         </Node>
-         <Node id="9" score="versicolor">
-          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.25"/>
-         </Node>
-        </Node>
-        <Node id="7" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="5.35"/>
-        </Node>
-       </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
-       </Node>
-      </Node>
-     </Node>
-    </TreeModel>
-   </Segment>
-   <Segment id="25">
     <True/>
     <TreeModel modelName="randomForest_Model" functionName="classification" algorithmName="randomForest" splitCharacteristic="binarySplit">
      <MiningSchema>
@@ -1095,26 +1089,104 @@
        <Node id="4">
         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
         <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="7.1"/>
         </Node>
-        <Node id="7">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-         <Node id="8" score="virginica">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
+        <Node id="7" score="virginica">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="7.1"/>
+        </Node>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+        <Node id="8">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6"/>
+         <Node id="10" score="versicolor">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.9"/>
          </Node>
-         <Node id="9">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
-          <Node id="10" score="versicolor">
-           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.85"/>
-          </Node>
-          <Node id="11" score="virginica">
-           <SimplePredicate field="sepal_width" operator="greaterThan" value="2.85"/>
-          </Node>
+         <Node id="11" score="virginica">
+          <SimplePredicate field="petal_length" operator="greaterThan" value="4.9"/>
          </Node>
+        </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="6"/>
+        </Node>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="24">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="classification" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="species" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="setosa">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
+       <Node id="4">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+        <Node id="6" score="virginica">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.95"/>
+        </Node>
+        <Node id="7" score="versicolor">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="4.95"/>
+        </Node>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+        <Node id="8">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.85"/>
+         <Node id="10" score="versicolor">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6"/>
+         </Node>
+         <Node id="11" score="virginica">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="6"/>
+         </Node>
+        </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.85"/>
+        </Node>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="25">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="classification" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="species" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="setosa">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+       <Node id="4">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+        <Node id="6" score="versicolor">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
+        </Node>
+        <Node id="7" score="virginica">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
         </Node>
        </Node>
        <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
        </Node>
       </Node>
      </Node>
@@ -1133,21 +1205,39 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.45"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.45"/>
        <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.9"/>
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
+        <Node id="6">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.05"/>
+         <Node id="8" score="versicolor">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
+         </Node>
+         <Node id="9" score="virginica">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
+         </Node>
         </Node>
-        <Node id="7" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.9"/>
+        <Node id="7">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="6.05"/>
+         <Node id="10" score="versicolor">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
+         </Node>
+         <Node id="11">
+          <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
+          <Node id="12" score="versicolor">
+           <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+          </Node>
+          <Node id="13" score="virginica">
+           <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+          </Node>
+         </Node>
         </Node>
        </Node>
        <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+        <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
        </Node>
       </Node>
      </Node>
@@ -1165,40 +1255,34 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2">
-       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.85"/>
-       <Node id="4">
-        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.95"/>
-        <Node id="8" score="setosa">
-         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.65"/>
-        </Node>
-        <Node id="9" score="versicolor">
-         <SimplePredicate field="sepal_length" operator="greaterThan" value="4.65"/>
-        </Node>
-       </Node>
-       <Node id="5" score="setosa">
-        <SimplePredicate field="sepal_width" operator="greaterThan" value="2.95"/>
-       </Node>
+      <Node id="2" score="setosa">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.85"/>
-       <Node id="6">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-        <Node id="10">
-         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.75"/>
-         <Node id="12" score="versicolor">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
-         </Node>
-         <Node id="13" score="virginica">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
-         </Node>
-        </Node>
-        <Node id="11" score="versicolor">
-         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.75"/>
-        </Node>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
+       <Node id="4" score="versicolor">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
        </Node>
-       <Node id="7" score="virginica">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+       <Node id="5">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
+        <Node id="6" score="versicolor">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
+        </Node>
+        <Node id="7">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
+         <Node id="8">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.75"/>
+          <Node id="10" score="versicolor">
+           <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+          </Node>
+          <Node id="11" score="virginica">
+           <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+          </Node>
+         </Node>
+         <Node id="9" score="virginica">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="6.75"/>
+         </Node>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -1216,35 +1300,17 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="5"/>
-       <Node id="4">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.8"/>
-        </Node>
-        <Node id="7" score="setosa">
-         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.8"/>
-        </Node>
-       </Node>
-       <Node id="5">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
-        <Node id="8">
-         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.7"/>
-         <Node id="10" score="versicolor">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-         </Node>
-         <Node id="11" score="virginica">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
-         </Node>
-        </Node>
-        <Node id="9" score="setosa">
-         <SimplePredicate field="sepal_width" operator="greaterThan" value="3.7"/>
-        </Node>
-       </Node>
+      <Node id="2" score="setosa">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
       </Node>
-      <Node id="3" score="virginica">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="5"/>
+      <Node id="3">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+       <Node id="4" score="versicolor">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
+       </Node>
+       <Node id="5" score="virginica">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
+       </Node>
       </Node>
      </Node>
     </TreeModel>
@@ -1266,40 +1332,22 @@
       </Node>
       <Node id="3">
        <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
-       <Node id="4">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.1"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.8"/>
-        </Node>
-        <Node id="7">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.8"/>
-         <Node id="10" score="versicolor">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
-         </Node>
-         <Node id="11" score="virginica">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
-         </Node>
-        </Node>
+       <Node id="4" score="versicolor">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.7"/>
        </Node>
        <Node id="5">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.1"/>
-        <Node id="8" score="versicolor">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
+        <SimplePredicate field="petal_length" operator="greaterThan" value="4.7"/>
+        <Node id="6">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
+         <Node id="8" score="virginica">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.5"/>
+         </Node>
+         <Node id="9" score="versicolor">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="6.5"/>
+         </Node>
         </Node>
-        <Node id="9">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
-         <Node id="12">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-          <Node id="14" score="versicolor">
-           <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.25"/>
-          </Node>
-          <Node id="15" score="virginica">
-           <SimplePredicate field="petal_length" operator="greaterThan" value="5.25"/>
-          </Node>
-         </Node>
-         <Node id="13" score="virginica">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
-         </Node>
+        <Node id="7" score="virginica">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
         </Node>
        </Node>
       </Node>
@@ -1319,44 +1367,32 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.75"/>
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.75"/>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
        <Node id="4">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.15"/>
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.85"/>
         <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.85"/>
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
         </Node>
         <Node id="7">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.85"/>
-         <Node id="10">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-          <Node id="14" score="virginica">
-           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.45"/>
-          </Node>
-          <Node id="15" score="versicolor">
-           <SimplePredicate field="sepal_width" operator="greaterThan" value="2.45"/>
-          </Node>
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
+         <Node id="10" score="virginica">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3"/>
          </Node>
-         <Node id="11" score="virginica">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+         <Node id="11" score="versicolor">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="3"/>
          </Node>
         </Node>
        </Node>
        <Node id="5">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.15"/>
-        <Node id="8">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-         <Node id="12" score="versicolor">
-          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="7.1"/>
-         </Node>
-         <Node id="13" score="virginica">
-          <SimplePredicate field="sepal_length" operator="greaterThan" value="7.1"/>
-         </Node>
+        <SimplePredicate field="petal_length" operator="greaterThan" value="4.85"/>
+        <Node id="8" score="versicolor">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
         </Node>
         <Node id="9" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
         </Node>
        </Node>
       </Node>
@@ -1376,21 +1412,27 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
-       <Node id="4">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.25"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+       <Node id="4" score="versicolor">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.75"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.75"/>
+        <Node id="6">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+         <Node id="8" score="versicolor">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.4"/>
+         </Node>
+         <Node id="9" score="virginica">
+          <SimplePredicate field="petal_length" operator="greaterThan" value="5.4"/>
+         </Node>
         </Node>
         <Node id="7" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
         </Node>
-       </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="5.25"/>
        </Node>
       </Node>
      </Node>
@@ -1408,28 +1450,52 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.75"/>
-      </Node>
-      <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.75"/>
-       <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.75"/>
+       <Node id="4" score="setosa">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
+        <Node id="8" score="versicolor">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
         </Node>
-        <Node id="7">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-         <Node id="8" score="virginica">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
-         </Node>
-         <Node id="9" score="versicolor">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
-         </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
         </Node>
        </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.75"/>
+       <Node id="6" score="versicolor">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.4"/>
+       </Node>
+       <Node id="7">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="2.4"/>
+        <Node id="10">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
+         <Node id="12">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.7"/>
+          <Node id="14" score="versicolor">
+           <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.7"/>
+          </Node>
+          <Node id="15">
+           <SimplePredicate field="petal_length" operator="greaterThan" value="4.7"/>
+           <Node id="16" score="virginica">
+            <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.5"/>
+           </Node>
+           <Node id="17" score="versicolor">
+            <SimplePredicate field="sepal_length" operator="greaterThan" value="6.5"/>
+           </Node>
+          </Node>
+         </Node>
+         <Node id="13" score="setosa">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="3.7"/>
+         </Node>
+        </Node>
+        <Node id="11" score="virginica">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -1447,28 +1513,52 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.7"/>
-      </Node>
-      <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.7"/>
-       <Node id="4" score="versicolor">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.6"/>
+       <Node id="4">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.8"/>
+        <Node id="8" score="versicolor">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.25"/>
+        </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.25"/>
+        </Node>
        </Node>
        <Node id="5">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-        <Node id="6">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-         <Node id="8" score="virginica">
-          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.45"/>
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="2.8"/>
+        <Node id="10" score="setosa">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.95"/>
+        </Node>
+        <Node id="11" score="versicolor">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="0.95"/>
+        </Node>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.6"/>
+       <Node id="6">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="5"/>
+        <Node id="12" score="setosa">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.6"/>
+        </Node>
+        <Node id="13">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="0.6"/>
+         <Node id="14" score="versicolor">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.95"/>
          </Node>
-         <Node id="9" score="versicolor">
-          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.45"/>
+         <Node id="15">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.95"/>
+          <Node id="16" score="versicolor">
+           <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.85"/>
+          </Node>
+          <Node id="17" score="virginica">
+           <SimplePredicate field="petal_length" operator="greaterThan" value="4.85"/>
+          </Node>
          </Node>
         </Node>
-        <Node id="7" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
-        </Node>
+       </Node>
+       <Node id="7" score="virginica">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="5"/>
        </Node>
       </Node>
      </Node>
@@ -1487,45 +1577,27 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
        <Node id="4">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.15"/>
-        <Node id="6" score="virginica">
-         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.25"/>
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+        <Node id="6">
+         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.55"/>
+         <Node id="8" score="virginica">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.95"/>
+         </Node>
+         <Node id="9" score="versicolor">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="4.95"/>
+         </Node>
         </Node>
         <Node id="7" score="versicolor">
-         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.25"/>
+         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.55"/>
         </Node>
        </Node>
-       <Node id="5">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.15"/>
-        <Node id="8">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-         <Node id="10">
-          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.85"/>
-          <Node id="12">
-           <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.55"/>
-           <Node id="14" score="versicolor">
-            <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
-           </Node>
-           <Node id="15" score="virginica">
-            <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
-           </Node>
-          </Node>
-          <Node id="13" score="versicolor">
-           <SimplePredicate field="sepal_length" operator="greaterThan" value="6.55"/>
-          </Node>
-         </Node>
-         <Node id="11" score="versicolor">
-          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.85"/>
-         </Node>
-        </Node>
-        <Node id="9" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-        </Node>
+       <Node id="5" score="virginica">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
        </Node>
       </Node>
      </Node>
@@ -1544,33 +1616,33 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
        <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-        <Node id="6">
-         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="7.05"/>
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+        <Node id="6" score="versicolor">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.45"/>
+        </Node>
+        <Node id="7">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.45"/>
          <Node id="8" score="versicolor">
-          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.05"/>
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
          </Node>
          <Node id="9">
-          <SimplePredicate field="sepal_length" operator="greaterThan" value="6.05"/>
-          <Node id="10" score="versicolor">
-           <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.25"/>
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
+          <Node id="10" score="virginica">
+           <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
           </Node>
-          <Node id="11" score="virginica">
-           <SimplePredicate field="petal_length" operator="greaterThan" value="5.25"/>
+          <Node id="11" score="versicolor">
+           <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
           </Node>
          </Node>
-        </Node>
-        <Node id="7" score="virginica">
-         <SimplePredicate field="sepal_length" operator="greaterThan" value="7.05"/>
         </Node>
        </Node>
        <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
        </Node>
       </Node>
      </Node>
@@ -1588,46 +1660,34 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2">
-       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.35"/>
-       <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-        <Node id="8" score="setosa">
-         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.95"/>
-        </Node>
-        <Node id="9">
-         <SimplePredicate field="sepal_length" operator="greaterThan" value="4.95"/>
-         <Node id="10">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-          <Node id="12" score="setosa">
-           <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.35"/>
-          </Node>
-          <Node id="13" score="versicolor">
-           <SimplePredicate field="petal_length" operator="greaterThan" value="2.35"/>
-          </Node>
-         </Node>
-         <Node id="11">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-          <Node id="14" score="virginica">
-           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.65"/>
-          </Node>
-          <Node id="15" score="versicolor">
-           <SimplePredicate field="sepal_width" operator="greaterThan" value="2.65"/>
-          </Node>
-         </Node>
-        </Node>
-       </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
-       </Node>
+      <Node id="2" score="setosa">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.55"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="sepal_width" operator="greaterThan" value="3.35"/>
-       <Node id="6" score="setosa">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.5"/>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.55"/>
+       <Node id="4">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.05"/>
+        <Node id="6" score="versicolor">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.9"/>
+        </Node>
+        <Node id="7" score="virginica">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.9"/>
+        </Node>
        </Node>
-       <Node id="7" score="virginica">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.5"/>
+       <Node id="5">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.05"/>
+        <Node id="8" score="versicolor">
+         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.6"/>
+        </Node>
+        <Node id="9">
+         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.6"/>
+         <Node id="10" score="versicolor">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+         </Node>
+         <Node id="11" score="virginica">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+         </Node>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -1646,38 +1706,32 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
-       <Node id="4">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.05"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.8"/>
-        </Node>
-        <Node id="7">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.8"/>
-         <Node id="10" score="virginica">
-          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.95"/>
-         </Node>
-         <Node id="11" score="versicolor">
-          <SimplePredicate field="sepal_length" operator="greaterThan" value="5.95"/>
-         </Node>
-        </Node>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
+       <Node id="4" score="versicolor">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
        </Node>
        <Node id="5">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.05"/>
-        <Node id="8">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-         <Node id="12" score="versicolor">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-         </Node>
-         <Node id="13" score="virginica">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
-         </Node>
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
+        <Node id="6" score="versicolor">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
         </Node>
-        <Node id="9" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+        <Node id="7">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
+         <Node id="8">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.85"/>
+          <Node id="10" score="virginica">
+           <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.85"/>
+          </Node>
+          <Node id="11" score="virginica">
+           <SimplePredicate field="petal_length" operator="greaterThan" value="4.85"/>
+          </Node>
+         </Node>
+         <Node id="9" score="virginica">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.85"/>
+         </Node>
         </Node>
        </Node>
       </Node>
@@ -1697,38 +1751,38 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
        <Node id="4">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
         <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.95"/>
         </Node>
         <Node id="7" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="6.95"/>
         </Node>
        </Node>
        <Node id="5">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
         <Node id="8">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-         <Node id="10" score="virginica">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
+         <Node id="10">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.5"/>
+          <Node id="12" score="virginica">
+           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.1"/>
+          </Node>
+          <Node id="13" score="versicolor">
+           <SimplePredicate field="sepal_width" operator="greaterThan" value="3.1"/>
+          </Node>
          </Node>
-         <Node id="11">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
-          <Node id="12" score="versicolor">
-           <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.45"/>
-          </Node>
-          <Node id="13" score="virginica">
-           <SimplePredicate field="petal_length" operator="greaterThan" value="5.45"/>
-          </Node>
+         <Node id="11" score="versicolor">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="6.5"/>
          </Node>
         </Node>
         <Node id="9" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+         <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
         </Node>
        </Node>
       </Node>
@@ -1748,26 +1802,32 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
-       <Node id="4" score="versicolor">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.25"/>
-       </Node>
-       <Node id="5">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.25"/>
-        <Node id="6">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-         <Node id="8" score="versicolor">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.3"/>
-         </Node>
-         <Node id="9" score="virginica">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="5.3"/>
-         </Node>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
+       <Node id="4">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+        <Node id="6" score="versicolor">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.4"/>
         </Node>
         <Node id="7" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+         <SimplePredicate field="petal_length" operator="greaterThan" value="5.4"/>
+        </Node>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+        <Node id="8">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.85"/>
+         <Node id="10" score="virginica">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3"/>
+         </Node>
+         <Node id="11" score="versicolor">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="3"/>
+         </Node>
+        </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.85"/>
         </Node>
        </Node>
       </Node>
@@ -1786,64 +1846,34 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2">
-       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.55"/>
-       <Node id="4" score="versicolor">
-        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.8"/>
-       </Node>
-       <Node id="5" score="setosa">
-        <SimplePredicate field="sepal_width" operator="greaterThan" value="2.8"/>
-       </Node>
+      <Node id="2" score="setosa">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.55"/>
-       <Node id="6">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.35"/>
-        <Node id="8" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+       <Node id="4">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+        <Node id="6">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="7.1"/>
+         <Node id="8">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.95"/>
+          <Node id="10" score="versicolor">
+           <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.35"/>
+          </Node>
+          <Node id="11" score="virginica">
+           <SimplePredicate field="petal_width" operator="greaterThan" value="1.35"/>
+          </Node>
+         </Node>
+         <Node id="9" score="versicolor">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="4.95"/>
+         </Node>
         </Node>
-        <Node id="9">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
-         <Node id="12">
-          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.55"/>
-          <Node id="14" score="virginica">
-           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.35"/>
-          </Node>
-          <Node id="15" score="versicolor">
-           <SimplePredicate field="sepal_width" operator="greaterThan" value="2.35"/>
-          </Node>
-         </Node>
-         <Node id="13">
-          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.55"/>
-          <Node id="16">
-           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.75"/>
-           <Node id="18">
-            <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-            <Node id="20" score="versicolor">
-             <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.35"/>
-            </Node>
-            <Node id="21" score="virginica">
-             <SimplePredicate field="petal_length" operator="greaterThan" value="5.35"/>
-            </Node>
-           </Node>
-           <Node id="19" score="virginica">
-            <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
-           </Node>
-          </Node>
-          <Node id="17" score="virginica">
-           <SimplePredicate field="sepal_width" operator="greaterThan" value="2.75"/>
-          </Node>
-         </Node>
+        <Node id="7" score="virginica">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="7.1"/>
         </Node>
        </Node>
-       <Node id="7">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.35"/>
-        <Node id="10" score="versicolor">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
-        </Node>
-        <Node id="11" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
-        </Node>
+       <Node id="5" score="virginica">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
        </Node>
       </Node>
      </Node>
@@ -1862,38 +1892,50 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
        <Node id="4">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.35"/>
+        <Node id="6">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+         <Node id="10" score="versicolor">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
+         </Node>
+         <Node id="11">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
+          <Node id="12">
+           <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.85"/>
+           <Node id="14" score="virginica">
+            <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+           </Node>
+           <Node id="15">
+            <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+            <Node id="16" score="versicolor">
+             <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.05"/>
+            </Node>
+            <Node id="17" score="virginica">
+             <SimplePredicate field="sepal_length" operator="greaterThan" value="6.05"/>
+            </Node>
+           </Node>
+          </Node>
+          <Node id="13" score="virginica">
+           <SimplePredicate field="petal_length" operator="greaterThan" value="4.85"/>
+          </Node>
+         </Node>
         </Node>
         <Node id="7" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
         </Node>
        </Node>
        <Node id="5">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-        <Node id="8">
-         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.05"/>
-         <Node id="10" score="virginica">
-          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.45"/>
-         </Node>
-         <Node id="11">
-          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.45"/>
-          <Node id="12" score="virginica">
-           <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.9"/>
-          </Node>
-          <Node id="13" score="versicolor">
-           <SimplePredicate field="sepal_length" operator="greaterThan" value="5.9"/>
-          </Node>
-         </Node>
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.35"/>
+        <Node id="8" score="versicolor">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
         </Node>
         <Node id="9" score="virginica">
-         <SimplePredicate field="sepal_length" operator="greaterThan" value="6.05"/>
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
         </Node>
        </Node>
       </Node>
@@ -1913,39 +1955,27 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.7"/>
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.75"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.7"/>
-       <Node id="4" score="versicolor">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
-       </Node>
-       <Node id="5">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
-        <Node id="6">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.15"/>
-         <Node id="8">
-          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.55"/>
-          <Node id="10" score="virginica">
-           <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
-          </Node>
-          <Node id="11">
-           <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
-           <Node id="12" score="virginica">
-            <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.95"/>
-           </Node>
-           <Node id="13" score="versicolor">
-            <SimplePredicate field="sepal_length" operator="greaterThan" value="5.95"/>
-           </Node>
-          </Node>
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.75"/>
+       <Node id="4">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
+        <Node id="6" score="versicolor">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+        </Node>
+        <Node id="7">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+         <Node id="8" score="virginica">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.75"/>
          </Node>
          <Node id="9" score="versicolor">
-          <SimplePredicate field="sepal_length" operator="greaterThan" value="6.55"/>
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.75"/>
          </Node>
         </Node>
-        <Node id="7" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="5.15"/>
-        </Node>
+       </Node>
+       <Node id="5" score="virginica">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
        </Node>
       </Node>
      </Node>
@@ -1964,27 +1994,39 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
-       <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-        <Node id="6" score="virginica">
-         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.25"/>
-        </Node>
-        <Node id="7">
-         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.25"/>
-         <Node id="8" score="versicolor">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.2"/>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
+       <Node id="4" score="versicolor">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
+        <Node id="6">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+         <Node id="8">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.4"/>
+          <Node id="12" score="virginica">
+           <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
+          </Node>
+          <Node id="13" score="versicolor">
+           <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
+          </Node>
          </Node>
          <Node id="9" score="virginica">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="5.2"/>
+          <SimplePredicate field="petal_length" operator="greaterThan" value="5.4"/>
          </Node>
         </Node>
-       </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+        <Node id="7">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+         <Node id="10" score="virginica">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.85"/>
+         </Node>
+         <Node id="11" score="virginica">
+          <SimplePredicate field="petal_length" operator="greaterThan" value="4.85"/>
+         </Node>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -2002,28 +2044,40 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2" score="setosa">
-       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
+       <Node id="4" score="setosa">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
+       </Node>
+       <Node id="5" score="versicolor">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
+       </Node>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
-       <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
-        <Node id="6" score="virginica">
-         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.25"/>
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
+       <Node id="6">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+        <Node id="8" score="setosa">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
         </Node>
-        <Node id="7">
-         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.25"/>
-         <Node id="8" score="versicolor">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.25"/>
-         </Node>
-         <Node id="9" score="virginica">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="5.25"/>
-         </Node>
+        <Node id="9" score="versicolor">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
         </Node>
        </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
+       <Node id="7">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+        <Node id="10">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6"/>
+         <Node id="12" score="versicolor">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+         </Node>
+         <Node id="13" score="virginica">
+          <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+         </Node>
+        </Node>
+        <Node id="11" score="virginica">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="6"/>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -2042,33 +2096,51 @@
      <Node id="1">
       <True/>
       <Node id="2">
-       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.55"/>
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.05"/>
        <Node id="4" score="setosa">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.7"/>
        </Node>
-       <Node id="5" score="versicolor">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
-       </Node>
-      </Node>
-      <Node id="3">
-       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.55"/>
-       <Node id="6">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
+       <Node id="5">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="0.7"/>
         <Node id="8">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-         <Node id="10" score="setosa">
-          <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.6"/>
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.8"/>
+         <Node id="12">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.55"/>
+          <Node id="16" score="versicolor">
+           <SimplePredicate field="petal_length" operator="lessOrEqual" value="4"/>
+          </Node>
+          <Node id="17" score="virginica">
+           <SimplePredicate field="petal_length" operator="greaterThan" value="4"/>
+          </Node>
          </Node>
-         <Node id="11" score="versicolor">
-          <SimplePredicate field="petal_width" operator="greaterThan" value="0.6"/>
+         <Node id="13" score="versicolor">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.55"/>
          </Node>
         </Node>
         <Node id="9" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4.8"/>
         </Node>
        </Node>
-       <Node id="7" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="6.05"/>
+       <Node id="6" score="versicolor">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
+       </Node>
+       <Node id="7">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
+        <Node id="10">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
+         <Node id="14" score="virginica">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
+         </Node>
+         <Node id="15" score="versicolor">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
+         </Node>
+        </Node>
+        <Node id="11" score="virginica">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+        </Node>
        </Node>
       </Node>
      </Node>
@@ -2087,38 +2159,32 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.7"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.7"/>
-       <Node id="4">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
-        </Node>
-        <Node id="7">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
-         <Node id="10" score="virginica">
-          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.5"/>
-         </Node>
-         <Node id="11" score="versicolor">
-          <SimplePredicate field="sepal_length" operator="greaterThan" value="6.5"/>
-         </Node>
-        </Node>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
+       <Node id="4" score="versicolor">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.7"/>
        </Node>
        <Node id="5">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-        <Node id="8">
-         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.05"/>
-         <Node id="12" score="versicolor">
-          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.85"/>
-         </Node>
-         <Node id="13" score="virginica">
-          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.85"/>
-         </Node>
+        <SimplePredicate field="petal_length" operator="greaterThan" value="4.7"/>
+        <Node id="6" score="versicolor">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.75"/>
         </Node>
-        <Node id="9" score="virginica">
-         <SimplePredicate field="sepal_length" operator="greaterThan" value="6.05"/>
+        <Node id="7">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.75"/>
+         <Node id="8">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6"/>
+          <Node id="10" score="virginica">
+           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.95"/>
+          </Node>
+          <Node id="11" score="versicolor">
+           <SimplePredicate field="sepal_width" operator="greaterThan" value="2.95"/>
+          </Node>
+         </Node>
+         <Node id="9" score="virginica">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="6"/>
+         </Node>
         </Node>
        </Node>
       </Node>
@@ -2137,53 +2203,17 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
+      <Node id="2">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.85"/>
+       <Node id="4" score="setosa">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
+       </Node>
+       <Node id="5" score="versicolor">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
+       </Node>
       </Node>
-      <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
-       <Node id="4" score="versicolor">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
-       </Node>
-       <Node id="5">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
-        <Node id="6">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-         <Node id="8">
-          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.55"/>
-          <Node id="12" score="versicolor">
-           <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
-          </Node>
-          <Node id="13" score="virginica">
-           <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
-          </Node>
-         </Node>
-         <Node id="9" score="versicolor">
-          <SimplePredicate field="sepal_length" operator="greaterThan" value="6.55"/>
-         </Node>
-        </Node>
-        <Node id="7">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-         <Node id="10">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.15"/>
-          <Node id="14" score="virginica">
-           <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
-          </Node>
-          <Node id="15">
-           <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
-           <Node id="16" score="virginica">
-            <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.85"/>
-           </Node>
-           <Node id="17" score="virginica">
-            <SimplePredicate field="sepal_width" operator="greaterThan" value="2.85"/>
-           </Node>
-          </Node>
-         </Node>
-         <Node id="11" score="virginica">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="5.15"/>
-         </Node>
-        </Node>
-       </Node>
+      <Node id="3" score="virginica">
+       <SimplePredicate field="petal_length" operator="greaterThan" value="4.85"/>
       </Node>
      </Node>
     </TreeModel>
@@ -2205,34 +2235,28 @@
       </Node>
       <Node id="3">
        <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
-       <Node id="4" score="versicolor">
-        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.75"/>
-       </Node>
-       <Node id="5">
-        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.75"/>
+       <Node id="4">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.05"/>
         <Node id="6">
-         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-         <Node id="8" score="versicolor">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
+         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.75"/>
+         <Node id="10" score="versicolor">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.45"/>
          </Node>
-         <Node id="9">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-          <Node id="10" score="virginica">
-           <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.55"/>
-          </Node>
-          <Node id="11">
-           <SimplePredicate field="petal_width" operator="greaterThan" value="1.55"/>
-           <Node id="12" score="versicolor">
-            <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.6"/>
-           </Node>
-           <Node id="13" score="virginica">
-            <SimplePredicate field="sepal_length" operator="greaterThan" value="6.6"/>
-           </Node>
-          </Node>
+         <Node id="11" score="virginica">
+          <SimplePredicate field="petal_length" operator="greaterThan" value="4.45"/>
          </Node>
         </Node>
-        <Node id="7" score="virginica">
-         <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+        <Node id="7" score="versicolor">
+         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.75"/>
+        </Node>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="6.05"/>
+        <Node id="8" score="versicolor">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
+        </Node>
+        <Node id="9" score="virginica">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
         </Node>
        </Node>
       </Node>
@@ -2252,44 +2276,26 @@
      <Node id="1">
       <True/>
       <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.7"/>
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
       </Node>
       <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.7"/>
-       <Node id="4">
-        <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.95"/>
-        <Node id="6" score="versicolor">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.75"/>
-        </Node>
-        <Node id="7">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="4.75"/>
-         <Node id="10" score="versicolor">
-          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.6"/>
-         </Node>
-         <Node id="11">
-          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.6"/>
-          <Node id="14" score="virginica">
-           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.95"/>
-          </Node>
-          <Node id="15" score="versicolor">
-           <SimplePredicate field="sepal_width" operator="greaterThan" value="2.95"/>
-          </Node>
-         </Node>
-        </Node>
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+       <Node id="4" score="versicolor">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.65"/>
        </Node>
        <Node id="5">
-        <SimplePredicate field="petal_length" operator="greaterThan" value="4.95"/>
-        <Node id="8">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.15"/>
-         <Node id="12" score="virginica">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.05"/>
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.65"/>
+        <Node id="6">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6"/>
+         <Node id="8" score="virginica">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.95"/>
          </Node>
-         <Node id="13" score="versicolor">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="5.05"/>
+         <Node id="9" score="versicolor">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.95"/>
          </Node>
         </Node>
-        <Node id="9" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="5.15"/>
+        <Node id="7" score="virginica">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="6"/>
         </Node>
        </Node>
       </Node>
@@ -2308,34 +2314,46 @@
      </MiningSchema>
      <Node id="1">
       <True/>
-      <Node id="2" score="setosa">
-       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
-      </Node>
-      <Node id="3">
-       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
-       <Node id="4">
-        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
-        <Node id="6">
-         <SimplePredicate field="petal_length" operator="lessOrEqual" value="5.35"/>
-         <Node id="8" score="versicolor">
-          <SimplePredicate field="petal_length" operator="lessOrEqual" value="4.85"/>
-         </Node>
-         <Node id="9">
-          <SimplePredicate field="petal_length" operator="greaterThan" value="4.85"/>
-          <Node id="10" score="virginica">
-           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.45"/>
-          </Node>
-          <Node id="11" score="versicolor">
-           <SimplePredicate field="sepal_width" operator="greaterThan" value="2.45"/>
-          </Node>
-         </Node>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
+       <Node id="4" score="setosa">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
+        <Node id="8" score="virginica">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.95"/>
         </Node>
-        <Node id="7" score="virginica">
-         <SimplePredicate field="petal_length" operator="greaterThan" value="5.35"/>
+        <Node id="9" score="versicolor">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="4.95"/>
         </Node>
        </Node>
-       <Node id="5" score="virginica">
-        <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
+       <Node id="6">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="5"/>
+        <Node id="10" score="setosa">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.7"/>
+        </Node>
+        <Node id="11">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="0.7"/>
+         <Node id="12" score="versicolor">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.7"/>
+         </Node>
+         <Node id="13">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="1.7"/>
+          <Node id="14" score="virginica">
+           <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3"/>
+          </Node>
+          <Node id="15" score="versicolor">
+           <SimplePredicate field="sepal_width" operator="greaterThan" value="3"/>
+          </Node>
+         </Node>
+        </Node>
+       </Node>
+       <Node id="7" score="virginica">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="5"/>
        </Node>
       </Node>
      </Node>
