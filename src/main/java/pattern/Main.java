@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2012 Concurrent, Inc. All Rights Reserved.
+ * Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
  *
  * Project and contact information: http://www.concurrentinc.com/
  */
@@ -63,9 +63,8 @@ public class Main
     OptionSet options = optParser.parse( args );
 
     // define a "Classifier" model from the PMML description
-    Classifier classifier = new Classifier( pmmlPath );
-    ClassifierFunction classFunc = new ClassifierFunction( new Fields( "score" ), classifier );
-    Pipe classifyPipe = new Each( new Pipe( "classify" ), classifier.getInputFields(), classFunc, Fields.ALL );
+    ClassifierFunction classFunc = new ClassifierFunction( new Fields( "score" ), pmmlPath );
+    Pipe classifyPipe = new Each( new Pipe( "classify" ), classFunc.getInputFields(), classFunc, Fields.ALL );
 
     // optionally: measure model results vs. what was predicted during
     // model creation

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2012 Concurrent, Inc. All Rights Reserved.
+ * Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
  *
  * Project and contact information: http://www.concurrentinc.com/
  */
@@ -61,15 +61,5 @@ public class Classifier implements Serializable
   public String classifyTuple( Tuple values ) throws PatternException
     {
     return model.classifyTuple( values );
-    }
-
-  /**
-   * Returns a Fields data structure naming the input tuple fields.
-   *
-   * @return
-   */
-  public Fields getInputFields()
-    {
-    return model.schema.getInputFields();
     }
   }

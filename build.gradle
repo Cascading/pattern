@@ -1,16 +1,15 @@
 /*
- * Copyright (c) 2007-2012 Concurrent, Inc. All Rights Reserved.
+ * Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
  *
  * Project and contact information: http://www.concurrentinc.com/
  */
-
-import java.text.SimpleDateFormat
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
 
+ext.cascadingVersion = '2.1.1'
 archivesBaseName = 'pattern'
 
 repositories {
@@ -19,12 +18,9 @@ repositories {
   mavenRepo name: 'conjars', url: 'http://conjars.org/repo/'
 }
 
-ext.cascadingVersion = '2.1.+'
-ext.cascadingChanging = cascadingVersion.endsWith( ' -dev' );
-
 dependencies {
-  compile( group: 'cascading', name: 'cascading-core', version: cascadingVersion, changing: cascadingChanging )
-  compile( group: 'cascading', name: 'cascading-hadoop', version: cascadingVersion, changing: cascadingChanging )
+  compile( group: 'cascading', name: 'cascading-core', version: cascadingVersion )
+  compile( group: 'cascading', name: 'cascading-hadoop', version: cascadingVersion )
   compile( 'net.sf.jopt-simple:jopt-simple:4.3' )
 
   testCompile( 'org.apache.hadoop:hadoop-core:1.0.+' )
@@ -47,24 +43,6 @@ jar {
   manifest {
     attributes( "Main-Class": "pattern/Main" )
   }
-}
-
-task distCopy( type: Copy, dependsOn: jar ) {
-  into "${buildDir}/dist/${archivesBaseName}"
-
-  from 'README.md'
-  from 'build.gradle'
-  from( 'src' ) {into 'src'}
-  from( 'data' ) {into 'data'}
-
-  from "$buildDir/libs"
-}
-
-task dist( type: Tar, dependsOn: distCopy ) {
-  compression = "GZIP"
-  classifier = new SimpleDateFormat( "yyyyMMdd" ).format( new Date() )
-
-  from "${buildDir}/dist/"
 }
 
 test {

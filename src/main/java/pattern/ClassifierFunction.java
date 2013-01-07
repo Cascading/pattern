@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2012 Concurrent, Inc. All Rights Reserved.
+ * Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
  *
  * Project and contact information: http://www.concurrentinc.com/
  */
@@ -34,13 +34,13 @@ public class ClassifierFunction extends BaseOperation<ClassifierFunction.Context
     }
 
   /**
-   * @param fieldDeclaration
-   * @param classifier
+   * @param fieldDeclaration result field
+   * @param pmmlPath PMML file
    */
-  public ClassifierFunction( Fields fieldDeclaration, Classifier classifier )
+  public ClassifierFunction( Fields fieldDeclaration, String pmmlPath )
     {
     super( 1, fieldDeclaration );
-    this.classifier = classifier;
+    this.classifier = new Classifier( pmmlPath );
     }
 
   /**
@@ -66,5 +66,15 @@ public class ClassifierFunction extends BaseOperation<ClassifierFunction.Context
     String label = classifier.classifyTuple( argument.getTuple() );
 
     functionCall.getOutputCollector().add( functionCall.getContext().result( label ) );
+    }
+
+  /**
+   * Returns a Fields data structure naming the input tuple fields.
+   *
+   * @return
+   */
+  public Fields getInputFields()
+    {
+    return classifier.model.schema.getInputFields();
     }
   }

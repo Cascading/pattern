@@ -54,7 +54,7 @@ model. Tuples which fail that assertion get trapped into
 Also, the _confusion matrix_ shown in `output/measure/part*` should
 match the one logged in `model.log` from baseline generated in _R_.
 
-To run on Amazon AWS, take a look at the `src/sh/cloud.sh` script.
+To run on Amazon AWS, take a look at the `emr.sh` script.
 
 Classifier vs. Predictive Model
 -------------------------------
@@ -87,14 +87,12 @@ then generate PMML as a file called `sample.rf.xml`:
     fit <- randomForest(f, data_train, ntree=50)
     saveXML(pmml(fit), file="sample.rf.xml")
 
-Then use the PMML file in your Cascading app, such as the following
-example where it is referenced as a command line argument called
-`pmmlPath`:
+To use the PMML file in your Cascading app, this example it
+referenced as a command line argument called `pmmlPath`:
 
     // define a "Classifier" model from PMML to evaluate the orders
-    Classifier classifier = new Classifier( pmmlPath );
-    ClassifierFunction classFunc = new ClassifierFunction( new Fields( "score" ), classifier );
-    Pipe classifyPipe = new Each( new Pipe( "classify" ), classifier.getFields(), classFunc, Fields.ALL );
+    ClassifierFunction classFunc = new ClassifierFunction( new Fields( "score" ), pmmlPath );
+    Pipe classifyPipe = new Each( new Pipe( "classify" ), classFunc.getFields(), classFunc, Fields.ALL );
 
 Now when you run that Cascading app, provide a reference to
 `sample.rf.xml` for the `pmmlPath` argument.
@@ -113,10 +111,10 @@ These examples use the popular
  * random forest (rf)
  * linear regression (lm)
  * logistic regression (glm)
+ * hierarchical clustering (hclust)
+ * k-means clustering (kmeans)
  * multinomial model (multinom)
  * single hidden-layer neural network (nnet)
- * k-means clustering (kmeans)
- * hierarchical clustering (hclust)
  * support vector machine (ksvm)
  * recursive partition classification tree (rpart)
  * association rules
@@ -124,6 +122,9 @@ These examples use the popular
 To execute the R script:
 
     R --vanilla < src/r/rattle_pmml.R
+
+It is possible to extend PMML support for other kinds of modeling in R and other analytics platforms.
+Contact the developers to discuss on the [cascading-user](https://groups.google.com/forum/?fromgroups#!forum/cascading-user) email forum.
 
 PMML Resources
 --------------

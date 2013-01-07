@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2012 Concurrent, Inc. All Rights Reserved.
+ * Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
  *
  * Project and contact information: http://www.concurrentinc.com/
  */
@@ -23,7 +23,7 @@ public abstract class DataField implements Serializable
   public String data_type;
 
   /**
-   * Does nothing. May override if a DataField subclass needs to parse additional info from PMML.
+   * Does nothing. Override this method if a DataField subclass needs to parse additional info from PMML.
    *
    * @param reader
    * @param node
