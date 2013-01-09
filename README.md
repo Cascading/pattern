@@ -56,6 +56,7 @@ match the one logged in `model.log` from baseline generated in _R_.
 
 To run on Amazon AWS, take a look at the `emr.sh` script.
 
+
 Classifier vs. Predictive Model
 -------------------------------
 
@@ -100,6 +101,7 @@ Now when you run that Cascading app, provide a reference to
 An architectural diagram for common use case patterns is shown in
 `docs/pattern.graffle` which is an OmniGraffle document.
 
+
 Example Models
 --------------
 
@@ -125,6 +127,21 @@ To execute the R script:
 
 It is possible to extend PMML support for other kinds of modeling in R and other analytics platforms.
 Contact the developers to discuss on the [cascading-user](https://groups.google.com/forum/?fromgroups#!forum/cascading-user) email forum.
+
+
+Generating Sample Data
+----------------------
+
+To generate sample data (500 rows, 1000 independent variables)
+approximating a customer orders data set:
+
+    ./src/py/gen_orders.py 500 1000 > orders.tsv
+    R --vanilla < ./src/py/rf_pmml.R
+
+This will generate `huge.rf.xml` as the PMML export for a Random
+Forest classifier plus `huge.tsv` as a baseline data set for
+regression testing.
+
 
 PMML Resources
 --------------
