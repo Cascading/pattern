@@ -32,7 +32,7 @@ if __name__ == '__main__':
     num_row = int(sys.argv[1])
     num_col = int(sys.argv[2])
 
-    print "\t".join(["label"] + map(lambda x: "var" + str(x), range(0, num_col)) + ["order_id"])
+    print "\t".join(["label"] + map(lambda x: "v" + str(x), range(0, num_col)) + ["order_id"])
 
     for i in range(0, num_row):
         print "\t".join(gen_row(CUSTOMER_SEGMENTS, num_col))
