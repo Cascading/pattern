@@ -31,28 +31,49 @@ public class Context implements Serializable
   private static final Logger LOG = LoggerFactory.getLogger( Context.class );
 
   public List<String> predicates = new ArrayList<String>();
-  protected Boolean[] pred_eval;
+  public List<ArrayList<Integer>> variables = new ArrayList<ArrayList<Integer>>();
 
+  protected Boolean[] pred_eval;
   protected Object[] param_values;
   protected ExpressionEvaluator[] ee_list;
 
   /**
    * Make a predicate representing the decision point for a vertext in
-   * the tree. Return an ID for the predicate.
+   * the tree, plus the indicies for the variables it requires. Return
+   * an ID for the predicate.
    *
    * @param schema model schema
    * @param reader XML reader
    * @param node predicate node in the XML
+   * @param params parameter names
    * @return Integer
    * @throws PatternException
    */
-  public Integer makePredicate( Schema schema, XPathReader reader, Element node ) throws PatternException
+  public Integer makePredicate( Schema schema, XPathReader reader, Element node, List<String> params ) throws PatternException
     {
     String field = node.getAttribute( "field" );
     String eval = schema.get( field ).getEval( reader, node );
+    ArrayList<Integer> pred_vars = new ArrayList<Integer>();
+
+    for ( String s: eval.split( "[^\\w\\_]" ) )
+      {
+      s = s.trim();
+
+      if( s.length() > 0 )
+        {
+        int var_index = params.indexOf( s ) ;
+
+        if( var_index > 0 )
+          pred_vars.add( var_index );
+        }
+      }
 
     if( !predicates.contains( eval ) )
+      {
+      LOG.debug( "pred: " + eval + " ? " + pred_vars.toString() );
       predicates.add( eval );
+      variables.add( pred_vars );
+      }
 
     Integer predicate_id = predicates.indexOf( eval );
 
@@ -79,8 +100,20 @@ public class Context implements Serializable
     for( int i = 0; i < predicates.size(); i++ )
       try
         {
-          LOG.debug( "eval: " + predicates.get( i ) );
-          ee_list[ i ] = new ExpressionEvaluator( predicates.get( i ), boolean.class, param_names, param_types, new Class[ 0 ], null );
+        ArrayList<Integer> pred_vars = variables.get( i );
+        String[] pred_param_names = new String[ pred_vars.size() ];
+        Class[] pred_param_types = new Class[ pred_vars.size() ];
+        int j = 0;
+
+        for (Integer pv : pred_vars)
+          {
+          LOG.debug( "pv: " + pv + " name: " + param_names[ pv ] + " type: " + param_types[ pv ] );
+          pred_param_names[ j ] = param_names[ pv ];
+          pred_param_types[ j++ ] = param_types[ pv ];
+          }
+
+        LOG.debug( "eval: " + predicates.get( i ) + " param len: " + pred_vars.size() + " ? " + pred_vars );
+        ee_list[ i ] = new ExpressionEvaluator( predicates.get( i ), boolean.class, pred_param_names, pred_param_types, new Class[ 0 ], null );
         }
       catch( NullPointerException exception )
         {
@@ -115,7 +148,17 @@ public class Context implements Serializable
     for( int i = 0; i < predicates.size(); i++ )
       try
         {
-        pred_eval[ i ] = new Boolean( ee_list[ i ].evaluate( param_values ).toString() );
+        ArrayList<Integer> pred_vars = variables.get( i );
+        Object[] pred_param_values = new Object[ pred_vars.size() ];
+        int j = 0;
+
+        for (Integer pv : pred_vars)
+          {
+          LOG.debug( "pv: " + pv + " value: " + param_values[ pv ] );
+          pred_param_values[ j++ ] = param_values[ pv ];
+          }
+
+        pred_eval[ i ] = new Boolean( ee_list[ i ].evaluate( pred_param_values ).toString() );
         }
       catch( InvocationTargetException exception )
         {

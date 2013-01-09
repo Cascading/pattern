@@ -7,6 +7,8 @@
 package pattern.model.tree;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.xpath.XPathConstants;
 
 import org.jgrapht.DirectedGraph;
@@ -124,6 +126,17 @@ public class TreeModel extends Model implements Serializable
    */
   protected void buildNode( PMML pmml, Context shared_context, Element node, Vertex vertex, DirectedGraph<Vertex, Edge> graph ) throws PatternException
     {
+    // build a list of parameters from which the predicate will be evaluated 
+
+    Schema schema = pmml.getSchema();
+    String[] param_names = schema.getParamNames();
+    List<String> params = new ArrayList<String>();
+
+    for( int i = 0; i < param_names.length; i++ )
+      params.add( param_names[ i ] );
+
+    // walk the node list to construct serializable predicates
+
     NodeList child_nodes = node.getChildNodes();
 
     for( int i = 0; i < child_nodes.getLength(); i++ )
@@ -134,7 +147,7 @@ public class TreeModel extends Model implements Serializable
         {
         if( "SimplePredicate".equals( child.getNodeName() ) || "SimpleSetPredicate".equals( child.getNodeName() ) )
           {
-          Integer predicate_id = shared_context.makePredicate( pmml.getSchema(), pmml.getReader(), (Element) child );
+          Integer predicate_id = shared_context.makePredicate( schema, pmml.getReader(), (Element) child, params );
 
           if( node.hasAttribute( "score" ) )
             {
