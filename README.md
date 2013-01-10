@@ -11,6 +11,9 @@ Current support for PMML includes:
 
  * [Random Forest](http://en.wikipedia.org/wiki/Random_forest) in [PMML 4.0+](http://www.dmg.org/v4-0-1/MultipleModels.html) exported from [R/Rattle](http://cran.r-project.org/web/packages/rattle/index.html)
  * [Linear Regression](http://en.wikipedia.org/wiki/Linear_regression) in [PMML 1.1+](http://www.dmg.org/v1-1/generalregression.html)
+
+Initial code -- but not ready for production yet:
+
  * [Hierarchical Clustering](http://en.wikipedia.org/wiki/Hierarchical_clustering) in [PMML 2.0+](http://www.dmg.org/v2-0/ClusteringModel.html)
 
 This is intended to complement other ML libraries atop Cascading, such as the excellent
