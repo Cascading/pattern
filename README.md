@@ -11,6 +11,7 @@ Current support for PMML includes:
 
  * [Random Forest](http://en.wikipedia.org/wiki/Random_forest) in [PMML 4.0+](http://www.dmg.org/v4-0-1/MultipleModels.html) exported from [R/Rattle](http://cran.r-project.org/web/packages/rattle/index.html)
  * [Linear Regression](http://en.wikipedia.org/wiki/Linear_regression) in [PMML 1.1+](http://www.dmg.org/v1-1/generalregression.html)
+ * [Hierarchical Clustering](http://en.wikipedia.org/wiki/Hierarchical_clustering) in [PMML 2.0+](http://www.dmg.org/v2-0/ClusteringModel.html)
 
 This is intended to complement other ML libraries atop Cascading, such as the excellent
 [Scalding Matrix API](https://github.com/twitter/scalding/wiki/Matrix-API-Reference).
@@ -19,11 +20,9 @@ This is intended to complement other ML libraries atop Cascading, such as the ex
 Project Status
 --------------
 
-One struggles with the notion of calling this an _alpha_ release.
-More like a _petroglyph_ release; very very early.
-
-We wanted to get the code "out there" early, to initiate a dialog and
-collect feedback about using PMML and Cascading together.
+This is an early release.  We wanted to get the code "out in the wild"
+early to help initiate a dialog and collect feedback about using PMML
+and Cascading together.
 
 
 Build Instructions
@@ -61,7 +60,7 @@ To run on Amazon AWS, take a look at the `emr.sh` script.
 Classifier vs. Predictive Model
 -------------------------------
 
-An example _classifier_ is Random Forest:
+Here is an example _classifier_ using Random Forest:
 
     gradle clean jar
     rm -rf output
@@ -69,7 +68,15 @@ An example _classifier_ is Random Forest:
       output/classify output/trap --measure output/measure
 
 
-An example _predictive model_ is Linear Regression:
+Here is an example _classifier_ using Hierarchical Clustering:
+
+    gradle clean jar
+    rm -rf output
+    hadoop jar build/libs/pattern.jar data/iris.hc.xml data/iris.hc.tsv \
+      output/classify output/trap --measure output/measure
+
+
+Here is an example _predictive model_ using Linear Regression:
 
     gradle clean jar
     rm -rf output

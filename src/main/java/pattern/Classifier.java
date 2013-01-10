@@ -12,6 +12,7 @@ import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
 import pattern.model.Model;
 import pattern.model.MiningModel;
+import pattern.model.clust.ClusteringModel;
 import pattern.model.lm.RegressionModel;
 import pattern.model.tree.TreeModel;
 
@@ -37,6 +38,8 @@ public class Classifier implements Serializable
       model = new TreeModel( pmml );
     else if( PMML.Models.REGRESSION.equals( pmml.model_type ) )
       model = new RegressionModel( pmml );
+    else if( PMML.Models.CLUSTERING.equals( pmml.model_type ) )
+      model = new ClusteringModel( pmml );
     else
       throw new PatternException( "unsupported model type: " + pmml.model_type.name() );
     }

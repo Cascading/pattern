@@ -24,7 +24,7 @@ public class PMML
   protected Schema schema = new Schema();
 
   /** Implemented model types */
-  public enum Models { UNKNOWN, MINING, TREE, REGRESSION };
+  public enum Models { UNKNOWN, MINING, TREE, REGRESSION, CLUSTERING };
 
   public Models model_type = Models.UNKNOWN;
   public String version;
@@ -63,6 +63,8 @@ public class PMML
       return Models.TREE;
     else if( reader.read( "/PMML/RegressionModel", XPathConstants.NODE ) != null )
       return Models.REGRESSION;
+    else if( reader.read( "/PMML/ClusteringModel", XPathConstants.NODE ) != null )
+      return Models.CLUSTERING;
 
     return model_type;
     }
