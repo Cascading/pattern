@@ -106,14 +106,14 @@ public class ModelTest
         classifier.prepare();
 
         String label = classifier.classifyTuple( values );
+        LOG.debug( values.toString() + " predicted: " + predicted + " score: " + label );
 
         if( !predicted.equals( label ) )
           {
           StringBuilder sb = new StringBuilder();
 
           sb.append( String.format( "regression: classifier label [ %s ] does not match predicted [ %s ]\n", label, predicted ) )
-            .append( line ).append( "\n" )
-            .append( "votes: " ).append( ((MiningModel) classifier.model).votes );
+            .append( line );
 
 	  fail( sb.toString() );
           }
