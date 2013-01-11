@@ -11,13 +11,7 @@ Current support for PMML includes:
 
  * [Random Forest](http://en.wikipedia.org/wiki/Random_forest) in [PMML 4.0+](http://www.dmg.org/v4-0-1/MultipleModels.html) exported from [R/Rattle](http://cran.r-project.org/web/packages/rattle/index.html)
  * [Linear Regression](http://en.wikipedia.org/wiki/Linear_regression) in [PMML 1.1+](http://www.dmg.org/v1-1/generalregression.html)
-
-Initial code -- but not ready for production yet:
-
- * [Hierarchical Clustering](http://en.wikipedia.org/wiki/Hierarchical_clustering) in [PMML 2.0+](http://www.dmg.org/v2-0/ClusteringModel.html)
-
-This is intended to complement other ML libraries atop Cascading, such as the excellent
-[Scalding Matrix API](https://github.com/twitter/scalding/wiki/Matrix-API-Reference).
+ * [Hierarchical Clustering](http://en.wikipedia.org/wiki/Hierarchical_clustering) and [K-Means Clustering](http://en.wikipedia.org/wiki/K-means_clustering) in [PMML 2.0+](http://www.dmg.org/v2-0/ClusteringModel.html)
 
 
 Project Status
@@ -68,21 +62,14 @@ To run on Amazon AWS, take a look at the `emr.sh` script.
 Classifier vs. Predictive Model
 -------------------------------
 
-Here is an example _classifier_ using Random Forest:
+Here's how to run an example _classifier_ using Random Forest:
 
     gradle clean jar
     rm -rf output
     hadoop jar build/libs/pattern.jar data/iris.rf.xml data/iris.rf.tsv \
       output/classify output/trap --measure output/measure
 
-Here is an example _classifier_ using Hierarchical Clustering:
-
-    gradle clean jar
-    rm -rf output
-    hadoop jar build/libs/pattern.jar data/iris.hc.xml data/iris.hc.tsv \
-      output/classify output/trap --measure output/measure
-
-Here is an example _predictive model_ using Linear Regression:
+Here's how to run an example _predictive model_ using Linear Regression:
 
     gradle clean jar
     rm -rf output
@@ -128,9 +115,9 @@ These examples use the popular
 
  * random forest (rf)
  * linear regression (lm)
- * logistic regression (glm)
  * hierarchical clustering (hclust)
  * k-means clustering (kmeans)
+ * logistic regression (glm)
  * multinomial model (multinom)
  * single hidden-layer neural network (nnet)
  * support vector machine (ksvm)
