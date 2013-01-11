@@ -10,6 +10,8 @@ import java.util.Properties;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cascading.flow.Flow;
 import cascading.flow.FlowDef;
@@ -34,6 +36,9 @@ import cascading.tuple.Fields;
 
 public class Main
   {
+  /** Field LOG */
+  private static final Logger LOG = LoggerFactory.getLogger( Main.class );
+
   /** @param args  */
   public static void main( String[] args ) throws RuntimeException
     {
@@ -131,14 +136,14 @@ public class Main
 
     // set to DebugLevel.VERBOSE for trace, or DebugLevel.NONE
     // in production
-    if( options.hasArgument( "debug" ) )
+    if( options.has( "debug" ) )
       flowDef.setDebugLevel( DebugLevel.VERBOSE );
     else
       flowDef.setDebugLevel( DebugLevel.NONE );
 
     // set to AssertionLevel.STRICT for all assertions, or
     // AssertionLevel.NONE in production
-    if( options.hasArgument( "assert" ) )
+    if( options.has( "assert" ) )
       flowDef.setAssertionLevel( AssertionLevel.STRICT );
     else
       flowDef.setAssertionLevel( AssertionLevel.NONE );

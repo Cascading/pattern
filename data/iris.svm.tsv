@@ -40,7 +40,7 @@ sepal_length	sepal_width	petal_length	petal_width	species	predict
 4.4	3	1.3	0.2	setosa	setosa
 5.1	3.4	1.5	0.2	setosa	setosa
 5	3.5	1.3	0.3	setosa	setosa
-4.5	2.3	1.3	0.3	setosa	versicolor
+4.5	2.3	1.3	0.3	setosa	setosa
 4.4	3.2	1.3	0.2	setosa	setosa
 5	3.5	1.6	0.6	setosa	setosa
 5.1	3.8	1.9	0.4	setosa	setosa
@@ -69,14 +69,14 @@ sepal_length	sepal_width	petal_length	petal_width	species	predict
 5.8	2.7	4.1	1	versicolor	versicolor
 6.2	2.2	4.5	1.5	versicolor	versicolor
 5.6	2.5	3.9	1.1	versicolor	versicolor
-5.9	3.2	4.8	1.8	versicolor	versicolor
+5.9	3.2	4.8	1.8	versicolor	virginica
 6.1	2.8	4	1.3	versicolor	versicolor
 6.3	2.5	4.9	1.5	versicolor	versicolor
 6.1	2.8	4.7	1.2	versicolor	versicolor
 6.4	2.9	4.3	1.3	versicolor	versicolor
 6.6	3	4.4	1.4	versicolor	versicolor
 6.8	2.8	4.8	1.4	versicolor	versicolor
-6.7	3	5	1.7	versicolor	virginica
+6.7	3	5	1.7	versicolor	versicolor
 6	2.9	4.5	1.5	versicolor	versicolor
 5.7	2.6	3.5	1	versicolor	versicolor
 5.5	2.4	3.8	1.1	versicolor	versicolor
@@ -105,7 +105,7 @@ sepal_length	sepal_width	petal_length	petal_width	species	predict
 6.3	2.9	5.6	1.8	virginica	virginica
 6.5	3	5.8	2.2	virginica	virginica
 7.6	3	6.6	2.1	virginica	virginica
-4.9	2.5	4.5	1.7	virginica	virginica
+4.9	2.5	4.5	1.7	virginica	versicolor
 7.3	2.9	6.3	1.8	virginica	virginica
 6.7	2.5	5.8	1.8	virginica	virginica
 7.2	3.6	6.1	2.5	virginica	virginica
@@ -132,8 +132,8 @@ sepal_length	sepal_width	petal_length	petal_width	species	predict
 7.4	2.8	6.1	1.9	virginica	virginica
 7.9	3.8	6.4	2	virginica	virginica
 6.4	2.8	5.6	2.2	virginica	virginica
-6.3	2.8	5.1	1.5	virginica	virginica
-6.1	2.6	5.6	1.4	virginica	virginica
+6.3	2.8	5.1	1.5	virginica	versicolor
+6.1	2.6	5.6	1.4	virginica	versicolor
 7.7	3	6.1	2.3	virginica	virginica
 6.3	3.4	5.6	2.4	virginica	virginica
 6.4	3.1	5.5	1.8	virginica	virginica

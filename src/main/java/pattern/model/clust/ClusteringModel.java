@@ -58,8 +58,6 @@ public class ClusteringModel extends Model implements Serializable
           exemplars.add( new Exemplar( node_elem ) );
         }
       }
-
-    LOG.debug( this.toString() );
     }
 
   /**
@@ -90,8 +88,6 @@ public class ClusteringModel extends Model implements Serializable
     for( int i = 0; i < param_names.length; i++ )
       param_values[ i ] = (Double) param_map.get( param_names[ i ] );
 
-    LOG.info( "input tuple: " + param_map.toString() );
-
     Exemplar best_clust = null;
     double best_dist = 0.0;
 
@@ -103,7 +99,6 @@ public class ClusteringModel extends Model implements Serializable
         {
         best_clust = clust;
         best_dist = distance;
-        LOG.info( "best dist: " + best_dist + " best_clust: " + best_clust );
         }
       }
 
