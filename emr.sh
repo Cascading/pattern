@@ -28,7 +28,8 @@ elastic-mapreduce --create --name "RF" \
   --debug --enable-debugging \
   --log-uri s3n://$BUCKET/logs \
   --jar s3n://$BUCKET/pattern.jar \
-  --arg s3n://$BUCKET/$PMML \
   --arg s3n://$BUCKET/$DATA \
   --arg s3n://$BUCKET/$SINK/classify \
-  --arg s3n://$BUCKET/$SINK/trap
+  --arg s3n://$BUCKET/$SINK/trap \
+  --arg "--pmml" \
+  --arg s3n://$BUCKET/$PMML
