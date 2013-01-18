@@ -79,7 +79,7 @@ public class Schema extends LinkedHashMap<String, DataField> implements Serializ
         String name = ( (Element) node ).getAttribute( "name" );
         String usage_type = ( (Element) node ).getAttribute( "usageType" );
 
-        LOG.info( String.format( "DataField: %s:%s", name, usage_type ) );
+        LOG.debug( String.format( "DataField: %s:%s", name, usage_type ) );
 
         if( containsKey( name ) )
           {

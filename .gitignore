@@ -1,7 +1,7 @@
 build/
 dot/
 etc/
-output/
+out/
 .gradle
 Rplots.pdf
 *.class

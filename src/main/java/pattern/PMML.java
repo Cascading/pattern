@@ -42,8 +42,8 @@ public class PMML
     version = ( (Element) getNodeList( "/PMML" ).item( 0 ) ).getAttribute( "version" );
     model_type = parseModelType();
 
-    LOG.info( String.format( "Model: %s", model_type.name() ) );
-    LOG.info( String.format( "Version: %s", version ) );
+    LOG.debug( String.format( "Model: %s", model_type.name() ) );
+    LOG.debug( String.format( "Version: %s", version ) );
 
     schema.parseDictionary( this, getNodeList( "/PMML/DataDictionary/DataField" ) );
     }

@@ -67,6 +67,7 @@ public class Main
 
     OptionSet options = optParser.parse( args );
     Pipe classifyPipe = new Pipe( "classifyPipe" );
+    String predictor = null;
 
     // define a "Classifier" model from the PMML description
     if( options.hasArgument( "pmml" ) )
@@ -74,10 +75,11 @@ public class Main
       String pmmlPath = (String) options.valuesOf( "pmml" ).get( 0 );
       ClassifierFunction classFunc = new ClassifierFunction( new Fields( "score" ), pmmlPath );
       classifyPipe = new Each( classifyPipe, classFunc.getInputFields(), classFunc, Fields.ALL );
+      predictor = classFunc.getPredictor();
       }
 
-    // optionally: measure model results vs. what was predicted during
-    // model creation
+    // optionally: measure the model results versus what was predicted
+    // by another framework during model creation
     Pipe measurePipe = null;
     Pipe verifyPipe = null;
 
@@ -97,8 +99,9 @@ public class Main
       verifyPipe = new Each( verifyPipe, AssertionLevel.STRICT, assertMatches );
 
       // calculate a confusion matrix for the model results
+      Fields confusion = new Fields( "predict", "score" );
       measurePipe = new Pipe( "measure", verifyPipe );
-      measurePipe = new GroupBy( measurePipe, new Fields( "predict", "score" ) );
+      measurePipe = new GroupBy( measurePipe, confusion );
       measurePipe = new Every( measurePipe, Fields.ALL, new Count(), Fields.ALL );
       }
     else if( options.hasArgument( "rmse" ) )
@@ -109,28 +112,26 @@ public class Main
       // calculate the RMSE for the model results
       String expression = "Math.pow( predict - score, 2.0 )";
       ExpressionFunction calcExpression = new ExpressionFunction( new Fields( "diff_sq" ), expression, Double.class );
-
       measurePipe = new Pipe( "measure", classifyPipe );
       measurePipe = new Each( measurePipe, Fields.ALL, calcExpression, Fields.ALL );
-      measurePipe = new GroupBy( measurePipe, new Fields( "species" ) );
+
+      measurePipe = new GroupBy( measurePipe, new Fields( predictor ) );
       measurePipe = new Every( measurePipe, new Fields( "diff_sq" ), new Average(), Fields.ALL );
 
       expression = "Math.sqrt( average )";
       calcExpression = new ExpressionFunction( new Fields( "rmse" ), expression, Double.class );
-      measurePipe = new Each( measurePipe, Fields.ALL, calcExpression, new Fields( "species", "rmse" ) );
+      measurePipe = new Each( measurePipe, Fields.ALL, calcExpression, new Fields( predictor, "rmse" ) );
       }
 
     // connect the taps, pipes, etc., into a flow
     FlowDef flowDef = FlowDef.flowDef().setName( "classify" )
       .addSource( classifyPipe, ordersTap )
-      .addTrap( classifyPipe, trapTap )
-      ;
+      .addTrap( classifyPipe, trapTap );
 
     if( measurePipe != null )
       {
       flowDef.addSink( classifyPipe, classifyTap )
-        .addTailSink( measurePipe, measureTap )
-        ;
+        .addTailSink( measurePipe, measureTap );
 
       if( verifyPipe != null )
         flowDef.addTrap( verifyPipe, trapTap );

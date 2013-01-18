@@ -50,7 +50,7 @@ public class RegressionModel extends Model implements Serializable
     Element model_node = (Element) pmml.getNodeList( node_expr ).item( 0 );
 
     intercept = Double.valueOf( model_node.getAttribute( "intercept" ) );
-    LOG.info( "Intercept: " + intercept );
+    LOG.debug( "Intercept: " + intercept );
 
     NodeList child_nodes = model_node.getChildNodes();
 
@@ -62,7 +62,7 @@ public class RegressionModel extends Model implements Serializable
         {
         Predictor pred = PredictorFactory.getPredictor( schema, (Element) child );
         predictors.add( pred );
-        LOG.info( pred.toString() );
+        LOG.debug( pred.toString() );
         }
       }
     }

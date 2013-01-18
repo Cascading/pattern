@@ -103,17 +103,39 @@ public class ClassifierSplitFunction extends BaseOperation<ClassifierSplitFuncti
     }
 
   /**
-   * Returns a Fields data structure naming the input tuple fields.
+   * Returns a Fields data structure naming the input tuple fields --
+   * which in this case is the union of input fields required for each
+   * model.
    *
    * @return
    */
   public Fields getInputFields()
     {
-    Fields results = new Fields();
+    Fields inputFields = new Fields();
 
     for( Classifier classifier : classifierMap.values() )
-      results = Fields.merge( results, classifier.model.schema.getInputFields() );
+      inputFields = Fields.merge( inputFields, classifier.model.schema.getInputFields() );
 
-    return results;
+    return inputFields;
+    }
+
+  /**
+   * Returns a String naming the predictor tuple fields -- which in in
+   * this case is the predictor for any one model, since they should
+   * all be the same.
+   *
+   * @return
+   */
+  public String getPredictor()
+    {
+    String predictor = null;
+
+    for( Classifier classifier : classifierMap.values() )
+      {
+      predictor = classifier.model.schema.label_field.name;
+      break;
+      }
+
+    return predictor;
     }
   }

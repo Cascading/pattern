@@ -77,4 +77,14 @@ public class ClassifierFunction extends BaseOperation<ClassifierFunction.Context
     {
     return classifier.model.schema.getInputFields();
     }
+
+  /**
+   * Returns a String naming the predictor tuple fields.
+   *
+   * @return
+   */
+  public String getPredictor()
+    {
+    return classifier.model.schema.label_field.name;
+    }
   }
