@@ -9,7 +9,7 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
 
-ext.cascadingVersion = '2.1.1'
+ext.cascadingVersion = '2.1.2'
 archivesBaseName = 'pattern'
 
 repositories {
