@@ -54,6 +54,7 @@ public class Context implements Serializable
     String field = node.getAttribute( "field" );
     String eval = schema.get( field ).getEval( reader, node );
     ArrayList<Integer> pred_vars = new ArrayList<Integer>();
+    LOG.debug( "eval: " + eval + " | " + params.toString() );
 
     for ( String s: eval.split( "[^\\w\\_]" ) )
       {
@@ -63,16 +64,17 @@ public class Context implements Serializable
         {
         int var_index = params.indexOf( s ) ;
 
-        if( var_index > 0 )
+        if( var_index >= 0 )
           pred_vars.add( var_index );
+          LOG.debug( "param: " + s + " ? " + var_index + " | " + pred_vars.toString() );
         }
       }
 
     if( !predicates.contains( eval ) )
       {
-      LOG.debug( "pred: " + eval + " ? " + pred_vars.toString() );
       predicates.add( eval );
       variables.add( pred_vars );
+      LOG.debug( "pred: " + eval + " ? " + predicates.toString() );
       }
 
     Integer predicate_id = predicates.indexOf( eval );

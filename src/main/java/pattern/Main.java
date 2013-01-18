@@ -42,10 +42,9 @@ public class Main
   /** @param args  */
   public static void main( String[] args ) throws RuntimeException
     {
-    String pmmlPath = args[ 0 ];
-    String ordersPath = args[ 1 ];
-    String classifyPath = args[ 2 ];
-    String trapPath = args[ 3 ];
+    String ordersPath = args[ 0 ];
+    String classifyPath = args[ 1 ];
+    String trapPath = args[ 2 ];
 
     // set up the config properties
     Properties properties = new Properties();
@@ -60,16 +59,22 @@ public class Main
 
     // handle command line options
     OptionParser optParser = new OptionParser();
+    optParser.accepts( "pmml" ).withRequiredArg();
     optParser.accepts( "measure" ).withRequiredArg();
     optParser.accepts( "rmse" ).withRequiredArg();
     optParser.accepts( "debug" );
     optParser.accepts( "assert" );
 
     OptionSet options = optParser.parse( args );
+    Pipe classifyPipe = new Pipe( "classifyPipe" );
 
     // define a "Classifier" model from the PMML description
-    ClassifierFunction classFunc = new ClassifierFunction( new Fields( "score" ), pmmlPath );
-    Pipe classifyPipe = new Each( new Pipe( "classify" ), classFunc.getInputFields(), classFunc, Fields.ALL );
+    if( options.hasArgument( "pmml" ) )
+      {
+      String pmmlPath = (String) options.valuesOf( "pmml" ).get( 0 );
+      ClassifierFunction classFunc = new ClassifierFunction( new Fields( "score" ), pmmlPath );
+      classifyPipe = new Each( classifyPipe, classFunc.getInputFields(), classFunc, Fields.ALL );
+      }
 
     // optionally: measure model results vs. what was predicted during
     // model creation
@@ -81,8 +86,7 @@ public class Main
       String measurePath = (String) options.valuesOf( "measure" ).get( 0 );
       measureTap = new Hfs( new TextDelimited( true, "\t" ), measurePath );
 
-      // add a stream assertion which implements a full regression
-      // test
+      // add a stream assertion which implements a full regression test
       verifyPipe = new Pipe( "verify", classifyPipe );
       String expression = "predict.equals( score )";
       ExpressionFunction matchExpression = new ExpressionFunction( new Fields( "match" ), expression, String.class );
