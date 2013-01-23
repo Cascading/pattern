@@ -6,22 +6,21 @@
 
 package pattern.model.clust;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import cascading.tuple.Fields;
+import cascading.tuple.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import cascading.tuple.Tuple;
-import pattern.PatternException;
 import pattern.PMML;
-import pattern.Schema;
+import pattern.PatternException;
 import pattern.model.Model;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 public class ClusteringModel extends Model implements Serializable
@@ -74,12 +73,14 @@ public class ClusteringModel extends Model implements Serializable
   /**
    * Classify an input tuple, returning the predicted label.
    *
+   *
    * @param values tuple values
+   * @param fields field names
    * @return String
    * @throws PatternException
    */
   @Override
-  public String classifyTuple( Tuple values ) throws PatternException
+  public String classifyTuple(Tuple values, Fields fields) throws PatternException
     {
     Map<String, Object> param_map = schema.getParamMap( values );
     String[] param_names = schema.getParamNames();

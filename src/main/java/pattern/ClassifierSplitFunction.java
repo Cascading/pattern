@@ -6,12 +6,6 @@
 
 package pattern;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import cascading.flow.FlowProcess;
 import cascading.operation.BaseOperation;
 import cascading.operation.Function;
@@ -20,7 +14,11 @@ import cascading.operation.OperationCall;
 import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
-import pattern.PatternException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ClassifierSplitFunction extends BaseOperation<ClassifierSplitFunction.Context> implements Function<ClassifierSplitFunction.Context>
@@ -91,7 +89,7 @@ public class ClassifierSplitFunction extends BaseOperation<ClassifierSplitFuncti
 
     if( classifier != null )
       {
-      String label = classifier.classifyTuple( argument.getTuple() );
+      String label = classifier.classifyTuple( argument.getTuple() , argument.getFields());
       functionCall.getOutputCollector().add( functionCall.getContext().result( label ) );
       }
     else

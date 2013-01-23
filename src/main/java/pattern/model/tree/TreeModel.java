@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.xpath.XPathConstants;
 
+import cascading.tuple.Fields;
 import org.jgrapht.DirectedGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,12 +89,14 @@ public class TreeModel extends Model implements Serializable
   /**
    * Classify an input tuple, returning the predicted label.
    *
+   *
    * @param values tuple values
+   * @param fields
    * @return String
    * @throws PatternException
    */
   @Override
-  public String classifyTuple( Tuple values ) throws PatternException
+  public String classifyTuple(Tuple values, Fields fields) throws PatternException
     {
     // TODO
     return "null";
