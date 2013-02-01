@@ -132,7 +132,7 @@ sepal_length	sepal_width	petal_length	petal_width	species	predict
 7.4	2.8	6.1	1.9	virginica	virginica
 7.9	3.8	6.4	2	virginica	virginica
 6.4	2.8	5.6	2.2	virginica	virginica
-6.3	2.8	5.1	1.5	virginica	versicolor
+6.3	2.8	5.1	1.5	virginica	virginica
 6.1	2.6	5.6	1.4	virginica	virginica
 7.7	3	6.1	2.3	virginica	virginica
 6.3	3.4	5.6	2.4	virginica	virginica

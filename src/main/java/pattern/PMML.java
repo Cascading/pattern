@@ -6,6 +6,7 @@
 
 package pattern;
 
+import java.io.Reader;
 import javax.xml.xpath.XPathConstants;
 
 import org.slf4j.Logger;
@@ -30,14 +31,14 @@ public class PMML
   public String version;
 
   /**
-   * Parse the XML in the PMML description.
+   * Parse the PMML description, using XPath.
    *
-   * @param pmml_file PMML file
+   * @param pmmlSource XML source for the PMML description
    * @throws PatternException
    */
-  public PMML( String pmml_file ) throws PatternException
+  public PMML( Reader pmmlSource ) throws PatternException
     {
-    reader = new XPathReader( pmml_file );
+    reader = new XPathReader( pmmlSource );
 
     version = ( (Element) getNodeList( "/PMML" ).item( 0 ) ).getAttribute( "version" );
     model_type = parseModelType();

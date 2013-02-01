@@ -3,7 +3,7 @@
  <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)" description="Linear Regression Model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2013-01-10 18:44:34</Timestamp>
+  <Timestamp>2013-01-25 10:01:53</Timestamp>
  </Header>
  <DataDictionary numberOfFields="5">
   <DataField name="sepal_length" optype="continuous" dataType="double"/>
@@ -24,13 +24,13 @@
    <MiningField name="petal_width" usageType="active"/>
    <MiningField name="species" usageType="active"/>
   </MiningSchema>
-  <RegressionTable intercept="2.46867382154499">
-   <NumericPredictor name="sepal_width" exponent="1" coefficient="0.404117346446401"/>
-   <NumericPredictor name="petal_length" exponent="1" coefficient="0.831502791765693"/>
-   <NumericPredictor name="petal_width" exponent="1" coefficient="-0.451058354745449"/>
+  <RegressionTable intercept="2.24166872421148">
+   <NumericPredictor name="sepal_width" exponent="1" coefficient="0.53448203205212"/>
+   <NumericPredictor name="petal_length" exponent="1" coefficient="0.691035562908626"/>
+   <NumericPredictor name="petal_width" exponent="1" coefficient="-0.21488157609202"/>
    <CategoricalPredictor name="species" value="setosa" coefficient="0"/>
-   <CategoricalPredictor name="species" value="versicolor" coefficient="-0.594807446472079"/>
-   <CategoricalPredictor name="species" value="virginica" coefficient="-0.791229574422055"/>
+   <CategoricalPredictor name="species" value="versicolor" coefficient="-0.43150751368126"/>
+   <CategoricalPredictor name="species" value="virginica" coefficient="-0.61868924203063"/>
   </RegressionTable>
  </RegressionModel>
 </PMML>

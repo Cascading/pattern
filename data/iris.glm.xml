@@ -3,7 +3,7 @@
  <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)" description="Generalized Linear Regression Model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
-  <Timestamp>2013-01-10 18:44:35</Timestamp>
+  <Timestamp>2013-01-25 10:01:54</Timestamp>
  </Header>
  <DataDictionary numberOfFields="5">
   <DataField name="setosa" optype="continuous" dataType="double"/>

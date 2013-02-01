@@ -6,6 +6,7 @@
 
 package pattern;
 
+import java.io.Reader;
 import java.io.IOException;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import org.xml.sax.InputSource;
 
 
 public class XPathReader
@@ -29,12 +31,16 @@ public class XPathReader
   private Document xmlDocument;
   private XPath xPath;
 
-  /** @param xmlFile  */
-  public XPathReader( String xmlFile )
+  /**
+   * Set up to read from the XML source.
+   *
+   * @param xmlSource Reader for the XML
+   */
+  public XPathReader( Reader xmlSource )
     {
     try
       {
-      xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse( xmlFile );
+      xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse( new InputSource( xmlSource ) );
       xPath = XPathFactory.newInstance().newXPath();
       }
     catch( IOException exception )

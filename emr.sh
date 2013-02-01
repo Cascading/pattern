@@ -32,4 +32,4 @@ elastic-mapreduce --create --name "RF" \
   --arg s3n://$BUCKET/$SINK/classify \
   --arg s3n://$BUCKET/$SINK/trap \
   --arg "--pmml" \
-  --arg s3n://$BUCKET/$PMML
+  --arg s3n//$BUCKET/$PMML

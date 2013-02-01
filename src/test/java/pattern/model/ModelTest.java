@@ -32,10 +32,13 @@ public class ModelTest
   private static final Logger LOG = LoggerFactory.getLogger( ModelTest.class );
 
   /**
-   * @param base
-   * @param suffix
-   * @param text
-   * @return
+   * Create a temporary text file, used for: a PMML model source,
+   * reference input data.
+   *
+   * @param base base path in the file system
+   * @param suffix file suffix
+   * @param text text to write into the file
+   * @return String
    */
   protected String makeFile( String base, String suffix, String text ) throws IOException
     {
@@ -73,8 +76,13 @@ public class ModelTest
     }
 
   /**
-   * @param data_file
-   * @param model
+   * For each tuple in the reference data -- assuming that the last
+   * field is a predicted "label" -- present the input tuple to the
+   * model and compare the resulting label vs. predicted as a
+   * regression test.
+   *
+   * @param data_file input data for the regression test
+   * @param classifier Classifier object based on the PMML model
    * @throws IOException
    * @throws PatternException
    */
