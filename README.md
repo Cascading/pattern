@@ -1,6 +1,5 @@
 cascading.pattern
 =================
-
 _Pattern_ sub-project for http://Cascading.org/ which uses flows as
 containers for machine learning models, importing
 [PMML](http://en.wikipedia.org/wiki/Predictive_Model_Markup_Language)
@@ -12,11 +11,11 @@ Current support for PMML includes:
  * [Random Forest](http://en.wikipedia.org/wiki/Random_forest) in [PMML 4.0+](http://www.dmg.org/v4-0-1/MultipleModels.html) exported from [R/Rattle](http://cran.r-project.org/web/packages/rattle/index.html)
  * [Linear Regression](http://en.wikipedia.org/wiki/Linear_regression) in [PMML 1.1+](http://www.dmg.org/v1-1/generalregression.html)
  * [Hierarchical Clustering](http://en.wikipedia.org/wiki/Hierarchical_clustering) and [K-Means Clustering](http://en.wikipedia.org/wiki/K-means_clustering) in [PMML 2.0+](http://www.dmg.org/v2-0/ClusteringModel.html)
+ * [Logistic Regression](http://en.wikipedia.org/wiki/Logistic_regression) in [PMML 4.0.1+](http://www.dmg.org/v4-0-1/Regression.html)
 
 
 Build Instructions
 ------------------
-
 To build _Pattern_ and then run its unit tests:
 
     gradle --info --stacktrace clean test
@@ -53,7 +52,6 @@ To run on Amazon AWS, take a look at the `emr.sh` script.
 
 Classifier vs. Predictive Model
 -------------------------------
-
 Here's how to run an example _classifier_ using Random Forest:
 
     gradle clean jar
@@ -71,7 +69,6 @@ Here's how to run an example _predictive model_ using Linear Regression:
 
 Use in Cascading Apps
 ---------------------
-
 Alternatively, if you want to re-use this assembly for your own
 Cascading app, remove the parts related to `verifyPipe` and
 `measurePipe` from the sample code.
@@ -99,7 +96,6 @@ An architectural diagram for common use case patterns is shown in
 
 Example Models
 --------------
-
 Check the `src/r/rattle_pmml.R` script for examples of predictive
 models which are created in R, then exported using _Rattle_.
 These examples use the popular
@@ -128,7 +124,6 @@ email forum.
 
 PMML Resources
 --------------
-
  * [Data Mining Group](http://www.dmg.org/) XML standards and supported vendors
  * [PMML In Action](http://www.amazon.com/dp/1470003244) book 
  * [PMML validator](http://www.zementis.com/pmml_tools.htm)

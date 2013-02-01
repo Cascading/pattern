@@ -12,7 +12,6 @@ import javax.xml.xpath.XPathConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
@@ -25,7 +24,7 @@ public class PMML
   protected Schema schema = new Schema();
 
   /** Implemented model types */
-  public enum Models { UNKNOWN, MINING, TREE, REGRESSION, CLUSTERING };
+  public enum Models { UNKNOWN, MINING, TREE, REGRESSION, CLUSTERING, GENERALIZED_REGRESSION };
 
   public Models model_type = Models.UNKNOWN;
   public String version;
@@ -66,6 +65,8 @@ public class PMML
       return Models.REGRESSION;
     else if( reader.read( "/PMML/ClusteringModel", XPathConstants.NODE ) != null )
       return Models.CLUSTERING;
+    else if( reader.read( "/PMML/GeneralRegressionModel", XPathConstants.NODE ) != null )
+      return Models.GENERALIZED_REGRESSION;
 
     return model_type;
     }

@@ -6,26 +6,23 @@
 
 package pattern.model;
 
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.xpath.XPathConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
-import pattern.PatternException;
 import pattern.PMML;
-import pattern.model.Model;
+import pattern.PatternException;
 import pattern.model.tree.Context;
-import pattern.model.tree.Edge;
-import pattern.model.tree.Tree;
 import pattern.model.tree.TreeModel;
 
 
@@ -78,12 +75,14 @@ public class MiningModel extends Model implements Serializable
   /**
    * Classify an input tuple, returning the predicted label.
    *
+   *
    * @param values tuple values
+   * @param fields field names
    * @return String
    * @throws PatternException
    */
   @Override
-  public String classifyTuple( Tuple values ) throws PatternException
+  public String classifyTuple( Tuple values, Fields fields ) throws PatternException
     {
     Boolean[] pred_eval = context.evalPredicates( schema, values );
     String label = null;

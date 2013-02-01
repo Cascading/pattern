@@ -20,7 +20,6 @@ import cascading.operation.OperationCall;
 import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
-import pattern.PatternException;
 
 
 public class ClassifierSplitFunction extends BaseOperation<ClassifierSplitFunction.Context> implements Function<ClassifierSplitFunction.Context>
@@ -91,7 +90,7 @@ public class ClassifierSplitFunction extends BaseOperation<ClassifierSplitFuncti
 
     if( classifier != null )
       {
-      String label = classifier.classifyTuple( argument.getTuple() );
+      String label = classifier.classifyTuple( argument.getTuple(), argument.getFields() );
       functionCall.getOutputCollector().add( functionCall.getContext().result( label ) );
       }
     else
@@ -107,7 +106,7 @@ public class ClassifierSplitFunction extends BaseOperation<ClassifierSplitFuncti
    * which in this case is the union of input fields required for each
    * model.
    *
-   * @return
+   * @return Fields
    */
   public Fields getInputFields()
     {
@@ -124,7 +123,7 @@ public class ClassifierSplitFunction extends BaseOperation<ClassifierSplitFuncti
    * this case is the predictor for any one model, since they should
    * all be the same.
    *
-   * @return
+   * @return String
    */
   public String getPredictor()
     {

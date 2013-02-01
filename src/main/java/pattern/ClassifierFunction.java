@@ -63,7 +63,7 @@ public class ClassifierFunction extends BaseOperation<ClassifierFunction.Context
   public void operate( FlowProcess flowProcess, FunctionCall<ClassifierFunction.Context> functionCall )
     {
     TupleEntry argument = functionCall.getArguments();
-    String label = classifier.classifyTuple( argument.getTuple() );
+    String label = classifier.classifyTuple( argument.getTuple(), argument.getFields() );
 
     functionCall.getOutputCollector().add( functionCall.getContext().result( label ) );
     }
@@ -71,7 +71,7 @@ public class ClassifierFunction extends BaseOperation<ClassifierFunction.Context
   /**
    * Returns a Fields data structure naming the input tuple fields.
    *
-   * @return
+   * @return Fields
    */
   public Fields getInputFields()
     {

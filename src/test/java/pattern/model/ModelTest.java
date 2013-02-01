@@ -113,7 +113,7 @@ public class ModelTest
 
         classifier.prepare();
 
-        String label = classifier.classifyTuple( values );
+        String label = classifier.classifyTuple( values, classifier.model.schema.getInputFields() );
         LOG.debug( values.toString() + " predicted: " + predicted + " score: " + label );
 
         if( !predicted.equals( label ) )

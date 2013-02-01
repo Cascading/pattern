@@ -8,6 +8,7 @@ package pattern.model;
 
 import java.io.Serializable;
 
+import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
 import pattern.PatternException;
 import pattern.Schema;
@@ -28,8 +29,9 @@ public abstract class Model implements Serializable
    * Classify an input tuple, returning the predicted label.
    *
    * @param values tuple values
+   * @param fields tuple fields
    * @return String
    * @throws PatternException
    */
-  public abstract String classifyTuple( Tuple values ) throws PatternException;
+  public abstract String classifyTuple( Tuple values, Fields fields ) throws PatternException;
   }
