@@ -25,7 +25,7 @@ public enum LinkFunction
       {
       public String calc( double value )
         {
-        return String.format( "%d", Math.round( 1.0 / ( 1.0 + Math.exp( -value ) ) ) );
+        return Double.toString( 1.0 / ( 1.0 + Math.exp( -value ) ) );
         }
       },
 
