@@ -98,8 +98,8 @@ public class Main
       AssertMatches assertMatches = new AssertMatches( ".*true" );
       verifyPipe = new Each( verifyPipe, AssertionLevel.STRICT, assertMatches );
 
-      // calculate a confusion matrix for the model results
-      Fields confusion = new Fields( "predict", "score" );
+      // calculate a confusion matrix for the model results, assuming a "label" field
+      Fields confusion = new Fields( "label", "score" );
       measurePipe = new Pipe( "measure", verifyPipe );
       measurePipe = new GroupBy( measurePipe, confusion );
       measurePipe = new Every( measurePipe, Fields.ALL, new Count(), Fields.ALL );
