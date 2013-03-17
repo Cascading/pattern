@@ -57,7 +57,7 @@ Here's how to run an example _classifier_ using Random Forest:
     gradle clean jar
     rm -rf out
     hadoop jar build/libs/pattern.jar data/iris.rf.tsv out/classify out/trap \
-     --pmml data/iris.rf.xml --measure out/measure
+     --pmml data/iris.rf.xml --measure out/measure --label species
 
 Here's how to run an example _predictive model_ using Linear Regression:
 

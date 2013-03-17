@@ -61,6 +61,7 @@ public class Main
     OptionParser optParser = new OptionParser();
     optParser.accepts( "pmml" ).withRequiredArg();
     optParser.accepts( "measure" ).withRequiredArg();
+    optParser.accepts( "label" ).withRequiredArg();
     optParser.accepts( "rmse" ).withRequiredArg();
     optParser.accepts( "debug" );
     optParser.accepts( "assert" );
@@ -99,7 +100,12 @@ public class Main
       verifyPipe = new Each( verifyPipe, AssertionLevel.STRICT, assertMatches );
 
       // calculate a confusion matrix for the model results, assuming a "label" field
-      Fields confusion = new Fields( "label", "score" );
+      String label_name = "label";
+
+      if( options.hasArgument( "label" ) )
+        label_name = (String) options.valuesOf( "label" ).get( 0 );
+
+      Fields confusion = new Fields( label_name, "score" );
       measurePipe = new Pipe( "measure", verifyPipe );
       measurePipe = new GroupBy( measurePipe, confusion );
       measurePipe = new Every( measurePipe, Fields.ALL, new Count(), Fields.ALL );
