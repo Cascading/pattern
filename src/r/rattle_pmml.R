@@ -43,10 +43,9 @@ print(fit$importance)
 print(fit)
 print(table(iris_test$species, predict(fit, iris_test, type="class")))
 
-op <- par(mfrow = c(2, 1))
 plot(fit, log="y", main="Random Forest")
+varImpPlot(fit)
 MDSplot(fit, iris_full$species)
-par(op)
 
 out <- iris_full
 out$predict <- predict(fit, out, type="class")
