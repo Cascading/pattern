@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
+  ~
+  ~ Project and contact information: http://www.cascading.org/
+  ~
+  ~ This file is part of the Cascading project.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://www.dmg.org/v4-0/pmml-4-0.xsd">
+ <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)" description="Generalized Linear Regression Model">
+  <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
+  <Application name="Rattle/PMML" version="1.2.30"/>
+  <Timestamp>2013-01-25 10:01:54</Timestamp>
+ </Header>
+ <DataDictionary numberOfFields="5">
+  <DataField name="setosa" optype="continuous" dataType="double"/>
+  <DataField name="sepal_length" optype="continuous" dataType="double"/>
+  <DataField name="sepal_width" optype="continuous" dataType="double"/>
+  <DataField name="petal_length" optype="continuous" dataType="double"/>
+  <DataField name="petal_width" optype="continuous" dataType="double"/>
+ </DataDictionary>
+ <GeneralRegressionModel modelName="General_Regression_Model" modelType="generalizedLinear" functionName="regression" algorithmName="glm" distribution="binomial" linkFunction="logit">
+  <MiningSchema>
+   <MiningField name="setosa" usageType="predicted"/>
+   <MiningField name="sepal_length" usageType="active"/>
+   <MiningField name="sepal_width" usageType="active"/>
+   <MiningField name="petal_length" usageType="active"/>
+   <MiningField name="petal_width" usageType="active"/>
+  </MiningSchema>
+  <ParameterList>
+   <Parameter name="p0" label="(Intercept)"/>
+   <Parameter name="p1" label="sepal_length"/>
+   <Parameter name="p2" label="sepal_width"/>
+   <Parameter name="p3" label="petal_length"/>
+   <Parameter name="p4" label="petal_width"/>
+  </ParameterList>
+  <FactorList/>
+  <CovariateList>
+   <Predictor name="sepal_length"/>
+   <Predictor name="sepal_width"/>
+   <Predictor name="petal_length"/>
+   <Predictor name="petal_width"/>
+  </CovariateList>
+  <PPMatrix>
+   <PPCell value="1" predictorName="sepal_length" parameterName="p1"/>
+   <PPCell value="1" predictorName="sepal_width" parameterName="p2"/>
+   <PPCell value="1" predictorName="petal_length" parameterName="p3"/>
+   <PPCell value="1" predictorName="petal_width" parameterName="p4"/>
+  </PPMatrix>
+  <ParamMatrix>
+   <PCell parameterName="p0" df="1" beta="-16.9456960387809"/>
+   <PCell parameterName="p1" df="1" beta="11.7592159418536"/>
+   <PCell parameterName="p2" df="1" beta="7.84157781514097"/>
+   <PCell parameterName="p3" df="1" beta="-20.0880078273996"/>
+   <PCell parameterName="p4" df="1" beta="-21.6076488529538"/>
+  </ParamMatrix>
+ </GeneralRegressionModel>
+</PMML>

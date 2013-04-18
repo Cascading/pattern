@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-rootProject.ext.testRoots = [ ]
+rootProject.ext.testRoots = []
 
 project.ext.setTestingProperties = {
 
@@ -26,7 +26,7 @@ project.ext.setTestingProperties = {
     System.properties[ 'test.cluster.enabled' ] = 'false'
 
   // hadoop hard codes 'build/test' into its test harness, so might as well play along
-  System.properties[ 'test.data.path' ] = new String( "${projectDir}/../lingual-platform/src/test/resources/data/" )
+  System.properties[ 'test.data.path' ] = new String( "${projectDir}/../pattern-pmml/src/test/resources/pmml/" )
   System.properties[ 'test.output.root' ] = new String( "${buildDir}/test/output/" )
 
   System.properties
@@ -41,6 +41,8 @@ test {
 }
 
 task platformTest( type: Test, dependsOn: test ) {
+
+  forkEvery = 1 // static fields on the platform test get munged otherwise
 
   if( System.properties[ 'platformTest.single' ] ) // test a single class from the command line
     include "**/${System.properties[ 'platformTest.single' ]}.class"
@@ -58,7 +60,7 @@ task platformTest( type: Test, dependsOn: test ) {
 
     rootProject.ext.testRoots << systemProperties[ 'test.output.root' ]
 
-    setTestClassesDir( file( project( ':lingual-platform' ).sourceSets.test.output.classesDir ) )
+    setTestClassesDir( file( project( ':pattern-pmml' ).sourceSets.test.output.classesDir ) )
   }
 }
 

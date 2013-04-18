@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
+  ~
+  ~ Project and contact information: http://www.cascading.org/
+  ~
+  ~ This file is part of the Cascading project.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://www.dmg.org/v4-0/pmml-4-0.xsd">
+ <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)" description="Multinomial Logistic Model">
+  <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
+  <Application name="Rattle/PMML" version="1.2.30"/>
+  <Timestamp>2013-01-25 10:01:53</Timestamp>
+ </Header>
+ <DataDictionary numberOfFields="5">
+  <DataField name="species" optype="categorical" dataType="string">
+   <Value value="setosa"/>
+   <Value value="versicolor"/>
+   <Value value="virginica"/>
+  </DataField>
+  <DataField name="sepal_length" optype="continuous" dataType="double"/>
+  <DataField name="sepal_width" optype="continuous" dataType="double"/>
+  <DataField name="petal_length" optype="continuous" dataType="double"/>
+  <DataField name="petal_width" optype="continuous" dataType="double"/>
+ </DataDictionary>
+ <RegressionModel modelName="multinom_Model" functionName="classification" algorithmName="multinom" normalizationMethod="softmax">
+  <MiningSchema>
+   <MiningField name="species" usageType="predicted"/>
+   <MiningField name="sepal_length" usageType="active"/>
+   <MiningField name="sepal_width" usageType="active"/>
+   <MiningField name="petal_length" usageType="active"/>
+   <MiningField name="petal_width" usageType="active"/>
+  </MiningSchema>
+  <Output>
+   <OutputField name="species" feature="predictedValue"/>
+   <OutputField name="Probability_setosa" optype="continuous" dataType="double" feature="probability" value="setosa"/>
+   <OutputField name="Probability_versicolor" optype="continuous" dataType="double" feature="probability" value="versicolor"/>
+   <OutputField name="Probability_virginica" optype="continuous" dataType="double" feature="probability" value="virginica"/>
+  </Output>
+  <RegressionTable intercept="86.7061379450354" targetCategory="versicolor">
+   <NumericPredictor name="sepal_length" exponent="1" coefficient="-11.3336819785783"/>
+   <NumericPredictor name="sepal_width" exponent="1" coefficient="-40.8601511206805"/>
+   <NumericPredictor name="petal_length" exponent="1" coefficient="38.439099544679"/>
+   <NumericPredictor name="petal_width" exponent="1" coefficient="-12.2920287460217"/>
+  </RegressionTable>
+  <RegressionTable intercept="-111.666532867146" targetCategory="virginica">
+   <NumericPredictor name="sepal_length" exponent="1" coefficient="-47.1170644419116"/>
+   <NumericPredictor name="sepal_width" exponent="1" coefficient="-51.6805606658275"/>
+   <NumericPredictor name="petal_length" exponent="1" coefficient="108.27736751831"/>
+   <NumericPredictor name="petal_width" exponent="1" coefficient="54.0277175236148"/>
+  </RegressionTable>
+  <RegressionTable intercept="0.0" targetCategory="setosa"/>
+ </RegressionModel>
+</PMML>

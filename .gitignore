@@ -1,19 +1,10 @@
-build/
-dot/
-out/
-misc/
-.gradle
-Rplots.pdf
-*.class
-*.log
-*~
-
-# IntelliJ Files #
-*.ipr
+junitvm*.properties
+build.properties
+gradle.properties
+.DS_Store
+build
 *.iml
 *.iws
-
-# Package Files #
-*.jar
-*.war
-*.ear
+*.ipr
+.idea/
+.gradle/

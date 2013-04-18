@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
+  ~
+  ~ Project and contact information: http://www.cascading.org/
+  ~
+  ~ This file is part of the Cascading project.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<PMML version="3.2" xmlns="http://www.dmg.org/PMML-3_2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-3_2 http://www.dmg.org/v3-2/pmml-3-2.xsd">
+ <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)" description="Hierarchical cluster model">
+  <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
+  <Application name="Rattle/PMML" version="1.2.30"/>
+  <Timestamp>2013-01-25 10:01:53</Timestamp>
+ </Header>
+ <DataDictionary numberOfFields="4">
+  <DataField name="sepal_length" optype="continuous" dataType="double"/>
+  <DataField name="sepal_width" optype="continuous" dataType="double"/>
+  <DataField name="petal_length" optype="continuous" dataType="double"/>
+  <DataField name="petal_width" optype="continuous" dataType="double"/>
+ </DataDictionary>
+ <ClusteringModel modelName="HClust_Model" functionName="clustering" algorithmName="HClust" modelClass="centerBased" numberOfClusters="3">
+  <MiningSchema>
+   <MiningField name="sepal_length" usageType="active"/>
+   <MiningField name="sepal_width" usageType="active"/>
+   <MiningField name="petal_length" usageType="active"/>
+   <MiningField name="petal_width" usageType="active"/>
+  </MiningSchema>
+  <ComparisonMeasure kind="distance">
+   <squaredEuclidean/>
+  </ComparisonMeasure>
+  <ClusteringField field="sepal_length"/>
+  <ClusteringField field="sepal_width"/>
+  <ClusteringField field="petal_length"/>
+  <ClusteringField field="petal_width"/>
+  <Cluster name="1">
+   <Array n="4" type="real">5.006 3.428 1.462 0.246</Array>
+  </Cluster>
+  <Cluster name="2">
+   <Array n="4" type="real">5.9296875 2.7578125 4.4109375 1.4390625</Array>
+  </Cluster>
+  <Cluster name="3">
+   <Array n="4" type="real">6.85277777777778 3.075 5.78611111111111 2.09722222222222</Array>
+  </Cluster>
+ </ClusteringModel>
+</PMML>

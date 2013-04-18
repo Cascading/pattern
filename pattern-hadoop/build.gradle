@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
+ *
+ * Project and contact information: http://www.cascading.org/
+ *
+ * This file is part of the Cascading project.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+dependencies {
+
+  testCompile project( path: ':pattern-pmml', configuration: 'testArtifacts' )
+
+  compile group: 'cascading', name: 'cascading-hadoop', version: cascadingVersion, changing: true
+
+  providedCompile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
+
+  testCompile group: 'cascading', name: 'cascading-core', version: cascadingVersion, classifier: 'tests', changing: true
+  testCompile group: 'cascading', name: 'cascading-hadoop', version: cascadingVersion, classifier: 'tests', changing: true
+  testCompile group: 'cascading', name: 'cascading-platform', version: cascadingVersion, classifier: 'tests', changing: true
+
+  // hadoop deps
+  providedCompile( group: 'org.apache.hadoop', name: 'hadoop-core', version: hadoopVersion ) {
+    exclude group: 'ant'
+    exclude group: 'junit'
+  }
+
+  testCompile group: 'org.apache.hadoop', name: 'hadoop-test', version: hadoopVersion
+  testCompile group: 'commons-io', name: 'commons-io', version: '2.1'
+
+  testRuntime 'javax.ws.rs:jsr311-api:1.1.1' // missed dep in hadoop, go figure
+}

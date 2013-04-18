@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
+  ~
+  ~ Project and contact information: http://www.cascading.org/
+  ~
+  ~ This file is part of the Cascading project.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<PMML
+  version="3.2" xmlns="http://www.dmg.org/PMML-3_2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.dmg.org/PMML-3_2 http://www.dmg.org/v3-2/pmml-3-2.xsd">
+  <Header
+    copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)" description="KMeans cluster model">
+    <Extension
+      name="user" value="ceteri" extender="Rattle/PMML"/>
+    <Application
+      name="Rattle/PMML" version="1.2.30"/>
+    <Timestamp>2013-01-10 18:44:35</Timestamp>
+  </Header>
+  <DataDictionary
+    numberOfFields="4">
+    <DataField name="sepal_length" optype="continuous" dataType="double"/>
+    <DataField
+      name="sepal_width" optype="continuous" dataType="double"/>
+    <DataField
+      name="petal_length" optype="continuous" dataType="double"/>
+    <DataField
+      name="petal_width" optype="continuous" dataType="double"/>
+  </DataDictionary>
+  <ClusteringModel
+    modelName="KMeans_Model" functionName="clustering" algorithmName="KMeans: Hartigan and Wong"
+    modelClass="centerBased" numberOfClusters="3">
+    <MiningSchema>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+    </MiningSchema>
+    <ComparisonMeasure kind="distance">
+      <squaredEuclidean/>
+    </ComparisonMeasure>
+    <ClusteringField
+      field="sepal_length" compareFunction="absDiff"/>
+    <ClusteringField
+      field="sepal_width" compareFunction="absDiff"/>
+    <ClusteringField
+      field="petal_length" compareFunction="absDiff"/>
+    <ClusteringField
+      field="petal_width" compareFunction="absDiff"/>
+    <Cluster name="1" size="38">
+      <Array
+        n="4" type="real">6.85 3.07368421052632 5.74210526315789 2.07105263157895
+      </Array>
+    </Cluster>
+    <Cluster
+      name="2" size="50">
+      <Array n="4" type="real">5.006 3.428 1.462 0.246</Array>
+    </Cluster>
+    <Cluster
+      name="3" size="62">
+      <Array
+        n="4" type="real">5.90161290322581 2.74838709677419 4.39354838709678 1.43387096774194
+      </Array>
+    </Cluster>
+  </ClusteringModel>
+</PMML>

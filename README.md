@@ -25,8 +25,8 @@ Forest_ algorithm. This baseline includes a reference data set --
 1000 independent variables, 500 rows of simulated ecommerce orders --
 plus a predictive model in PMML:
 
-    ./src/py/gen_orders.py 500 1000 > orders.tsv
-    R --vanilla < ./src/r/rf_pmml.R > model.log
+    ./examples/py/gen_orders.py 500 1000 > orders.tsv
+    R --vanilla < ./examples/r/rf_pmml.R > model.log
 
 This will generate `huge.rf.xml` as the PMML export for a Random
 Forest classifier plus `huge.tsv` as a baseline data set for
@@ -36,7 +36,7 @@ To build _Pattern_ and run a regression test:
 
     gradle clean jar
     rm -rf out
-    hadoop jar build/libs/pattern.jar data/sample.tsv out/classify out/trap \
+    hadoop jar build/libs/pattern.jar --data data/sample.tsv --output out/classify --trap out/trap \
      --pmml data/sample.rf.xml --measure out/measure --assert
 
 For each tuple in the data, a _stream assertion_ tests whether the
@@ -56,14 +56,14 @@ Here's how to run an example _classifier_ using Random Forest:
 
     gradle clean jar
     rm -rf out
-    hadoop jar build/libs/pattern.jar data/iris.rf.tsv out/classify out/trap \
+    hadoop jar build/libs/pattern.jar --data data/iris.rf.tsv --output out/classify --trap out/trap \
      --pmml data/iris.rf.xml --measure out/measure --label species
 
 Here's how to run an example _predictive model_ using Linear Regression:
 
     gradle clean jar
     rm -rf out
-    hadoop jar build/libs/pattern.jar data/iris.lm_p.tsv out/classify out/trap \
+    hadoop jar build/libs/pattern.jar --data data/iris.lm_p.tsv --output out/classify --trap out/trap \
      --pmml data/iris.lm_p.xml --rmse out/measure
 
 
@@ -96,7 +96,7 @@ An architectural diagram for common use case patterns is shown in
 
 Example Models
 --------------
-Check the `src/r/rattle_pmml.R` script for examples of predictive
+Check the `examples/r/rattle_pmml.R` script for examples of predictive
 models which are created in R, then exported using _Rattle_.
 These examples use the popular
 [Iris](http://en.wikipedia.org/wiki/Iris_flower_data_set) data set.
@@ -114,7 +114,7 @@ These examples use the popular
 
 To execute the R script:
 
-    R --vanilla < src/r/rattle_pmml.R
+    R --vanilla < examples/r/rattle_pmml.R
 
 It is possible to extend PMML support for other kinds of modeling in R
 and other analytics platforms.  Contact the developers to discuss on

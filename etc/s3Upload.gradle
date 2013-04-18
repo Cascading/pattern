@@ -18,31 +18,34 @@
  * limitations under the License.
  */
 
-configurations {
-  s3AntTask
-}
+import com.monochromeroad.gradle.plugin.aws.s3.S3Sync
+import com.monochromeroad.gradle.plugin.aws.s3.ACL
 
-dependencies {
-  s3AntTask 'thirdparty:awstasks:0.3'
-}
-
-task s3Upload() {
-
-  ext.uploadFiles = [ ]
-  ext.remotePath = "${project.group}/${majorVersion}/${project.name}/"
-
-  enabled = s3Bucket != null
-}
-
-s3Upload << {
-  ant.taskdef( name: 's3Upload', classname: 'dak.ant.taskdefs.S3Upload',
-          classpath: configurations.s3AntTask.asPath )
-
-  ant.s3Upload( verbose: 'true', accessId: awsAccessId, secretKey: awsSecretKey,
-          bucket: s3Bucket, prefix: remotePath, publicRead: 'true' ) {
-
-    uploadFiles.each { path ->
-      fileset( file: path )
-    }
+buildscript {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    mavenRepo name: 'monochromeroad', url: 'http://repository-monochromeroad.forge.cloudbees.com/release/'
   }
+  dependencies {
+    classpath 'com.monochromeroad.gradle:gradle-aws-s3-sync:0.4'
+  }
+}
+
+task s3Upload( type: S3Sync ) {
+
+  accessKey = rootProject.awsAccessId
+  secretKey = rootProject.awsSecretKey
+
+  keepFiles = true // prevents deletion from bucket
+
+  acl ACL.PublicRead
+
+  configFile "${rootProject.projectDir}/etc/synchronizer.properties"
+
+  ext.source = "${buildDir}/publish"
+  ext.destination = "${project.s3Bucket}/${rootProject.name}/${majorVersion}/"
+
+  from source
+  into destination
 }
