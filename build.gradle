@@ -25,7 +25,6 @@ apply plugin: 'eclipse'
 apply plugin: 'maven'
 
 ext.cascadingVersion = '2.2.0-+'
-ext.hadoopVersion = '1.0.4'
 
 // set property to use locally installed cascading builds
 // otherwise wip releases will be pulled from conjars

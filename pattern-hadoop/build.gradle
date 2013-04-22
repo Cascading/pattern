@@ -18,6 +18,11 @@
  * limitations under the License.
  */
 
+ext.hadoopVersion = '1.0.4'
+
+if( System.properties[ 'hadoop.release.final' ] )
+  hadoopVersion = System.properties[ 'hadoop.release.final' ]
+
 dependencies {
 
   testCompile project( path: ':pattern-pmml', configuration: 'testArtifacts' )
