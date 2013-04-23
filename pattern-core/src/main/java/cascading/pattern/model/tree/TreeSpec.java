@@ -18,33 +18,36 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model;
+package cascading.pattern.model.tree;
+
+import cascading.pattern.model.ModelSchema;
+import cascading.pattern.model.Spec;
 
 
-import java.io.Serializable;
-import java.util.List;
-
-import cascading.pattern.model.tree.TreeContext;
-
-
-public class MiningParam extends Param implements Serializable
+public class TreeSpec extends Spec
   {
-  public TreeContext treeContext;
-  public List<Param> segments;
+  public TreeContext treeContext = null;
+  public Tree tree;
 
-  public MiningParam( MiningSchemaParam schemaParam, TreeContext treeContext, List<Param> segments )
+  public TreeSpec( Tree tree )
+    {
+    super( null );
+    this.tree = tree;
+    }
+
+  public TreeSpec( ModelSchema schemaParam, TreeContext treeContext, Tree tree )
     {
     super( schemaParam );
     this.treeContext = treeContext;
-    this.segments = segments;
+    this.tree = tree;
     }
 
   @Override
   public String toString()
     {
-    final StringBuilder sb = new StringBuilder( "MiningParam{" );
+    final StringBuilder sb = new StringBuilder( "TreeParam{" );
     sb.append( "treeContext=" ).append( treeContext );
-    sb.append( ", segments=" ).append( segments );
+    sb.append( ", tree=" ).append( tree );
     sb.append( '}' );
     return sb.toString();
     }

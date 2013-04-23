@@ -34,17 +34,17 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class GeneralRegressionFunction extends ClassifierFunction<GeneralRegressionParam>
+public class GeneralRegressionFunction extends ClassifierFunction<GeneralRegressionSpec, Void>
   {
   private static final Logger LOG = LoggerFactory.getLogger( GeneralRegressionFunction.class );
 
-  public GeneralRegressionFunction( GeneralRegressionParam param )
+  public GeneralRegressionFunction( GeneralRegressionSpec param )
     {
     super( param );
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context> functionCall )
+  public void operate( FlowProcess flowProcess, FunctionCall<Context<Void>> functionCall )
     {
     Fields fields = functionCall.getArguments().getFields();
     Tuple values = functionCall.getArguments().getTuple();
@@ -52,19 +52,19 @@ public class GeneralRegressionFunction extends ClassifierFunction<GeneralRegress
     //TODO: Currently handling only logit and Covariate.
     double result = 0.0;
 
-    for( String param : getParam().paramMatrix.keySet() )
+    for( String param : getSpec().paramMatrix.keySet() )
       {
       // if PPMatrix has the parameter
-      if( getParam().ppMatrix.containsKey( param ) )
+      if( getSpec().ppMatrix.containsKey( param ) )
         {
         //get the Betas from the paramMatrix for param
-        ArrayList<PCell> pCells = getParam().paramMatrix.get( param );
+        ArrayList<PCell> pCells = getSpec().paramMatrix.get( param );
         //TODO : Handling the targetCategory
         PCell pCell = pCells.get( 0 );
         Double beta = pCell.getBeta();
 
         // get the corresponding PPCells to get the predictor name
-        ArrayList<PPCell> ppCells = getParam().ppMatrix.get( param );
+        ArrayList<PPCell> ppCells = getSpec().ppMatrix.get( param );
         double paramResult = 1.0;
 
         for( PPCell pc : ppCells )
@@ -77,7 +77,7 @@ public class GeneralRegressionFunction extends ClassifierFunction<GeneralRegress
             String data = values.getString( pos );
 
             // if in factor list
-            if( getParam().factors.contains( param ) )
+            if( getSpec().factors.contains( param ) )
               {
               if( pc.getValue().equals( data ) )
                 paramResult *= 1.0;
@@ -97,7 +97,7 @@ public class GeneralRegressionFunction extends ClassifierFunction<GeneralRegress
         }
       else
         {
-        ArrayList<PCell> pCells = getParam().paramMatrix.get( param );
+        ArrayList<PCell> pCells = getSpec().paramMatrix.get( param );
 
         //TODO: handling the targetCategory
         PCell pCell = pCells.get( 0 );
@@ -105,7 +105,7 @@ public class GeneralRegressionFunction extends ClassifierFunction<GeneralRegress
         }
       }
 
-    String linkResult = getParam().linkFunction.calc( result );
+    String linkResult = getSpec().linkFunction.calc( result );
     LOG.debug( "result: {}", linkResult );
 
     functionCall.getOutputCollector().add( functionCall.getContext().result( linkResult ) );

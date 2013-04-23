@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cascading.pattern.PatternException;
-import cascading.pattern.model.MiningSchemaParam;
+import cascading.pattern.model.ModelSchema;
 import cascading.tuple.Tuple;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.ExpressionEvaluator;
@@ -51,15 +51,15 @@ public class TreeContext implements Serializable
    * the enclosing Operation instance is put into play processing
    * Tuples.
    *
-   * @param miningSchemaParam model schema
+   * @param modelSchema model schema
    */
-  public void prepare( MiningSchemaParam miningSchemaParam )
+  public void prepare( ModelSchema modelSchema )
     {
     // handle the loop-invariant preparations here,
     // in lieu of incurring overhead for each tuple
 
-    String[] param_names = miningSchemaParam.getParamNames();
-    Class[] param_types = miningSchemaParam.getParamTypes();
+    String[] param_names = modelSchema.getParamNames();
+    Class[] param_types = modelSchema.getParamTypes();
 
     expressionEvaluators = new ExpressionEvaluator[ predicates.size() ];
 
@@ -94,7 +94,7 @@ public class TreeContext implements Serializable
         throw new PatternException( message, exception );
         }
 
-    paramValues = new Object[ miningSchemaParam.size() ];
+    paramValues = new Object[ modelSchema.expectedFields.size() ];
     predicateEval = new Boolean[ predicates.size() ];
     }
 
@@ -102,14 +102,14 @@ public class TreeContext implements Serializable
    * Evaluate a tuple of input values to generate an array of
    * predicate values for the tree/forest.
    *
-   * @param miningSchemaParam model schema
+   * @param modelSchema model schema
    * @param values            tuple values
    * @return Boolean[]
    * @throws PatternException
    */
-  public Boolean[] evalPredicates( MiningSchemaParam miningSchemaParam, Tuple values ) throws PatternException
+  public Boolean[] evalPredicates( ModelSchema modelSchema, Tuple values ) throws PatternException
     {
-    miningSchemaParam.setParamValues( values, paramValues );
+    modelSchema.setParamValues( values, paramValues );
 
     for( int i = 0; i < predicates.size(); i++ )
       try

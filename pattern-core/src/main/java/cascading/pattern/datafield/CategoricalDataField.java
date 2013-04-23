@@ -22,6 +22,7 @@ package cascading.pattern.datafield;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cascading.pattern.PatternException;
@@ -39,6 +40,11 @@ public class CategoricalDataField extends DataField
   private static final Logger LOG = LoggerFactory.getLogger( CategoricalDataField.class );
 
   public List<String> categories = new ArrayList<String>();
+
+  public CategoricalDataField( String name, Type dataType, String... categories )
+    {
+    this( name, dataType, Arrays.asList( categories ) );
+    }
 
   public CategoricalDataField( String name, Type dataType, List<String> categories )
     {

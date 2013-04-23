@@ -18,24 +18,38 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.regression.predictor;
+package cascading.pattern.model.clustering;
 
-import java.io.Serializable;
+import java.util.List;
 
-
-public abstract class Predictor<T> implements Serializable
+/**
+ *
+ */
+public class SquaredEuclidean extends DistanceCluster
   {
-  public String name;
-
-  protected Predictor( String name )
+  public SquaredEuclidean( String name, Double... points )
     {
-    this.name = name;
+    super( name, points );
     }
 
-  public String getName()
+  public SquaredEuclidean( String name, List<Double> points )
     {
-    return name;
+    super( name, points );
     }
 
-  public abstract double calcTerm( T value );
+  /**
+   * Calculate the distance from this cluster for the given tuple.
+   *
+   * @param paramValues array of tuple values
+   * @return double
+   */
+  public double calcDistance( Double[] paramValues )
+    {
+    double sumOfSquares = 0.0;
+
+    for( int i = 0; i < paramValues.length; i++ )
+      sumOfSquares += Math.pow( paramValues[ i ] - points.get( i ), 2.0 );
+
+    return sumOfSquares;
+    }
   }

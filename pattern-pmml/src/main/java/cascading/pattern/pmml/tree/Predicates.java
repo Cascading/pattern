@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cascading.pattern.PatternException;
-import cascading.pattern.model.MiningSchemaParam;
+import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.tree.TreeContext;
 import org.dmg.pmml.Predicate;
 import org.dmg.pmml.SimplePredicate;
@@ -39,7 +39,7 @@ public class Predicates
   {
   private static final Logger LOG = LoggerFactory.getLogger( Predicates.class );
 
-  public static Integer makePredicate( TreeContext treeContext, MiningSchemaParam miningSchemaParam, Predicate predicate, List<String> params )
+  public static Integer makePredicate( TreeContext treeContext, ModelSchema modelSchema, Predicate predicate, List<String> params )
     {
     String field;
 
@@ -50,7 +50,7 @@ public class Predicates
     else
       throw new PatternException( "unknown predicate type: " + predicate.getClass().getName() );
 
-    String expression = miningSchemaParam.get( field ).getExpression( predicate );
+    String expression = modelSchema.getExpectedField( field ).getExpression( predicate );
 
     ArrayList<Integer> predicateVars = new ArrayList<Integer>();
 

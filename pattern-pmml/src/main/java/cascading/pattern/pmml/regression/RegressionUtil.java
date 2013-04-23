@@ -22,10 +22,10 @@ package cascading.pattern.pmml.regression;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import cascading.pattern.datafield.CategoricalDataField;
-import cascading.pattern.model.MiningSchemaParam;
 import cascading.pattern.model.regression.predictor.Predictor;
 import org.dmg.pmml.CategoricalPredictor;
 import org.dmg.pmml.NumericPredictor;
@@ -36,20 +36,25 @@ import org.dmg.pmml.RegressionTable;
  */
 public class RegressionUtil
   {
-  public static List<Predictor> createPredictors( MiningSchemaParam schemaParam, RegressionTable regressionTable )
+  public static List<Predictor> createPredictors( RegressionTable regressionTable )
     {
     List<Predictor> predictors = new ArrayList<Predictor>();
+
+    Map<String, cascading.pattern.model.regression.predictor.CategoricalPredictor> categories = new HashMap<String, cascading.pattern.model.regression.predictor.CategoricalPredictor>();
 
     for( CategoricalPredictor predictor : regressionTable.getCategoricalPredictors() )
       {
       String name = predictor.getName().getValue();
-      CategoricalDataField dataField = (CategoricalDataField) schemaParam.get( name );
       String value = predictor.getValue();
-      int valueIndex = dataField.categories.indexOf( value );
       double coefficient = predictor.getCoefficient();
 
-      predictors.add( new cascading.pattern.model.regression.predictor.CategoricalPredictor( name, valueIndex, coefficient ) );
+      if( !categories.containsKey( name ) )
+        categories.put( name, new cascading.pattern.model.regression.predictor.CategoricalPredictor( name ) );
+
+      categories.get( name ).addCategory( value, coefficient );
       }
+
+    predictors.addAll( categories.values() );
 
     for( NumericPredictor predictor : regressionTable.getNumericPredictors() )
       {

@@ -27,14 +27,15 @@ import cascading.operation.OperationCall;
 import cascading.tuple.Tuple;
 
 
-public abstract class ClassifierFunction<P extends Param> extends BaseOperation<ClassifierFunction.Context> implements Function<ClassifierFunction.Context>
+public abstract class ClassifierFunction<S extends Spec, P> extends BaseOperation<ClassifierFunction.Context<P>> implements Function<ClassifierFunction.Context<P>>
   {
-  protected P param;
+  protected S spec;
 
   /** Class Context is used to hold intermediate values. */
-  protected static class Context
+  protected static class Context<Payload>
     {
-    Tuple tuple = Tuple.size( 1 );
+    public Tuple tuple = Tuple.size( 1 );
+    public Payload payload;
 
     public Tuple result( Object label )
       {
@@ -44,19 +45,19 @@ public abstract class ClassifierFunction<P extends Param> extends BaseOperation<
       }
     }
 
-  protected ClassifierFunction( P param )
+  protected ClassifierFunction( S spec )
     {
-    super( param.getSchemaParam().getInputFields().size(), param.getSchemaParam().getDeclaredFields() );
-    this.param = param;
+    super( spec.getModelSchema().getInputFields().size(), spec.getModelSchema().getDeclaredFields() );
+    this.spec = spec;
     }
 
-  public P getParam()
+  public S getSpec()
     {
-    return param;
+    return spec;
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<ClassifierFunction.Context> operationCall )
+  public void prepare( FlowProcess flowProcess, OperationCall<ClassifierFunction.Context<P>> operationCall )
     {
     operationCall.setContext( new ClassifierFunction.Context() );
     }

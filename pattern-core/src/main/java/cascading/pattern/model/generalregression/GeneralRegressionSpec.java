@@ -22,11 +22,11 @@ package cascading.pattern.model.generalregression;
 
 import java.util.Set;
 
-import cascading.pattern.model.MiningSchemaParam;
-import cascading.pattern.model.Param;
+import cascading.pattern.model.ModelSchema;
+import cascading.pattern.model.Spec;
 
 
-public class GeneralRegressionParam extends Param
+public class GeneralRegressionSpec extends Spec
   {
   PPMatrix ppMatrix;
   ParamMatrix paramMatrix;
@@ -35,7 +35,7 @@ public class GeneralRegressionParam extends Param
   Set<String> parameters;
   LinkFunction linkFunction;
 
-  public GeneralRegressionParam( MiningSchemaParam schemaParam, PPMatrix ppMatrix, ParamMatrix paramMatrix, Set<String> parameters, Set<String> covariates, Set<String> factors, LinkFunction linkFunction )
+  public GeneralRegressionSpec( ModelSchema schemaParam, PPMatrix ppMatrix, ParamMatrix paramMatrix, Set<String> parameters, Set<String> covariates, Set<String> factors, LinkFunction linkFunction )
     {
     super( schemaParam );
     this.ppMatrix = ppMatrix;

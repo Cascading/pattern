@@ -25,7 +25,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,25 +34,27 @@ import cascading.flow.AssemblyPlanner;
 import cascading.flow.planner.PlannerException;
 import cascading.pattern.PatternException;
 import cascading.pattern.model.ClassifierFunction;
-import cascading.pattern.model.MiningParam;
-import cascading.pattern.model.MiningSchemaParam;
-import cascading.pattern.model.Param;
+import cascading.pattern.model.MiningSpec;
+import cascading.pattern.model.ModelSchema;
+import cascading.pattern.model.Spec;
 import cascading.pattern.model.clustering.ClusteringFunction;
-import cascading.pattern.model.clustering.ClusteringParam;
-import cascading.pattern.model.clustering.Exemplar;
+import cascading.pattern.model.clustering.ClusteringSpec;
+import cascading.pattern.model.clustering.DistanceCluster;
+import cascading.pattern.model.clustering.Euclidean;
+import cascading.pattern.model.clustering.SquaredEuclidean;
 import cascading.pattern.model.generalregression.GeneralRegressionFunction;
-import cascading.pattern.model.generalregression.GeneralRegressionParam;
+import cascading.pattern.model.generalregression.GeneralRegressionSpec;
 import cascading.pattern.model.generalregression.LinkFunction;
 import cascading.pattern.model.generalregression.PPMatrix;
 import cascading.pattern.model.generalregression.ParamMatrix;
 import cascading.pattern.model.randomforest.RandomForestFunction;
 import cascading.pattern.model.regression.RegressionFunction;
-import cascading.pattern.model.regression.RegressionParam;
+import cascading.pattern.model.regression.RegressionSpec;
 import cascading.pattern.model.regression.predictor.Predictor;
 import cascading.pattern.model.tree.Tree;
 import cascading.pattern.model.tree.TreeContext;
 import cascading.pattern.model.tree.TreeFunction;
-import cascading.pattern.model.tree.TreeParam;
+import cascading.pattern.model.tree.TreeSpec;
 import cascading.pattern.pmml.generalregression.GLMUtil;
 import cascading.pattern.pmml.regression.RegressionUtil;
 import cascading.pattern.pmml.tree.TreeUtil;
@@ -65,6 +66,7 @@ import cascading.tuple.Fields;
 import cascading.util.Util;
 import org.dmg.pmml.Cluster;
 import org.dmg.pmml.ClusteringModel;
+import org.dmg.pmml.ComparisonMeasure;
 import org.dmg.pmml.DataField;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.FieldName;
@@ -360,6 +362,12 @@ public class PMMLPlanner implements AssemblyPlanner
 
     for( Model model : getPMMLModel().getModels() )
       {
+      if( !model.isScorable() )
+        {
+        LOG.info( "skipping non-scoreable model: " + model.getModelName() );
+        continue;
+        }
+
       if( model instanceof MiningModel )
         tail = handleMiningModel( tail, (MiningModel) model );
       else if( model instanceof ClusteringModel )
@@ -398,39 +406,39 @@ public class PMMLPlanner implements AssemblyPlanner
 
   private Pipe handleRandomForestModel( Pipe tail, MiningModel model )
     {
-    MiningSchemaParam schemaParam = createMiningSchema( model );
+    ModelSchema modelSchema = createModelSchema( model );
     TreeContext treeContext = new TreeContext();
-    List<Param> models = new LinkedList<Param>();
+    List<Spec> models = new LinkedList<Spec>();
 
     for( Segment segment : model.getSegmentation().getSegments() )
       {
       TreeModel treeModel = (TreeModel) segment.getModel();
-      Tree tree = TreeUtil.createTree( segment.getId(), treeModel, schemaParam, treeContext );
+      Tree tree = TreeUtil.createTree( segment.getId(), treeModel, modelSchema, treeContext );
 
-      models.add( new TreeParam( tree ) );
+      models.add( new TreeSpec( tree ) );
       }
 
-    MiningParam modelParam = new MiningParam( schemaParam, treeContext, models );
+    MiningSpec modelParam = new MiningSpec( modelSchema, treeContext, models );
 
-    return create( tail, schemaParam, new RandomForestFunction( modelParam ) );
+    return create( tail, modelSchema, new RandomForestFunction( modelParam ) );
     }
 
   private Pipe handleTreeModel( Pipe tail, TreeModel model )
     {
-    MiningSchemaParam schemaParam = createMiningSchema( model );
+    ModelSchema modelSchema = createModelSchema( model );
 
     TreeContext treeContext = new TreeContext();
 
-    Tree tree = TreeUtil.createTree( model, schemaParam, treeContext );
+    Tree tree = TreeUtil.createTree( model, modelSchema, treeContext );
 
-    TreeParam modelParam = new TreeParam( schemaParam, treeContext, tree );
+    TreeSpec modelParam = new TreeSpec( modelSchema, treeContext, tree );
 
-    return create( tail, schemaParam, new TreeFunction( modelParam ) );
+    return create( tail, modelSchema, new TreeFunction( modelParam ) );
     }
 
   private Pipe handleGeneralRegressionModel( Pipe tail, GeneralRegressionModel model )
     {
-    MiningSchemaParam schemaParam = createMiningSchema( model );
+    ModelSchema modelSchema = createModelSchema( model );
 
     PPMatrix ppMatrix = GLMUtil.createPPMatrix( model );
     ParamMatrix paramMatrix = GLMUtil.createParamMatrix( model );
@@ -439,9 +447,9 @@ public class PMMLPlanner implements AssemblyPlanner
     Set<String> factorsList = GLMUtil.createFactors( model );
     LinkFunction linkFunction = LinkFunction.getFunction( model.getLinkFunction().value() );
 
-    GeneralRegressionParam modelParam = new GeneralRegressionParam( schemaParam, ppMatrix, paramMatrix, parameterList, covariateList, factorsList, linkFunction );
+    GeneralRegressionSpec modelParam = new GeneralRegressionSpec( modelSchema, ppMatrix, paramMatrix, parameterList, covariateList, factorsList, linkFunction );
 
-    return create( tail, schemaParam, new GeneralRegressionFunction( modelParam ) );
+    return create( tail, modelSchema, new GeneralRegressionFunction( modelParam ) );
     }
 
   private Pipe handleRegressionModel( Pipe tail, RegressionModel model )
@@ -455,30 +463,59 @@ public class PMMLPlanner implements AssemblyPlanner
     if( !model.getAlgorithmName().equals( "least squares" ) )
       throw new UnsupportedOperationException( "unsupported regression algorithm: " + model.getAlgorithmName() );
 
-    MiningSchemaParam schemaParam = createMiningSchema( model );
+    ModelSchema modelSchema = createModelSchema( model );
 
     RegressionTable regressionTable = model.getRegressionTables().get( 0 );
 
+    RegressionSpec regressionSpec = new RegressionSpec( modelSchema );
+
     double intercept = regressionTable.getIntercept();
-    List<Predictor> predictors = RegressionUtil.createPredictors( schemaParam, regressionTable );
+    List<Predictor> predictors = RegressionUtil.createPredictors( regressionTable );
 
-    RegressionParam modelParam = new RegressionParam( schemaParam, intercept, predictors );
+    regressionSpec.addRegressionTable( new cascading.pattern.model.regression.RegressionTable( intercept, predictors ) );
 
-    return create( tail, schemaParam, new RegressionFunction( modelParam ) );
+    return create( tail, modelSchema, new RegressionFunction( regressionSpec ) );
     }
 
   private Pipe handleClusteringModel( Pipe tail, ClusteringModel model )
     {
-    MiningSchemaParam schemaParam = createMiningSchema( model );
+    ModelSchema modelSchema = createModelSchema( model );
 
-    List<Exemplar> exemplars = new ArrayList<Exemplar>();
+    if( model.getModelClass() != ClusteringModel.ModelClass.CENTER_BASED )
+      throw new UnsupportedOperationException( "unsupported model class, got: " + model.getModelClass() );
+
+    ComparisonMeasure comparisonMeasure = model.getComparisonMeasure();
+
+    if( comparisonMeasure.getKind() != ComparisonMeasure.Kind.DISTANCE )
+      throw new UnsupportedOperationException( "unsupported comparison kind, got: " + comparisonMeasure.getKind() );
+
+    boolean isSquared = comparisonMeasure.getSquaredEuclidean() != null;
+    boolean isEuclidean = comparisonMeasure.getEuclidean() != null;
+
+    if( isEuclidean && isSquared )
+      throw new IllegalStateException( "cannot be both squared and euclidean models" );
+
+    ClusteringSpec clusteringSpec = new ClusteringSpec( modelSchema );
 
     for( Cluster cluster : model.getClusters() )
-      exemplars.add( new Exemplar( cluster.getName(), PMMLUtil.parseArray( cluster.getArray() ) ) );
+      {
+      List<Double> exemplar = PMMLUtil.parseArray( cluster.getArray() );
 
-    ClusteringParam modelParam = new ClusteringParam( schemaParam, exemplars );
+      LOG.debug( "exemplar: {}", exemplar );
 
-    return create( tail, modelParam.getSchemaParam(), new ClusteringFunction( modelParam ) );
+      DistanceCluster distanceCluster;
+      if( isEuclidean )
+        distanceCluster = new Euclidean( cluster.getName(), exemplar );
+      else if( isSquared )
+        distanceCluster = new SquaredEuclidean( cluster.getName(), exemplar );
+      else
+        throw new UnsupportedOperationException( "unsupported comparison measure: " + comparisonMeasure );
+
+
+      clusteringSpec.addCluster( distanceCluster );
+      }
+
+    return create( tail, modelSchema, new ClusteringFunction( clusteringSpec ) );
     }
 
   private Pipe handleMiningModel( Pipe tail, MiningModel model )
@@ -491,7 +528,7 @@ public class PMMLPlanner implements AssemblyPlanner
     return tail;
     }
 
-  private Pipe create( Pipe tail, MiningSchemaParam schemaParam, ClassifierFunction function )
+  private Pipe create( Pipe tail, ModelSchema schemaParam, ClassifierFunction function )
     {
     Fields inputFields = schemaParam.getInputFields();
     Fields declaredFields = schemaParam.getDeclaredFields();
@@ -501,21 +538,20 @@ public class PMMLPlanner implements AssemblyPlanner
     return new Each( tail, inputFields, function, Fields.ALL );
     }
 
-  private MiningSchemaParam createMiningSchema( Model model )
+  private ModelSchema createModelSchema( Model model )
     {
-    MiningSchemaParam schemaParam = new MiningSchemaParam();
+    ModelSchema schemaParam = new ModelSchema();
 
     for( MiningField miningField : model.getMiningSchema().getMiningFields() )
       {
       DataField dataField = getPMMLModel().getDataField( miningField.getName() );
 
       if( miningField.getUsageType() == FieldUsageType.ACTIVE )
-        schemaParam.addActiveField( createDataFields( dataField ) );
+        schemaParam.addExpectedField( createDataFields( dataField ) );
       else if( miningField.getUsageType() == FieldUsageType.PREDICTED )
-        schemaParam.setLabelField( createDataFields( dataField ) );
+        schemaParam.setPredictedFields( createDataFields( dataField ) );
       }
 
     return schemaParam;
     }
-
   }

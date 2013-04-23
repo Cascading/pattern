@@ -24,9 +24,9 @@ import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
 import cascading.operation.OperationCall;
 import cascading.pattern.model.ClassifierFunction;
-import cascading.pattern.model.MiningParam;
-import cascading.pattern.model.Param;
-import cascading.pattern.model.tree.TreeParam;
+import cascading.pattern.model.MiningSpec;
+import cascading.pattern.model.Spec;
+import cascading.pattern.model.tree.TreeSpec;
 import cascading.tuple.Tuple;
 import com.google.common.collect.LinkedHashMultiset;
 import com.google.common.collect.Multiset;
@@ -36,39 +36,39 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class RandomForestFunction extends ClassifierFunction<MiningParam>
+public class RandomForestFunction extends ClassifierFunction<MiningSpec, Void>
   {
   private static final Logger LOG = LoggerFactory.getLogger( RandomForestFunction.class );
 
-  public RandomForestFunction( MiningParam param )
+  public RandomForestFunction( MiningSpec param )
     {
     super( param );
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<Context> operationCall )
+  public void prepare( FlowProcess flowProcess, OperationCall<Context<Void>> operationCall )
     {
     super.prepare( flowProcess, operationCall );
 
-    getParam().treeContext.prepare( getParam().getSchemaParam() ); // should be stored in context
+    getSpec().treeContext.prepare( getSpec().getModelSchema() ); // should be stored in context
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context> functionCall )
+  public void operate( FlowProcess flowProcess, FunctionCall<Context<Void>> functionCall )
     {
     Tuple values = functionCall.getArguments().getTuple();
 
-    Boolean[] predicateEval = getParam().treeContext.evalPredicates( getParam().getSchemaParam(), values );
+    Boolean[] predicateEval = getSpec().treeContext.evalPredicates( getSpec().getModelSchema(), values );
 
     // todo: create simpler way to track frequency of labels
     Multiset<String> votes = LinkedHashMultiset.create();
 
     // tally the vote for each tree in the forest
-    for( Param param : getParam().segments )
+    for( Spec spec : getSpec().segments )
       {
-      String label = ( (TreeParam) param ).tree.traverse( predicateEval );
+      String label = ( (TreeSpec) spec ).tree.traverse( predicateEval );
 
-      LOG.debug( "segment: {}, returned label: {}", param, label );
+      LOG.debug( "segment: {}, returned label: {}", spec, label );
 
       votes.add( label );
       }

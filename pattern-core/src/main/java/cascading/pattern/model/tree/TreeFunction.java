@@ -28,23 +28,23 @@ import cascading.pattern.model.ClassifierFunction;
 /**
  *
  */
-public class TreeFunction extends ClassifierFunction<TreeParam>
+public class TreeFunction extends ClassifierFunction<TreeSpec, Void>
   {
-  public TreeFunction( TreeParam treeParam )
+  public TreeFunction( TreeSpec treeParam )
     {
     super( treeParam );
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<Context> operationCall )
+  public void prepare( FlowProcess flowProcess, OperationCall<Context<Void>> operationCall )
     {
     super.prepare( flowProcess, operationCall );
 
-    getParam().treeContext.prepare( getParam().getSchemaParam() );
+    getSpec().treeContext.prepare( getSpec().getModelSchema() );
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context> functionCall )
+  public void operate( FlowProcess flowProcess, FunctionCall<Context<Void>> functionCall )
     {
     throw new UnsupportedOperationException( "not yet implemented" );
     }

@@ -20,41 +20,34 @@
 
 package cascading.pattern.model.regression.predictor;
 
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class NumericPredictor extends Predictor
+public class NumericPredictor extends Predictor<Double>
   {
   /** Field LOG */
   private static final Logger LOG = LoggerFactory.getLogger( NumericPredictor.class );
 
-  public long exponent;
+  public double coefficient;
+  public long exponent = 1;
 
-  /**
-   * @param name        name of the DataField used by this term
-   * @param coefficient coefficient for the term
-   * @param exponent    exponent for the term
-   */
+  public NumericPredictor( String name, double coefficient )
+    {
+    super( name );
+    this.coefficient = coefficient;
+    }
+
   public NumericPredictor( String name, double coefficient, long exponent )
     {
-    this.name = name;
+    super( name );
     this.coefficient = coefficient;
     this.exponent = exponent;
     }
 
-  /**
-   * Calculate the value for the term based on this Predictor.
-   *
-   * @param param_map tuples names/values
-   * @return double
-   */
   @Override
-  public double calcTerm( Map<String, Object> param_map )
+  public double calcTerm( Double value )
     {
-    double value = (Double) param_map.get( name );
     double result = Math.pow( value, exponent ) * coefficient;
 
     LOG.debug( String.format( "calc: %s, %e, %d, %e, %e", name, value, exponent, coefficient, result ) );

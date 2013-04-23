@@ -18,22 +18,33 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model;
+package cascading.pattern.model.clustering;
 
 import java.io.Serializable;
 
-
-public abstract class Param implements Serializable
+/**
+ *
+ */
+public abstract class Cluster implements Serializable
   {
-  protected MiningSchemaParam schemaParam = null;
+  protected int ordinal; // set when added to spec
+  protected String name;
 
-  protected Param( MiningSchemaParam schemaParam )
+  public Cluster( String name )
     {
-    this.schemaParam = schemaParam;
+    this.name = name;
     }
 
-  public MiningSchemaParam getSchemaParam()
+  protected void setOrdinal( int ordinal )
     {
-    return schemaParam;
+    this.ordinal = ordinal;
+    }
+
+  public String getLabel()
+    {
+    if( name == null )
+      return Integer.toString( ordinal );
+
+    return name;
     }
   }

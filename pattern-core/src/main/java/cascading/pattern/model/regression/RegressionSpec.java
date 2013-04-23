@@ -18,30 +18,32 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.clustering;
+package cascading.pattern.model.regression;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import cascading.pattern.model.MiningSchemaParam;
-import cascading.pattern.model.Param;
+import cascading.pattern.model.ModelSchema;
+import cascading.pattern.model.Spec;
 
-
-public class ClusteringParam extends Param
+public class RegressionSpec extends Spec
   {
-  public List<Exemplar> exemplars;
+  List<RegressionTable> regressionTables = new ArrayList<RegressionTable>();
 
-  public ClusteringParam( MiningSchemaParam schemaParam, List<Exemplar> exemplars )
+  public RegressionSpec( ModelSchema modelSchema )
     {
-    super( schemaParam );
-    this.exemplars = exemplars;
+    super( modelSchema );
     }
 
-  @Override
-  public String toString()
+  public List<RegressionTable> getRegressionTables()
     {
-    final StringBuilder sb = new StringBuilder( "ClusteringParam{" );
-    sb.append( "exemplars=" ).append( exemplars );
-    sb.append( '}' );
-    return sb.toString();
+    return Collections.unmodifiableList( regressionTables );
     }
+
+  public void addRegressionTable( RegressionTable regressionTable )
+    {
+    regressionTables.add( regressionTable );
+    }
+
   }

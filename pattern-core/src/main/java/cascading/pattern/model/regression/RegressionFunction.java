@@ -20,10 +20,12 @@
 
 package cascading.pattern.model.regression;
 
+import java.util.List;
 import java.util.Map;
 
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
+import cascading.operation.OperationCall;
 import cascading.pattern.model.ClassifierFunction;
 import cascading.pattern.model.regression.predictor.Predictor;
 import cascading.tuple.Tuple;
@@ -34,26 +36,57 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class RegressionFunction extends ClassifierFunction<RegressionParam>
+public class RegressionFunction extends ClassifierFunction<RegressionSpec, RegressionFunction.Payload>
   {
   private static final Logger LOG = LoggerFactory.getLogger( RegressionFunction.class );
 
-  public RegressionFunction( RegressionParam param )
+  protected static class Payload
+    {
+    public Predictor[][] predictors;
+    }
+
+  public RegressionFunction( RegressionSpec param )
     {
     super( param );
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context> functionCall )
+  public void prepare( FlowProcess flowProcess, OperationCall<Context<Payload>> operationCall )
+    {
+    super.prepare( flowProcess, operationCall );
+
+    operationCall.getContext().payload = new Payload();
+
+    List<RegressionTable> tables = spec.getRegressionTables();
+
+    Predictor[][] orderedPredictors = new Predictor[ tables.size() ][];
+
+    for( int i = 0; i < tables.size(); i++ )
+      {
+      Map<String, Predictor> predictors = tables.get( i ).predictors;
+      orderedPredictors[ i ] = new Predictor[ predictors.size() ];
+
+      int j = 0;
+
+      for( Comparable comparable : operationCall.getArgumentFields() )
+        orderedPredictors[ i ][ j++ ] = predictors.get( comparable.toString() );
+      }
+
+    operationCall.getContext().payload.predictors = orderedPredictors;
+    }
+
+  @Override
+  public void operate( FlowProcess flowProcess, FunctionCall<Context<Payload>> functionCall )
     {
     TupleEntry arguments = functionCall.getArguments();
     Tuple values = arguments.getTuple();
 
-    Map<String, Object> param_map = getParam().getSchemaParam().getParamMap( values );
-    double result = getParam().intercept;
+    Predictor[][] predictors = functionCall.getContext().payload.predictors;
 
-    for( Predictor pred : getParam().predictors )
-      result += pred.calcTerm( param_map );
+    double result = getSpec().getRegressionTables().get( 0 ).intercept;
+
+    for( int i = 0; i < values.size(); i++ )
+      result += predictors[ 0 ][ i ].calcTerm( values.getObject( i ) );
 
     LOG.debug( "result: " + result );
 

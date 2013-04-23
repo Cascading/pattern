@@ -20,26 +20,21 @@
 
 package cascading.pattern.model.clustering;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
-public class Exemplar implements Serializable
+/**
+ *
+ */
+public class Euclidean extends DistanceCluster
   {
-  /** Field LOG */
-  private static final Logger LOG = LoggerFactory.getLogger( Exemplar.class );
-
-  public String name;
-  public List<Double> points = new ArrayList<Double>();
-
-  public Exemplar( String name, List<Double> points )
+  public Euclidean( String name, Double... points )
     {
-    this.name = name;
-    this.points = points;
+    super( name, points );
+    }
+
+  public Euclidean( String name, List<Double> points )
+    {
+    super( name, points );
     }
 
   /**
@@ -56,12 +51,5 @@ public class Exemplar implements Serializable
       sumOfSquares += Math.pow( paramValues[ i ] - points.get( i ), 2.0 );
 
     return Math.sqrt( sumOfSquares );
-    }
-
-  /** @return String */
-  @Override
-  public String toString()
-    {
-    return String.format( "Exemplar: %s %s", name, points.toString() );
     }
   }

@@ -18,34 +18,33 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.regression;
+package cascading.pattern.model;
 
-import java.util.ArrayList;
+
+import java.io.Serializable;
 import java.util.List;
 
-import cascading.pattern.model.MiningSchemaParam;
-import cascading.pattern.model.Param;
-import cascading.pattern.model.regression.predictor.Predictor;
+import cascading.pattern.model.tree.TreeContext;
 
 
-public class RegressionParam extends Param
+public class MiningSpec extends Spec implements Serializable
   {
-  public Double intercept = 0.0;
-  public List<Predictor> predictors = new ArrayList<Predictor>();
+  public TreeContext treeContext;
+  public List<Spec> segments;
 
-  public RegressionParam( MiningSchemaParam schemaParam, double intercept, List<Predictor> predictors )
+  public MiningSpec( ModelSchema schemaParam, TreeContext treeContext, List<Spec> segments )
     {
     super( schemaParam );
-    this.intercept = intercept;
-    this.predictors = predictors;
+    this.treeContext = treeContext;
+    this.segments = segments;
     }
 
   @Override
   public String toString()
     {
-    final StringBuilder sb = new StringBuilder( "RegressionParam{" );
-    sb.append( "intercept=" ).append( intercept );
-    sb.append( ", predictors=" ).append( predictors );
+    final StringBuilder sb = new StringBuilder( "MiningParam{" );
+    sb.append( "treeContext=" ).append( treeContext );
+    sb.append( ", segments=" ).append( segments );
     sb.append( '}' );
     return sb.toString();
     }

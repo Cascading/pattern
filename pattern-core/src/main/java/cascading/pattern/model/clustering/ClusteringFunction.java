@@ -29,37 +29,41 @@ import cascading.pattern.model.ClassifierFunction;
 /**
  *
  */
-public class ClusteringFunction extends ClassifierFunction<ClusteringParam>
+public class ClusteringFunction extends ClassifierFunction<ClusteringSpec, Void>
   {
-  public ClusteringFunction( ClusteringParam clusteringParam )
+  public ClusteringFunction( ClusteringSpec clusteringParam )
     {
     super( clusteringParam );
+
+    if( getFieldDeclaration().size() != 1 )
+      throw new IllegalArgumentException( "may only declare one field, was " + getFieldDeclaration().print() );
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context> functionCall )
+  public void operate( FlowProcess flowProcess, FunctionCall<Context<Void>> functionCall )
     {
-    Map<String, Object> paramMap = getParam().getSchemaParam().getParamMap( functionCall.getArguments().getTuple() );
-    String[] paramNames = getParam().getSchemaParam().getParamNames();
+    // todo: optimize out paramMap into array since arguments are properly ordered
+    Map<String, Object> paramMap = getSpec().getModelSchema().getParamMap( functionCall.getArguments().getTuple() );
+    String[] paramNames = getSpec().getModelSchema().getParamNames();
     Double[] paramValues = new Double[ paramNames.length ];
 
     for( int i = 0; i < paramNames.length; i++ )
       paramValues[ i ] = (Double) paramMap.get( paramNames[ i ] );
 
-    Exemplar bestExemplar = null;
-    double bestDist = 0.0;
+    double bestDist = Double.MAX_VALUE;
+    String bestLabel = null;
 
-    for( Exemplar exemplar : getParam().exemplars )
+    for( Cluster cluster : getSpec().getClusters() )
       {
-      double distance = exemplar.calcDistance( paramValues );
+      double distance = ( (DistanceCluster) cluster ).calcDistance( paramValues );
 
-      if( ( bestExemplar == null ) || ( distance < bestDist ) )
+      if( distance < bestDist )
         {
-        bestExemplar = exemplar;
         bestDist = distance;
+        bestLabel = cluster.getLabel();
         }
       }
 
-    functionCall.getOutputCollector().add( functionCall.getContext().result( bestExemplar.name ) );
+    functionCall.getOutputCollector().add( functionCall.getContext().result( bestLabel ) );
     }
   }

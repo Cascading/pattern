@@ -20,56 +20,50 @@
 
 package cascading.pattern.model.regression.predictor;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class CategoricalPredictor extends Predictor
+public class CategoricalPredictor extends Predictor<String>
   {
   /** Field LOG */
   private static final Logger LOG = LoggerFactory.getLogger( CategoricalPredictor.class );
 
-  public int index;
+  Map<String, Double> categories = new HashMap<String, Double>();
 
-  /**
-   * @param name        name of the DataField used by this term
-   * @param index       value for the category
-   * @param coefficient coefficient for the term
-   */
-  public CategoricalPredictor( String name, Integer index, Double coefficient )
+  public CategoricalPredictor( String name )
     {
-    this.name = name;
-    this.index = index;
-    this.coefficient = coefficient;
+    super( name );
     }
 
-  /**
-   * Calculate the value for the term based on this Predictor.
-   *
-   * @param param_map tuples names/values
-   * @return double
-   */
-  @Override
-  public double calcTerm( Map<String, Object> param_map )
+  public void addCategory( String value, double coefficient )
     {
-    double result = 0.0;
-    int categoryIndex = (Integer) param_map.get( name );
+    categories.put( value, coefficient );
+    }
 
-    if( index == categoryIndex )
-      result = coefficient;
+  @Override
+  public double calcTerm( String value )
+    {
+    Double result = categories.get( value );
+
+    if( result == null )
+      result = 0.0d;
 
     if( LOG.isDebugEnabled() )
-      LOG.debug( String.format( "calc: %s, %d, %d, %e", name, index, categoryIndex, result ) );
+      LOG.debug( String.format( "calc: %s, %s, %e", name, value, result ) );
 
     return result;
     }
 
-  /** @return String */
   @Override
   public String toString()
     {
-    return String.format( "CategoricalPredictor: %s, %d, %e", name, index, coefficient );
+    final StringBuilder sb = new StringBuilder( "CategoricalPredictor{" );
+    sb.append( "categories=" ).append( categories );
+    sb.append( '}' );
+    return sb.toString();
     }
   }

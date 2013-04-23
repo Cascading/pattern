@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 import cascading.pattern.PatternException;
-import cascading.pattern.model.MiningSchemaParam;
+import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.tree.Edge;
 import cascading.pattern.model.tree.Tree;
 import cascading.pattern.model.tree.TreeContext;
@@ -42,12 +42,12 @@ import org.jgrapht.DirectedGraph;
  */
 public class TreeUtil
   {
-  public static Tree createTree( TreeModel model, MiningSchemaParam schemaParam, TreeContext treeContext )
+  public static Tree createTree( TreeModel model, ModelSchema schemaParam, TreeContext treeContext )
     {
     return createTree( "default", model, schemaParam, treeContext );
     }
 
-  public static Tree createTree( String id, TreeModel model, MiningSchemaParam schemaParam, TreeContext treeContext )
+  public static Tree createTree( String id, TreeModel model, ModelSchema schemaParam, TreeContext treeContext )
     {
     Tree tree = new Tree( id );
 
@@ -58,7 +58,7 @@ public class TreeUtil
     return tree;
     }
 
-  public static void buildTree( MiningSchemaParam schemaParam, TreeContext treeContext, Node node, Tree tree ) throws PatternException
+  public static void buildTree( ModelSchema schemaParam, TreeContext treeContext, Node node, Tree tree ) throws PatternException
     {
     Vertex vertex = makeVertex( tree.getGraph(), node.getId() );
 
@@ -67,7 +67,7 @@ public class TreeUtil
     buildNode( schemaParam, treeContext, node, vertex, tree.getGraph() );
     }
 
-  private static void buildNode( MiningSchemaParam schemaParam, TreeContext treeContext, Node node, Vertex vertex, DirectedGraph<Vertex, Edge> graph )
+  private static void buildNode( ModelSchema schemaParam, TreeContext treeContext, Node node, Vertex vertex, DirectedGraph<Vertex, Edge> graph )
     {
     // build a list of parameters from which the predicate will be evaluated
     String[] paramNames = schemaParam.getParamNames();
