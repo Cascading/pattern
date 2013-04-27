@@ -21,9 +21,14 @@
 package cascading.pattern.model.tree;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
+import cascading.pattern.model.tree.decision.DecisionTree;
+import cascading.pattern.model.tree.predicate.Predicate;
+import cascading.tuple.Fields;
 import org.jgrapht.DirectedGraph;
-import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.SimpleDirectedGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,87 +38,48 @@ public class Tree implements Serializable
   /** Field LOG */
   private static final Logger LOG = LoggerFactory.getLogger( Tree.class );
 
-  public String tree_name;
-  public Vertex root;
-  public DirectedGraph<Vertex, Edge> graph = new DefaultDirectedGraph<Vertex, Edge>( Edge.class );
+  private transient Map<String, Node> nodes = new HashMap<String, Node>();
+  public SimpleDirectedGraph<Node, Integer> graph = new SimpleDirectedGraph<Node, Integer>( Integer.class );
+  public Node root;
 
-  /** @param id  */
+  private int count = 0;
+
   public Tree( String id )
     {
-    tree_name = "tree_" + id;
-
-    if( LOG.isDebugEnabled() )
-      LOG.debug( tree_name );
+    root = new Node( id );
+    nodes.put( root.getID(), root );
+    graph.addVertex( root );
     }
 
-  /** @param root  */
-  public void setRoot( Vertex root )
-    {
-    this.root = root;
-    }
-
-  /** @return  */
-  public Vertex getRoot()
+  public Node getRoot()
     {
     return root;
     }
 
-  /** @return  */
-  public DirectedGraph<Vertex, Edge> getGraph()
+  public DirectedGraph<Node, Integer> getGraph()
     {
     return graph;
     }
 
-  /**
-   * @param pred_eval
-   * @return
-   */
-  public String traverse( Boolean[] pred_eval )
+  public void addPredicate( String from, String to, Predicate predicate )
     {
-    return traverseVertex( root, pred_eval );
+    addPredicate( from, to, predicate, null );
     }
 
-  /**
-   * @param vertex
-   * @param pred_eval
-   * @return
-   */
-  protected String traverseVertex( Vertex vertex, Boolean[] pred_eval )
+  public void addPredicate( String from, String to, Predicate predicate, String score )
     {
-    String score = vertex.getScore();
+    if( nodes.containsKey( to ) )
+      throw new IllegalArgumentException( "duplicate node name: " + to );
 
-    if( score != null )
-      {
-      if( LOG.isDebugEnabled() )
-        LOG.debug( "  then " + score );
+    Node toNode = new Node( to, predicate, score );
 
-      return score;
-      }
-
-    for( Edge edge : graph.outgoingEdgesOf( vertex ) )
-      {
-      if( LOG.isDebugEnabled() )
-        {
-        LOG.debug( edge.toString() );
-        LOG.debug( " if pred_eval[ " + edge.getPredicateId() + " ]:" + pred_eval[ edge.getPredicateId() ] );
-        }
-
-      if( pred_eval[ edge.getPredicateId() ] )
-        {
-        score = traverseVertex( graph.getEdgeTarget( edge ), pred_eval );
-
-        if( score != null )
-          return score;
-        }
-      }
-
-    return null;
+    nodes.put( to, toNode );
+    graph.addVertex( toNode );
+    graph.addEdge( nodes.get( from ), toNode, count++ );
     }
 
-  /** @return  */
-  @Override
-  public String toString()
+  public DecisionTree createDecisionTree( Fields argumentFields )
     {
-    return tree_name + ": " + graph;
+    return new DecisionTree( argumentFields, this, this.getRoot() );
     }
   }

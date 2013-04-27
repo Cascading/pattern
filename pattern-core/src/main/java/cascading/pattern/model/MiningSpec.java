@@ -22,29 +22,45 @@ package cascading.pattern.model;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import cascading.pattern.model.tree.TreeContext;
 
-
-public class MiningSpec extends Spec implements Serializable
+public class MiningSpec<S extends Spec> extends Spec implements Serializable
   {
-  public TreeContext treeContext;
-  public List<Spec> segments;
+  public List<S> segments = new ArrayList<S>();
 
-  public MiningSpec( ModelSchema schemaParam, TreeContext treeContext, List<Spec> segments )
+  public MiningSpec( ModelSchema modelSchema )
     {
-    super( schemaParam );
-    this.treeContext = treeContext;
+    super( modelSchema );
+    }
+
+  public MiningSpec( ModelSchema modelSchema, List<S> segments )
+    {
+    super( modelSchema );
     this.segments = segments;
+    }
+
+  public void addSegments( List<S> segments )
+    {
+    this.segments.addAll( segments );
+    }
+
+  public void addSegment( S segment )
+    {
+    this.segments.add( segment );
+    }
+
+  public List<S> getSegments()
+    {
+    return segments;
     }
 
   @Override
   public String toString()
     {
-    final StringBuilder sb = new StringBuilder( "MiningParam{" );
-    sb.append( "treeContext=" ).append( treeContext );
-    sb.append( ", segments=" ).append( segments );
+    final StringBuilder sb = new StringBuilder( "MiningSpec{" );
+    sb.append( "segments=" ).append( segments );
     sb.append( '}' );
     return sb.toString();
     }

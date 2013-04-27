@@ -18,49 +18,43 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.tree;
+package cascading.pattern.model.randomforest;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cascading.pattern.model.MiningSpec;
 import cascading.pattern.model.ModelSchema;
-import cascading.pattern.model.Spec;
+import cascading.pattern.model.tree.Tree;
+import cascading.pattern.model.tree.TreeSpec;
 
-
-public class TreeSpec extends Spec
+/**
+ *
+ */
+public class RandomForestSpec extends MiningSpec<TreeSpec>
   {
-  public Tree tree;
-
-  public TreeSpec( ModelSchema modelSchema )
+  public RandomForestSpec( ModelSchema modelSchema )
     {
     super( modelSchema );
     }
 
-  public TreeSpec( Tree tree )
+  public RandomForestSpec( ModelSchema modelSchema, List<TreeSpec> treeSpecs )
     {
-    super( null );
-    this.tree = tree;
+    super( modelSchema, treeSpecs );
     }
 
-  public TreeSpec( ModelSchema schemaParam, Tree tree )
+  public void addTreeSpec( TreeSpec treeSpec )
     {
-    super( schemaParam );
-    this.tree = tree;
+    addSegment( treeSpec );
     }
 
-  public Tree getTree()
+  public List<Tree> getTrees()
     {
-    return tree;
-    }
+    List<Tree> trees = new ArrayList<Tree>();
 
-  public void setTree( Tree tree )
-    {
-    this.tree = tree;
-    }
+    for( TreeSpec treeSpec : getSegments() )
+      trees.add( treeSpec.getTree() );
 
-  @Override
-  public String toString()
-    {
-    final StringBuilder sb = new StringBuilder( "TreeSpec{" );
-    sb.append( "tree=" ).append( tree );
-    sb.append( '}' );
-    return sb.toString();
+    return trees;
     }
   }

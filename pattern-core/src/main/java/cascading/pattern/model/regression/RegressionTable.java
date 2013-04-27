@@ -20,6 +20,7 @@
 
 package cascading.pattern.model.regression;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,7 @@ import cascading.pattern.model.regression.predictor.Predictor;
 /**
  *
  */
-public class RegressionTable
+public class RegressionTable implements Serializable
   {
   public double intercept = 0.0;
   public Map<String, Predictor> predictors = new HashMap<String, Predictor>();

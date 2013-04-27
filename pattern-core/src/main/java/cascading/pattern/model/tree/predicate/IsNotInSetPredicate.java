@@ -18,46 +18,25 @@
  * limitations under the License.
  */
 
-package cascading.pattern.datafield;
+package cascading.pattern.model.tree.predicate;
 
-import java.io.Serializable;
-import java.lang.reflect.Type;
+import java.util.Collection;
 
-import cascading.pattern.PatternException;
-import cascading.tuple.Tuple;
-import org.dmg.pmml.Predicate;
+import cascading.tuple.TupleEntry;
 
-
-public abstract class DataField implements Serializable
+/**
+ *
+ */
+public class IsNotInSetPredicate extends SimpleSetPredicate
   {
-  public String name;
-  public Type type;
-
-  public String getName()
+  public IsNotInSetPredicate( String field, Collection values )
     {
-    return name;
+    super( field, values );
     }
 
-  public Type getType()
-    {
-    return type;
-    }
-
-  /** @return  */
-  public abstract Class getClassType();
-
-  /**
-   * @return Object
-   * @throws PatternException
-   */
-  public abstract Object getValue( Tuple values, int i ) throws PatternException;
-
-  /** @return Object */
   @Override
-  public String toString()
+  public boolean evaluate( TupleEntry tupleEntry )
     {
-    return name + ":" + getClass().getSimpleName() + ":" + type;
+    return !set.contains( tupleEntry.getObject( 0 ) );
     }
-
-  public abstract String getExpression( Predicate predicate );
   }

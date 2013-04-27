@@ -49,7 +49,7 @@ public class CategoricalDataField extends DataField
   public CategoricalDataField( String name, Type dataType, List<String> categories )
     {
     this.name = name;
-    this.dataType = dataType;
+    this.type = dataType;
     this.categories.addAll( categories );
     }
 

@@ -23,6 +23,7 @@ package cascading.pattern.pmml;
 import java.lang.reflect.Type;
 import java.util.Map;
 
+import cascading.tuple.coerce.Coercions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.primitives.Primitives;
@@ -57,4 +58,10 @@ public class DataTypes
 
     return typeToPmml.get( type );
     }
+
+  public static Object coerceTo( Object value, DataType dataType )
+    {
+    return Coercions.coerce( value, getPmmlToType( dataType ) );
+    }
+
   }

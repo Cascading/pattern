@@ -18,49 +18,28 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.tree;
+package cascading.pattern.model.tree.predicate;
 
-import cascading.pattern.model.ModelSchema;
-import cascading.pattern.model.Spec;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-
-public class TreeSpec extends Spec
+/**
+ *
+ */
+public abstract class SimpleSetPredicate extends Predicate
   {
-  public Tree tree;
+  String field;
+  Set set = new HashSet();
 
-  public TreeSpec( ModelSchema modelSchema )
+  public SimpleSetPredicate( String field, Collection values )
     {
-    super( modelSchema );
+    this.field = field;
+    this.set.addAll( values );
     }
 
-  public TreeSpec( Tree tree )
+  public String getField()
     {
-    super( null );
-    this.tree = tree;
-    }
-
-  public TreeSpec( ModelSchema schemaParam, Tree tree )
-    {
-    super( schemaParam );
-    this.tree = tree;
-    }
-
-  public Tree getTree()
-    {
-    return tree;
-    }
-
-  public void setTree( Tree tree )
-    {
-    this.tree = tree;
-    }
-
-  @Override
-  public String toString()
-    {
-    final StringBuilder sb = new StringBuilder( "TreeSpec{" );
-    sb.append( "tree=" ).append( tree );
-    sb.append( '}' );
-    return sb.toString();
+    return field;
     }
   }

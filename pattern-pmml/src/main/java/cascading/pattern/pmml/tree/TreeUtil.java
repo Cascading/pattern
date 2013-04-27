@@ -20,90 +20,115 @@
 
 package cascading.pattern.pmml.tree;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.lang.reflect.Type;
 import java.util.List;
 
-import cascading.pattern.PatternException;
+import cascading.pattern.datafield.DataField;
 import cascading.pattern.model.ModelSchema;
-import cascading.pattern.model.tree.Edge;
 import cascading.pattern.model.tree.Tree;
-import cascading.pattern.model.tree.TreeContext;
-import cascading.pattern.model.tree.Vertex;
+import cascading.pattern.model.tree.predicate.EqualsToPredicate;
+import cascading.pattern.model.tree.predicate.GreaterOrEqualThanPredicate;
+import cascading.pattern.model.tree.predicate.GreaterThanPredicate;
+import cascading.pattern.model.tree.predicate.IsInSetPredicate;
+import cascading.pattern.model.tree.predicate.IsMissingPredicate;
+import cascading.pattern.model.tree.predicate.IsNotInSetPredicate;
+import cascading.pattern.model.tree.predicate.IsNotMissingPredicate;
+import cascading.pattern.model.tree.predicate.LessOrEqualThanPredicate;
+import cascading.pattern.model.tree.predicate.LessThanPredicate;
+import cascading.pattern.model.tree.predicate.NotEqualsToPredicate;
+import cascading.pattern.pmml.PMMLUtil;
+import cascading.tuple.coerce.Coercions;
+import org.dmg.pmml.ArrayType;
 import org.dmg.pmml.Node;
 import org.dmg.pmml.Predicate;
 import org.dmg.pmml.SimplePredicate;
 import org.dmg.pmml.SimpleSetPredicate;
 import org.dmg.pmml.TreeModel;
-import org.jgrapht.DirectedGraph;
 
 /**
  *
  */
 public class TreeUtil
   {
-  public static Tree createTree( TreeModel model, ModelSchema schemaParam, TreeContext treeContext )
+  public static Tree createTree( TreeModel model, ModelSchema modelSchema )
     {
-    return createTree( "default", model, schemaParam, treeContext );
-    }
+    Node parent = model.getNode();
 
-  public static Tree createTree( String id, TreeModel model, ModelSchema schemaParam, TreeContext treeContext )
-    {
-    Tree tree = new Tree( id );
+    Tree tree = new Tree( parent.getId() );
 
-    Node node = model.getNode();
-
-    buildTree( schemaParam, treeContext, node, tree );
+    buildTree( modelSchema, tree, parent );
 
     return tree;
     }
 
-  public static void buildTree( ModelSchema schemaParam, TreeContext treeContext, Node node, Tree tree ) throws PatternException
+  private static void buildTree( ModelSchema modelSchema, Tree tree, Node parent )
     {
-    Vertex vertex = makeVertex( tree.getGraph(), node.getId() );
-
-    tree.setRoot( vertex );
-
-    buildNode( schemaParam, treeContext, node, vertex, tree.getGraph() );
-    }
-
-  private static void buildNode( ModelSchema schemaParam, TreeContext treeContext, Node node, Vertex vertex, DirectedGraph<Vertex, Edge> graph )
-    {
-    // build a list of parameters from which the predicate will be evaluated
-    String[] paramNames = schemaParam.getParamNames();
-    List<String> params = new ArrayList<String>();
-
-    Collections.addAll( params, paramNames );
-
-    // walk the node list to construct serializable predicates
-    Predicate predicate = node.getPredicate();
-
-    if( predicate instanceof SimplePredicate || predicate instanceof SimpleSetPredicate )
+    for( Node child : parent.getNodes() )
       {
-      Integer predicateId = Predicates.makePredicate( treeContext, schemaParam, predicate, params );
+      Predicate predicate = child.getPredicate();
 
-      vertex.setScore( node.getScore() );
+      tree.addPredicate( parent.getId(), child.getId(), getPredicateFor( modelSchema, predicate ), child.getScore() );
 
-      for( Edge edge : graph.edgesOf( vertex ) )
-        edge.setPredicateId( predicateId );
-      }
-
-    for( int i = 0; i < node.getNodes().size(); i++ )
-      {
-      Node child = node.getNodes().get( i );
-
-      Vertex childVertex = makeVertex( graph, child.getId() );
-
-      graph.addEdge( vertex, childVertex );
-
-      buildNode( schemaParam, treeContext, child, childVertex, graph );
+      buildTree( modelSchema, tree, child );
       }
     }
 
-  private static Vertex makeVertex( DirectedGraph<Vertex, Edge> graph, String id )
+  private static cascading.pattern.model.tree.predicate.Predicate getPredicateFor( ModelSchema modelSchema, Predicate predicate )
     {
-    Vertex vertex = new Vertex( id );
-    graph.addVertex( vertex );
-    return vertex;
+    if( predicate instanceof SimplePredicate )
+      {
+      String fieldName = ( (SimplePredicate) predicate ).getField().getValue();
+      String value = ( (SimplePredicate) predicate ).getValue();
+      SimplePredicate.Operator operator = ( (SimplePredicate) predicate ).getOperator();
+      DataField expectedField = modelSchema.getExpectedField( fieldName );
+
+      if( expectedField == null )
+        throw new IllegalStateException( "missing field declaration in dictionary for: " + fieldName );
+
+      Type expectedFieldType = expectedField.getType();
+
+      switch( operator )
+        {
+        case EQUAL:
+          return new EqualsToPredicate( fieldName, Coercions.coerce( value, expectedFieldType ) );
+        case NOT_EQUAL:
+          return new NotEqualsToPredicate( fieldName, Coercions.coerce( value, expectedFieldType ) );
+        case LESS_THAN:
+          return new LessThanPredicate( fieldName, (Comparable) Coercions.coerce( value, expectedFieldType ) );
+        case LESS_OR_EQUAL:
+          return new LessOrEqualThanPredicate( fieldName, (Comparable) Coercions.coerce( value, expectedFieldType ) );
+        case GREATER_THAN:
+          return new GreaterThanPredicate( fieldName, (Comparable) Coercions.coerce( value, expectedFieldType ) );
+        case GREATER_OR_EQUAL:
+          return new GreaterOrEqualThanPredicate( fieldName, (Comparable) Coercions.coerce( value, expectedFieldType ) );
+        case IS_MISSING:
+          return new IsMissingPredicate( fieldName );
+        case IS_NOT_MISSING:
+          return new IsNotMissingPredicate( fieldName );
+        }
+      }
+
+    if( predicate instanceof SimpleSetPredicate )
+      {
+      String fieldName = ( (SimpleSetPredicate) predicate ).getField().getValue();
+      ArrayType valueArray = ( (SimpleSetPredicate) predicate ).getArray();
+      SimpleSetPredicate.BooleanOperator operator = ( (SimpleSetPredicate) predicate ).getBooleanOperator();
+      DataField expectedField = modelSchema.getExpectedField( fieldName );
+
+      if( expectedField == null )
+        throw new IllegalStateException( "missing field declaration in dictionary for: " + fieldName );
+
+      List list = PMMLUtil.parseArray( valueArray ); // performs coercions
+
+      switch( operator )
+        {
+        case IS_IN:
+          return new IsInSetPredicate( fieldName, list );
+        case IS_NOT_IN:
+          return new IsNotInSetPredicate( fieldName, list );
+        }
+      }
+
+    throw new UnsupportedOperationException( "predicate typs is unsupported: " + predicate );
     }
   }

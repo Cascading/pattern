@@ -18,46 +18,26 @@
  * limitations under the License.
  */
 
-package cascading.pattern.datafield;
+package cascading.pattern.model.tree.decision;
 
-import java.io.Serializable;
-import java.lang.reflect.Type;
+import cascading.pattern.model.tree.Node;
+import cascading.pattern.model.tree.Tree;
+import cascading.tuple.Fields;
+import cascading.tuple.TupleEntry;
 
-import cascading.pattern.PatternException;
-import cascading.tuple.Tuple;
-import org.dmg.pmml.Predicate;
-
-
-public abstract class DataField implements Serializable
+/**
+ *
+ */
+public class DecisionTree extends ParentDecision
   {
-  public String name;
-  public Type type;
-
-  public String getName()
+  public DecisionTree( Fields expectedFields, Tree tree, Node node )
     {
-    return name;
+    super( expectedFields, tree, node );
     }
 
-  public Type getType()
-    {
-    return type;
-    }
-
-  /** @return  */
-  public abstract Class getClassType();
-
-  /**
-   * @return Object
-   * @throws PatternException
-   */
-  public abstract Object getValue( Tuple values, int i ) throws PatternException;
-
-  /** @return Object */
   @Override
-  public String toString()
+  public FinalDecision decide( TupleEntry tupleEntry )
     {
-    return name + ":" + getClass().getSimpleName() + ":" + type;
+    return super.decide( tupleEntry );
     }
-
-  public abstract String getExpression( Predicate predicate );
   }

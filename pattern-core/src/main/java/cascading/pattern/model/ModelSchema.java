@@ -132,7 +132,7 @@ public class ModelSchema implements Serializable
     Fields fields = Fields.NONE;
 
     for( String name : expectedFields.keySet() )
-      fields = fields.append( new Fields( name, expectedFields.get( name ).dataType ) );
+      fields = fields.append( new Fields( name, expectedFields.get( name ).type ) );
 
     return fields;
     }
@@ -142,7 +142,7 @@ public class ModelSchema implements Serializable
     if( predictedFields == null )
       return new Fields( "predict", String.class );
 
-    return new Fields( predictedFields.get( 0 ).getName(), predictedFields.get( 0 ).dataType );
+    return new Fields( predictedFields.get( 0 ).getName(), predictedFields.get( 0 ).type );
     }
 
   /**

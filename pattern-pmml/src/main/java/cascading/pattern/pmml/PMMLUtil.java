@@ -34,7 +34,7 @@ import org.jpmml.evaluator.ArrayUtil;
  */
 public class PMMLUtil
   {
-  static List parseArray( ArrayType arrayType )
+  public static List parseArray( ArrayType arrayType )
     {
     List<String> tokenize = ArrayUtil.tokenize( arrayType );
 

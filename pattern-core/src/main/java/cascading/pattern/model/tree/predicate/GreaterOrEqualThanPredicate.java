@@ -18,46 +18,23 @@
  * limitations under the License.
  */
 
-package cascading.pattern.datafield;
+package cascading.pattern.model.tree.predicate;
 
-import java.io.Serializable;
-import java.lang.reflect.Type;
+import cascading.tuple.TupleEntry;
 
-import cascading.pattern.PatternException;
-import cascading.tuple.Tuple;
-import org.dmg.pmml.Predicate;
-
-
-public abstract class DataField implements Serializable
+/**
+ *
+ */
+public class GreaterOrEqualThanPredicate extends ComparablePredicate<Comparable>
   {
-  public String name;
-  public Type type;
-
-  public String getName()
+  public GreaterOrEqualThanPredicate( String field, Comparable value )
     {
-    return name;
+    super( field, value );
     }
 
-  public Type getType()
-    {
-    return type;
-    }
-
-  /** @return  */
-  public abstract Class getClassType();
-
-  /**
-   * @return Object
-   * @throws PatternException
-   */
-  public abstract Object getValue( Tuple values, int i ) throws PatternException;
-
-  /** @return Object */
   @Override
-  public String toString()
+  public boolean evaluate( TupleEntry tupleEntry )
     {
-    return name + ":" + getClass().getSimpleName() + ":" + type;
+    return ( (Comparable) tupleEntry.getObject( 0 ) ).compareTo( value ) >= 0;
     }
-
-  public abstract String getExpression( Predicate predicate );
   }

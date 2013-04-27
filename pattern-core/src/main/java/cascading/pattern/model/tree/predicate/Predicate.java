@@ -18,33 +18,16 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.tree;
+package cascading.pattern.model.tree.predicate;
 
-import org.jgrapht.graph.DefaultEdge;
+import java.io.Serializable;
 
+import cascading.tuple.TupleEntry;
 
-public class Edge extends DefaultEdge
+/**
+ *
+ */
+public abstract class Predicate implements Serializable
   {
-  public Integer predicate_id = null;
-
-  /** @param predicate_id  */
-  public void setPredicateId( Integer predicate_id )
-    {
-    this.predicate_id = predicate_id;
-    }
-
-  /** @return  */
-  public Integer getPredicateId()
-    {
-    return predicate_id;
-    }
-
-  /** @return  */
-  @Override
-  public String toString()
-    {
-    String base = super.toString();
-
-    return base + ":" + predicate_id;
-    }
+  public abstract boolean evaluate( TupleEntry tupleEntry );
   }

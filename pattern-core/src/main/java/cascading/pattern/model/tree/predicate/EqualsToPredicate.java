@@ -18,40 +18,23 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.tree;
+package cascading.pattern.model.tree.predicate;
 
-import java.io.Serializable;
+import cascading.tuple.TupleEntry;
 
-public class Vertex implements Serializable
+/**
+ *
+ */
+public class EqualsToPredicate extends ComparablePredicate<Object>
   {
-  public String id;
-  public String score = null;
-
-  /** @param id vertex ID */
-  public Vertex( String id )
+  public EqualsToPredicate( String field, Object value )
     {
-    this.id = id;
+    super( field, value );
     }
 
-  /** @param score evaluated model score */
-  public void setScore( String score )
-    {
-    this.score = score;
-    }
-
-  /** @return String */
-  public String getScore()
-    {
-    return score;
-    }
-
-  /** @return String */
   @Override
-  public String toString()
+  public boolean evaluate( TupleEntry tupleEntry )
     {
-    if( score != null )
-      return id + ":" + score;
-    else
-      return id;
+    return tupleEntry.getObject( 0 ).equals( value );
     }
   }

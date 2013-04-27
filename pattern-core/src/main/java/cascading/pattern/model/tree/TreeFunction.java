@@ -24,28 +24,40 @@ import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
 import cascading.operation.OperationCall;
 import cascading.pattern.model.ClassifierFunction;
+import cascading.pattern.model.tree.decision.DecisionTree;
+import cascading.pattern.model.tree.decision.FinalDecision;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
-public class TreeFunction extends ClassifierFunction<TreeSpec, Void>
+public class TreeFunction extends ClassifierFunction<TreeSpec, DecisionTree>
   {
+  private static final Logger LOG = LoggerFactory.getLogger( TreeFunction.class );
+
   public TreeFunction( TreeSpec treeParam )
     {
     super( treeParam );
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<Context<Void>> operationCall )
+  public void prepare( FlowProcess flowProcess, OperationCall<Context<DecisionTree>> operationCall )
     {
     super.prepare( flowProcess, operationCall );
 
-    getSpec().treeContext.prepare( getSpec().getModelSchema() );
+    operationCall.getContext().payload = getSpec().getTree().createDecisionTree( operationCall.getArgumentFields() );
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context<Void>> functionCall )
+  public void operate( FlowProcess flowProcess, FunctionCall<Context<DecisionTree>> functionCall )
     {
-    throw new UnsupportedOperationException( "not yet implemented" );
+    DecisionTree decisionTree = functionCall.getContext().payload;
+
+    FinalDecision finalDecision = decisionTree.decide( functionCall.getArguments() );
+
+    LOG.debug( "final decision: {}", finalDecision );
+
+    functionCall.getOutputCollector().add( functionCall.getContext().result( finalDecision.getScore() ) );
     }
   }

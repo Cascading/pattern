@@ -20,14 +20,17 @@
 
 package cascading.pattern.model.randomforest;
 
+import java.util.List;
+
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
 import cascading.operation.OperationCall;
 import cascading.pattern.model.ClassifierFunction;
-import cascading.pattern.model.MiningSpec;
-import cascading.pattern.model.Spec;
-import cascading.pattern.model.tree.TreeSpec;
-import cascading.tuple.Tuple;
+import cascading.pattern.model.tree.Tree;
+import cascading.pattern.model.tree.decision.DecisionTree;
+import cascading.pattern.model.tree.decision.FinalDecision;
+import cascading.tuple.Fields;
+import cascading.tuple.TupleEntry;
 import com.google.common.collect.LinkedHashMultiset;
 import com.google.common.collect.Multiset;
 import org.slf4j.Logger;
@@ -36,46 +39,54 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class RandomForestFunction extends ClassifierFunction<MiningSpec, Void>
+public class RandomForestFunction extends ClassifierFunction<RandomForestSpec, DecisionTree[]>
   {
   private static final Logger LOG = LoggerFactory.getLogger( RandomForestFunction.class );
 
-  public RandomForestFunction( MiningSpec param )
+  public RandomForestFunction( RandomForestSpec param )
     {
     super( param );
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<Context<Void>> operationCall )
+  public void prepare( FlowProcess flowProcess, OperationCall<Context<DecisionTree[]>> operationCall )
     {
     super.prepare( flowProcess, operationCall );
 
-    getSpec().treeContext.prepare( getSpec().getModelSchema() ); // should be stored in context
+    Fields argumentFields = operationCall.getArgumentFields();
+    List<Tree> trees = getSpec().getTrees();
+    DecisionTree[] decisionTrees = new DecisionTree[ trees.size() ];
+
+    for( int i = 0; i < trees.size(); i++ )
+      decisionTrees[ i ] = trees.get( i ).createDecisionTree( argumentFields );
+
+    operationCall.getContext().payload = decisionTrees;
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context<Void>> functionCall )
+  public void operate( FlowProcess flowProcess, FunctionCall<Context<DecisionTree[]>> functionCall )
     {
-    Tuple values = functionCall.getArguments().getTuple();
+    TupleEntry arguments = functionCall.getArguments();
 
-    Boolean[] predicateEval = getSpec().treeContext.evalPredicates( getSpec().getModelSchema(), values );
-
-    // todo: create simpler way to track frequency of labels
+    // todo: pluggable voting strategy
     Multiset<String> votes = LinkedHashMultiset.create();
 
-    // tally the vote for each tree in the forest
-    for( Spec spec : getSpec().segments )
+    DecisionTree[] decisionTrees = functionCall.getContext().payload;
+
+    for( int i = 0; i < decisionTrees.length; i++ )
       {
-      String label = ( (TreeSpec) spec ).tree.traverse( predicateEval );
+      FinalDecision finalDecision = decisionTrees[ i ].decide( arguments );
 
-      LOG.debug( "segment: {}, returned label: {}", spec, label );
+      String score = finalDecision.getScore();
 
-      votes.add( label );
+      LOG.debug( "segment: {}, returned decision: {}", i, finalDecision );
+
+      votes.add( score );
       }
 
-    // determine the winning label
+    // determine the winning score
     int count = 0;
-    String label = null;
+    String score = null;
 
     for( Multiset.Entry<String> entry : votes.entrySet() )
       {
@@ -83,11 +94,11 @@ public class RandomForestFunction extends ClassifierFunction<MiningSpec, Void>
         continue;
 
       count = entry.getCount();
-      label = entry.getElement();
+      score = entry.getElement();
       }
 
-    LOG.debug( "label: {}", label );
+    LOG.debug( "winning score: {}, with votes: {}", score, count );
 
-    functionCall.getOutputCollector().add( functionCall.getContext().result( label ) );
+    functionCall.getOutputCollector().add( functionCall.getContext().result( score ) );
     }
   }

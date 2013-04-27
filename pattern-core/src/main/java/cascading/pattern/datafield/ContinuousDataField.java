@@ -43,7 +43,7 @@ public class ContinuousDataField extends DataField
   public ContinuousDataField( String name, Type dataType )
     {
     this.name = name;
-    this.dataType = dataType;
+    this.type = dataType;
     }
 
   @Override
@@ -76,7 +76,7 @@ public class ContinuousDataField extends DataField
   /** @return Class */
   public Class getClassType()
     {
-    return (Class) dataType;
+    return (Class) type;
     }
 
   /**
@@ -89,7 +89,7 @@ public class ContinuousDataField extends DataField
     {
     try
       {
-      return Coercions.coerce( values.getObject( i ), dataType );
+      return Coercions.coerce( values.getObject( i ), type );
       }
     catch( NumberFormatException exception )
       {

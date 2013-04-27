@@ -34,9 +34,7 @@ import cascading.flow.AssemblyPlanner;
 import cascading.flow.planner.PlannerException;
 import cascading.pattern.PatternException;
 import cascading.pattern.model.ClassifierFunction;
-import cascading.pattern.model.MiningSpec;
 import cascading.pattern.model.ModelSchema;
-import cascading.pattern.model.Spec;
 import cascading.pattern.model.clustering.ClusteringFunction;
 import cascading.pattern.model.clustering.ClusteringSpec;
 import cascading.pattern.model.clustering.DistanceCluster;
@@ -48,11 +46,11 @@ import cascading.pattern.model.generalregression.LinkFunction;
 import cascading.pattern.model.generalregression.PPMatrix;
 import cascading.pattern.model.generalregression.ParamMatrix;
 import cascading.pattern.model.randomforest.RandomForestFunction;
+import cascading.pattern.model.randomforest.RandomForestSpec;
 import cascading.pattern.model.regression.RegressionFunction;
 import cascading.pattern.model.regression.RegressionSpec;
 import cascading.pattern.model.regression.predictor.Predictor;
 import cascading.pattern.model.tree.Tree;
-import cascading.pattern.model.tree.TreeContext;
 import cascading.pattern.model.tree.TreeFunction;
 import cascading.pattern.model.tree.TreeSpec;
 import cascading.pattern.pmml.generalregression.GLMUtil;
@@ -407,31 +405,28 @@ public class PMMLPlanner implements AssemblyPlanner
   private Pipe handleRandomForestModel( Pipe tail, MiningModel model )
     {
     ModelSchema modelSchema = createModelSchema( model );
-    TreeContext treeContext = new TreeContext();
-    List<Spec> models = new LinkedList<Spec>();
+    List<TreeSpec> models = new LinkedList<TreeSpec>();
 
     for( Segment segment : model.getSegmentation().getSegments() )
       {
       TreeModel treeModel = (TreeModel) segment.getModel();
-      Tree tree = TreeUtil.createTree( segment.getId(), treeModel, modelSchema, treeContext );
+      Tree tree = TreeUtil.createTree( treeModel, modelSchema );
 
       models.add( new TreeSpec( tree ) );
       }
 
-    MiningSpec modelParam = new MiningSpec( modelSchema, treeContext, models );
+    RandomForestSpec miningSpec = new RandomForestSpec( modelSchema, models );
 
-    return create( tail, modelSchema, new RandomForestFunction( modelParam ) );
+    return create( tail, modelSchema, new RandomForestFunction( miningSpec ) );
     }
 
   private Pipe handleTreeModel( Pipe tail, TreeModel model )
     {
     ModelSchema modelSchema = createModelSchema( model );
 
-    TreeContext treeContext = new TreeContext();
+    Tree tree = TreeUtil.createTree( model, modelSchema );
 
-    Tree tree = TreeUtil.createTree( model, modelSchema, treeContext );
-
-    TreeSpec modelParam = new TreeSpec( modelSchema, treeContext, tree );
+    TreeSpec modelParam = new TreeSpec( modelSchema, tree );
 
     return create( tail, modelSchema, new TreeFunction( modelParam ) );
     }
