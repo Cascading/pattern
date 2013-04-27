@@ -499,6 +499,7 @@ public class PMMLPlanner implements AssemblyPlanner
       LOG.debug( "exemplar: {}", exemplar );
 
       DistanceCluster distanceCluster;
+
       if( isEuclidean )
         distanceCluster = new Euclidean( cluster.getName(), exemplar );
       else if( isSquared )

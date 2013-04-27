@@ -100,10 +100,12 @@ public class ModelTest extends CascadingTestCase
 
     ClusteringFunction clusteringFunction = new ClusteringFunction( clusteringSpec );
 
+//    TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 6.9d, 3.1d, 4.9d, 1.5d ) );
     TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 6.4d, 3.1d, 5.5d, 1.8d ) );
 
     TupleListCollector collector = invokeFunction( clusteringFunction, tupleArguments, predictedFields );
 
+//    assertEquals( new Tuple( "2" ), collector.entryIterator().next().getTuple() );
     assertEquals( new Tuple( "3" ), collector.entryIterator().next().getTuple() );
     }
 

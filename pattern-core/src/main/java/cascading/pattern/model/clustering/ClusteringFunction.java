@@ -20,8 +20,6 @@
 
 package cascading.pattern.model.clustering;
 
-import java.util.Map;
-
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
 import cascading.pattern.model.ClassifierFunction;
@@ -42,20 +40,12 @@ public class ClusteringFunction extends ClassifierFunction<ClusteringSpec, Void>
   @Override
   public void operate( FlowProcess flowProcess, FunctionCall<Context<Void>> functionCall )
     {
-    // todo: optimize out paramMap into array since arguments are properly ordered
-    Map<String, Object> paramMap = getSpec().getModelSchema().getParamMap( functionCall.getArguments().getTuple() );
-    String[] paramNames = getSpec().getModelSchema().getParamNames();
-    Double[] paramValues = new Double[ paramNames.length ];
-
-    for( int i = 0; i < paramNames.length; i++ )
-      paramValues[ i ] = (Double) paramMap.get( paramNames[ i ] );
-
     double bestDist = Double.MAX_VALUE;
     String bestLabel = null;
 
     for( Cluster cluster : getSpec().getClusters() )
       {
-      double distance = ( (DistanceCluster) cluster ).calcDistance( paramValues );
+      double distance = ( (DistanceCluster) cluster ).calcDistance( functionCall.getArguments().getTuple() );
 
       if( distance < bestDist )
         {

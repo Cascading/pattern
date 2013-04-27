@@ -50,7 +50,7 @@ public class DataFields
     else if( optype == OpType.CONTINUOUS )
       return createContinuousDataField( name, dataField );
 
-    throw new PatternException( "unknown optype: " + optype );
+    throw new UnsupportedOperationException( "unsupported optype: " + optype );
     }
 
   public static ContinuousDataField createContinuousDataField( String name, org.dmg.pmml.DataField dataField )

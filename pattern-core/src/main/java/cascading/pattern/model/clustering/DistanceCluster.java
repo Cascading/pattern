@@ -20,38 +20,42 @@
 
 package cascading.pattern.model.clustering;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import cascading.tuple.Tuple;
 
 
 public abstract class DistanceCluster extends Cluster
   {
-  protected List<Double> points = new ArrayList<Double>(); // todo: may Double[], nulls as missing values
+  protected Double[] points;
 
   public DistanceCluster( String name, Double... points )
     {
-    this( name, Arrays.asList( points ) );
+    super( name );
+    this.points = new Double[ points.length ];
+
+    System.arraycopy( points, 0, this.points, 0, points.length );
     }
 
   public DistanceCluster( String name, List<Double> points )
     {
     super( name );
-    this.points = points;
+    this.points = points.toArray( new Double[ points.size() ] );
     }
 
   /**
    * Calculate the distance from this cluster for the given tuple.
    *
-   * @param paramValues array of tuple values
+   * @param values array of tuple values
    * @return double
    */
-  public abstract double calcDistance( Double[] paramValues );
+  public abstract double calcDistance( Tuple values );
 
   /** @return String */
   @Override
   public String toString()
     {
-    return String.format( "%s: %s %s", getClass().getSimpleName(), name, points.toString() );
+    return String.format( "%s: %s %s", getClass().getSimpleName(), name, Arrays.toString( points ) );
     }
   }

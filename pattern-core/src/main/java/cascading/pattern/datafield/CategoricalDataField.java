@@ -25,21 +25,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import cascading.pattern.PatternException;
-import cascading.tuple.Tuple;
-import org.dmg.pmml.ArrayType;
-import org.dmg.pmml.Predicate;
-import org.dmg.pmml.SimpleSetPredicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 public class CategoricalDataField extends DataField
   {
-  /** Field LOG */
-  private static final Logger LOG = LoggerFactory.getLogger( CategoricalDataField.class );
-
-  public List<String> categories = new ArrayList<String>();
+  protected List<String> categories = new ArrayList<String>();
 
   public CategoricalDataField( String name, Type dataType, String... categories )
     {
@@ -53,46 +42,8 @@ public class CategoricalDataField extends DataField
     this.categories.addAll( categories );
     }
 
-  @Override
-  public String getExpression( Predicate predicate )
+  public List<String> getCategories()
     {
-    SimpleSetPredicate simpleSetPredicate = (SimpleSetPredicate) predicate;
-    String operator = simpleSetPredicate.getBooleanOperator().value();
-    ArrayType array = simpleSetPredicate.getArray();
-
-    PortableBitSet bits = new PortableBitSet( categories.size() );
-    String value = array.getContent();
-
-    value = value.substring( 1, value.length() - 1 );
-
-    for( String s : value.split( "\\\"\\s+\\\"" ) )
-      bits.set( categories.indexOf( s ) );
-
-    if( operator.equals( "isIn" ) )
-      return String.format( "pattern.datafield.PortableBitSet.isIn( \"%s\", %s )", bits.toString(), name );
-
-    throw new PatternException( "unknown operator: " + operator );
-    }
-
-  /** @return Class */
-  public Class getClassType()
-    {
-    return int.class;
-    }
-
-  /**
-   * @param values
-   * @param i
-   * @return Object
-   */
-  public Object getValue( Tuple values, int i )
-    {
-    String field_value = values.getString( i );
-    int index = categories.indexOf( field_value );
-
-    if( LOG.isDebugEnabled() )
-      LOG.debug( String.format( "%s @ %d | %s", field_value, index, categories ) );
-
-    return index;
+    return categories;
     }
   }

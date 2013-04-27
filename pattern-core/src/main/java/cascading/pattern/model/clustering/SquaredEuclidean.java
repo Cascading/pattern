@@ -22,6 +22,8 @@ package cascading.pattern.model.clustering;
 
 import java.util.List;
 
+import cascading.tuple.Tuple;
+
 /**
  *
  */
@@ -40,15 +42,16 @@ public class SquaredEuclidean extends DistanceCluster
   /**
    * Calculate the distance from this cluster for the given tuple.
    *
-   * @param paramValues array of tuple values
+   *
+   * @param values array of tuple values
    * @return double
    */
-  public double calcDistance( Double[] paramValues )
+  public double calcDistance( Tuple values )
     {
     double sumOfSquares = 0.0;
 
-    for( int i = 0; i < paramValues.length; i++ )
-      sumOfSquares += Math.pow( paramValues[ i ] - points.get( i ), 2.0 );
+    for( int i = 0; i < points.length; i++ )
+      sumOfSquares += Math.pow( (Double) values.getObject( i ) - points[ i ], 2.0 );
 
     return sumOfSquares;
     }

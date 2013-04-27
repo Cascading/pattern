@@ -64,7 +64,7 @@ public class ClusteringSpec extends Spec
 
   public void addCluster( Cluster cluster )
     {
-    if( cluster instanceof DistanceCluster && getModelSchema().expectedFields.size() != ( (DistanceCluster) cluster ).points.size() )
+    if( cluster instanceof DistanceCluster && getModelSchema().expectedFields.size() != ( (DistanceCluster) cluster ).points.length )
       throw new IllegalArgumentException( "given points must be same size as active fields" );
 
     cluster.setOrdinal( getClusters().size() + 1 );

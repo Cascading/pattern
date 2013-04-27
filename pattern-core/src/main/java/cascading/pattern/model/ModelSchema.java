@@ -23,18 +23,14 @@ package cascading.pattern.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import cascading.pattern.PatternException;
 import cascading.pattern.datafield.CategoricalDataField;
 import cascading.pattern.datafield.ContinuousDataField;
 import cascading.pattern.datafield.DataField;
 import cascading.tuple.Fields;
-import cascading.tuple.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,76 +139,5 @@ public class ModelSchema implements Serializable
       return new Fields( "predict", String.class );
 
     return new Fields( predictedFields.get( 0 ).getName(), predictedFields.get( 0 ).type );
-    }
-
-  /**
-   * Returns the expected name for each field in the Tuple, to be
-   * used as Janino parameters.
-   *
-   * @return String[]
-   */
-  public String[] getParamNames()
-    {
-    return expectedFields.keySet().toArray( new String[ 0 ] );
-    }
-
-  /**
-   * Returns the expected class for each field in the Tuple, to be
-   * used as Janino parameters.
-   *
-   * @return Class[]
-   */
-  public Class[] getParamTypes()
-    {
-    Class[] param_types = new Class[ expectedFields.size() ];
-    Iterator<DataField> iter = expectedFields.values().iterator();
-
-    for( int i = 0; i < expectedFields.size(); i++ )
-      {
-      DataField df = iter.next();
-      param_types[ i ] = df.getClassType();
-      }
-
-    return param_types;
-    }
-
-  /**
-   * Convert values for the fields in the Tuple, in a form that Janino expects.
-   *
-   * @param values
-   * @param param_values
-   * @throws cascading.pattern.PatternException
-   *
-   */
-  public void setParamValues( Tuple values, Object[] param_values ) throws PatternException
-    {
-    Iterator<DataField> iter = expectedFields.values().iterator();
-
-    for( int i = 0; i < expectedFields.size(); i++ )
-      {
-      DataField df = iter.next();
-      param_values[ i ] = df.getValue( values, i );
-      }
-    }
-
-  /**
-   * Returns a Map of names/values for each field in the Tuple.
-   *
-   * @param values
-   * @return Map<String, Object>
-   * @throws PatternException
-   */
-  public Map<String, Object> getParamMap( Tuple values ) throws PatternException
-    {
-    HashMap<String, Object> param_map = new HashMap<String, Object>();
-    Iterator<DataField> iter = expectedFields.values().iterator();
-
-    for( int i = 0; i < expectedFields.size(); i++ )
-      {
-      DataField df = iter.next();
-      param_map.put( df.name, df.getValue( values, i ) );
-      }
-
-    return param_map;
     }
   }

@@ -23,10 +23,6 @@ package cascading.pattern.datafield;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 
-import cascading.pattern.PatternException;
-import cascading.tuple.Tuple;
-import org.dmg.pmml.Predicate;
-
 
 public abstract class DataField implements Serializable
   {
@@ -43,21 +39,9 @@ public abstract class DataField implements Serializable
     return type;
     }
 
-  /** @return  */
-  public abstract Class getClassType();
-
-  /**
-   * @return Object
-   * @throws PatternException
-   */
-  public abstract Object getValue( Tuple values, int i ) throws PatternException;
-
-  /** @return Object */
   @Override
   public String toString()
     {
     return name + ":" + getClass().getSimpleName() + ":" + type;
     }
-
-  public abstract String getExpression( Predicate predicate );
   }
