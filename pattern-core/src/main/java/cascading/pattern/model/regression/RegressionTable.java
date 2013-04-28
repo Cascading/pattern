@@ -34,11 +34,30 @@ import cascading.tuple.Fields;
  */
 public class RegressionTable implements Serializable
   {
-  public double intercept = 0.0;
-  public Map<String, Predictor> predictors = new HashMap<String, Predictor>();
+  String targetCategory;
+  double intercept = 0.0;
+  Map<String, Predictor> predictors = new HashMap<String, Predictor>();
 
   public RegressionTable()
     {
+    }
+
+  public RegressionTable( double intercept )
+    {
+    this.intercept = intercept;
+    }
+
+  public RegressionTable( String targetCategory, double intercept )
+    {
+    this.targetCategory = targetCategory;
+    this.intercept = intercept;
+    }
+
+  public RegressionTable( String targetCategory, double intercept, List<Predictor> predictors )
+    {
+    this.targetCategory = targetCategory;
+    this.intercept = intercept;
+    setPredictors( predictors );
     }
 
   public RegressionTable( double intercept, List<Predictor> predictors )
@@ -75,12 +94,15 @@ public class RegressionTable implements Serializable
     Predictor[] orderedPredictors;
     orderedPredictors = new Predictor[ predictors.size() ];
 
-    int i = 0;
+    if( predictors.size() != 0 )
+      {
+      int i = 0;
 
-    for( Comparable comparable : argumentFields )
-      orderedPredictors[ i++ ] = predictors.get( comparable.toString() );
+      for( Comparable comparable : argumentFields )
+        orderedPredictors[ i++ ] = predictors.get( comparable.toString() );
+      }
 
-    return new ExpressionEvaluator( intercept, orderedPredictors );
+    return new ExpressionEvaluator( targetCategory, intercept, orderedPredictors );
     }
 
   @Override

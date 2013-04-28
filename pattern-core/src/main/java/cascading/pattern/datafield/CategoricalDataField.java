@@ -23,6 +23,7 @@ package cascading.pattern.datafield;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -40,6 +41,12 @@ public class CategoricalDataField extends DataField
     this.name = name;
     this.type = dataType;
     this.categories.addAll( categories );
+    }
+
+  public void setCategories( String... categories )
+    {
+    this.categories.clear();
+    Collections.addAll( this.categories, categories );
     }
 
   public List<String> getCategories()

@@ -28,20 +28,27 @@ import cascading.tuple.TupleEntry;
  */
 public class ExpressionEvaluator
   {
+  private final String targetCategory;
   private final double intercept;
   private final Predictor[] orderedPredictors;
 
-  public ExpressionEvaluator( double intercept, Predictor[] orderedPredictors )
+  public ExpressionEvaluator( String targetCategory, double intercept, Predictor[] orderedPredictors )
     {
+    this.targetCategory = targetCategory;
     this.intercept = intercept;
     this.orderedPredictors = orderedPredictors;
+    }
+
+  public String getTargetCategory()
+    {
+    return targetCategory;
     }
 
   public double calculate( TupleEntry tupleEntry )
     {
     double result = intercept;
 
-    for( int i = 0; i < tupleEntry.size(); i++ )
+    for( int i = 0; i < orderedPredictors.length; i++ )
       result += orderedPredictors[ i ].calculate( tupleEntry.getObject( i ) );
 
     return result;

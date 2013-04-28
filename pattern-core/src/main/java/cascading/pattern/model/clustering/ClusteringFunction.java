@@ -22,12 +22,12 @@ package cascading.pattern.model.clustering;
 
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
-import cascading.pattern.model.ClassifierFunction;
+import cascading.pattern.model.ModelScoringFunction;
 
 /**
  *
  */
-public class ClusteringFunction extends ClassifierFunction<ClusteringSpec, Void>
+public class ClusteringFunction extends ModelScoringFunction<ClusteringSpec, Void>
   {
   public ClusteringFunction( ClusteringSpec clusteringParam )
     {

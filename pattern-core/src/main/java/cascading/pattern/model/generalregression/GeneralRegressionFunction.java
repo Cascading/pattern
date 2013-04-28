@@ -23,14 +23,14 @@ package cascading.pattern.model.generalregression;
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
 import cascading.operation.OperationCall;
-import cascading.pattern.model.ClassifierFunction;
+import cascading.pattern.model.ModelScoringFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  */
-public class GeneralRegressionFunction extends ClassifierFunction<GeneralRegressionSpec, ExpressionEvaluator>
+public class GeneralRegressionFunction extends ModelScoringFunction<GeneralRegressionSpec, ExpressionEvaluator>
   {
   private static final Logger LOG = LoggerFactory.getLogger( GeneralRegressionFunction.class );
 

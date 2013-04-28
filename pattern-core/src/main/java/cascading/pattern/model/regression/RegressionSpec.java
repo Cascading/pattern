@@ -26,10 +26,12 @@ import java.util.List;
 
 import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.Spec;
+import cascading.pattern.model.normalization.Normalization;
 
 public class RegressionSpec extends Spec
   {
   List<RegressionTable> regressionTables = new ArrayList<RegressionTable>();
+  private Normalization normalization;
 
   public RegressionSpec( ModelSchema modelSchema )
     {
@@ -46,4 +48,13 @@ public class RegressionSpec extends Spec
     regressionTables.add( regressionTable );
     }
 
+  public void setNormalization( Normalization normalization )
+    {
+    this.normalization = normalization;
+    }
+
+  public Normalization getNormalization()
+    {
+    return normalization;
+    }
   }

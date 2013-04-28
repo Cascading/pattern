@@ -25,7 +25,7 @@ import java.util.List;
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
 import cascading.operation.OperationCall;
-import cascading.pattern.model.ClassifierFunction;
+import cascading.pattern.model.ModelScoringFunction;
 import cascading.pattern.model.tree.Tree;
 import cascading.pattern.model.tree.decision.DecisionTree;
 import cascading.pattern.model.tree.decision.FinalDecision;
@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class RandomForestFunction extends ClassifierFunction<RandomForestSpec, DecisionTree[]>
+public class RandomForestFunction extends ModelScoringFunction<RandomForestSpec, DecisionTree[]>
   {
   private static final Logger LOG = LoggerFactory.getLogger( RandomForestFunction.class );
 

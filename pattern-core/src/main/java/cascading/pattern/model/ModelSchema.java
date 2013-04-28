@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,8 +41,9 @@ public class ModelSchema implements Serializable
   /** Field LOG */
   private static final Logger LOG = LoggerFactory.getLogger( ModelSchema.class );
 
-  public Map<String, DataField> expectedFields = new LinkedHashMap<String, DataField>();
-  public List<DataField> predictedFields;
+  public Map<String, DataField> dictionary = new LinkedHashMap<String, DataField>();
+  public List<String> expectedFields = new LinkedList<String>();
+  public List<String> predictedFields = new LinkedList<String>();
 
   public ModelSchema()
     {
@@ -53,39 +55,101 @@ public class ModelSchema implements Serializable
     setPredictedFields( predictedFields );
     }
 
+  public DataField getPredictedField( String name )
+    {
+    if( predictedFields.contains( name ) )
+      return dictionary.get( name );
+
+    return null;
+    }
+
+  public List<String> getPredictedFieldNames()
+    {
+    return predictedFields;
+    }
+
   public void setPredictedFields( Fields fields )
     {
-    predictedFields = toDataFields( fields );
+    setPredictedFields( toDataFields( fields ) );
+    }
 
-    if( predictedFields.size() != 1 )
-      throw new IllegalArgumentException( "currently only support one predicted field, got: " + fields.printVerbose() );
+  public void setPredictedFields( List<DataField> dataFields )
+    {
+    if( dataFields.size() != 1 )
+      throw new IllegalArgumentException( "currently only support one predicted field, got: " + dataFields );
+
+    addToDictionary( dataFields );
+
+    for( DataField dataField : dataFields )
+      predictedFields.add( dataField.getName() );
     }
 
   public void setPredictedFields( DataField predictedFields )
     {
-    this.predictedFields = Arrays.asList( predictedFields );
+    setPredictedFields( Arrays.asList( predictedFields ) );
+    }
+
+  public void setPredictedCategories( String fieldName, String... categories )
+    {
+    if( !predictedFields.contains( fieldName ) )
+      throw new IllegalArgumentException( "predicted field does not exist: " + fieldName );
+
+    DataField dataField = dictionary.get( fieldName );
+
+    if( dataField instanceof ContinuousDataField )
+      dataField = new CategoricalDataField( fieldName, String.class, categories );
+    else
+      ( (CategoricalDataField) dataField ).setCategories( categories );
+
+    dictionary.put( fieldName, dataField );
     }
 
   public DataField getExpectedField( String name )
     {
-    return expectedFields.get( name );
+    if( expectedFields.contains( name ) )
+      return dictionary.get( name );
+
+    return null;
     }
 
   public void addExpectedFields( Fields fields )
     {
-    for( DataField dataField : toDataFields( fields ) )
-      expectedFields.put( dataField.getName(), dataField );
+    List<DataField> dataFields = toDataFields( fields );
+
+    addToDictionary( dataFields );
+
+    for( DataField dataField : dataFields )
+      expectedFields.add( dataField.getName() );
     }
 
   public void addExpectedFields( Fields fields, String[][] categories )
     {
-    for( DataField dataField : toDataFields( fields, categories ) )
-      expectedFields.put( dataField.getName(), dataField );
+    List<DataField> dataFields = toDataFields( fields, categories );
+
+    addToDictionary( dataFields );
+
+    for( DataField dataField : dataFields )
+      expectedFields.add( dataField.getName() );
     }
 
   public void addExpectedField( DataField expectedField )
     {
-    expectedFields.put( expectedField.name, expectedField );
+    expectedFields.add( expectedField.name );
+    addToDictionary( expectedField );
+    }
+
+  private void addToDictionary( List<DataField> dataFields )
+    {
+    for( DataField dataField : dataFields )
+      addToDictionary( dataField );
+    }
+
+  private void addToDictionary( DataField dataField )
+    {
+    if( dictionary.containsKey( dataField.getName() ) )
+      throw new IllegalArgumentException( "data field already exists: " + dataField.getName() );
+
+    dictionary.put( dataField.getName(), dataField );
     }
 
   private static List<DataField> toDataFields( Fields fields )
@@ -127,17 +191,17 @@ public class ModelSchema implements Serializable
     {
     Fields fields = Fields.NONE;
 
-    for( String name : expectedFields.keySet() )
-      fields = fields.append( new Fields( name, expectedFields.get( name ).type ) );
+    for( String name : expectedFields )
+      fields = fields.append( new Fields( name, dictionary.get( name ).type ) );
 
     return fields;
     }
 
   public Fields getDeclaredFields()
     {
-    if( predictedFields == null )
+    if( predictedFields.isEmpty() )
       return new Fields( "predict", String.class );
 
-    return new Fields( predictedFields.get( 0 ).getName(), predictedFields.get( 0 ).type );
+    return new Fields( predictedFields.get( 0 ), dictionary.get( predictedFields.get( 0 ) ).type );
     }
   }

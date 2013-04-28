@@ -25,7 +25,7 @@ import java.util.List;
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
 import cascading.operation.OperationCall;
-import cascading.pattern.model.ClassifierFunction;
+import cascading.pattern.model.ModelScoringFunction;
 import cascading.tuple.TupleEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +33,13 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class RegressionFunction extends ClassifierFunction<RegressionSpec, ExpressionEvaluator[]>
+public class RegressionFunction extends ModelScoringFunction<RegressionSpec, ExpressionEvaluator[]>
   {
   private static final Logger LOG = LoggerFactory.getLogger( RegressionFunction.class );
 
-  public RegressionFunction( RegressionSpec param )
+  public RegressionFunction( RegressionSpec regressionSpec )
     {
-    super( param );
+    super( regressionSpec );
     }
 
   @Override

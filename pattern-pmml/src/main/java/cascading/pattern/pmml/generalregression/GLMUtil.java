@@ -68,7 +68,7 @@ public class GLMUtil
       if( factorsList.contains( predictorName ) )
         predictor = new FactorPredictor( predictorName, value );
       else if( covariateList.contains( predictorName ) )
-        predictor = new CovariantPredictor( predictorName, Double.parseDouble( value ) );
+        predictor = new CovariantPredictor( predictorName, Long.parseLong( value ) );
       else
         throw new IllegalStateException( "unknown predictor name: " + predictorName );
 

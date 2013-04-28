@@ -18,31 +18,12 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.generalregression.predictor;
+package cascading.pattern.model.normalization;
 
 /**
  *
  */
-public class CovariantPredictor extends Predictor
+public abstract class Normalization
   {
-  private final long exponent;
-
-  public CovariantPredictor( String fieldName )
-    {
-    super( fieldName );
-
-    this.exponent = 1;
-    }
-
-  public CovariantPredictor( String fieldName, long exponent )
-    {
-    super( fieldName );
-
-    this.exponent = exponent;
-    }
-
-  public double calculate( double value )
-    {
-    return Math.pow( value, exponent );
-    }
+  public abstract double[] normalize( double[] values );
   }

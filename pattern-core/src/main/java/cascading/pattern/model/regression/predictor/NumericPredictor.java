@@ -32,15 +32,15 @@ public class NumericPredictor extends Predictor<Double>
   public double coefficient;
   public long exponent = 1;
 
-  public NumericPredictor( String name, double coefficient )
+  public NumericPredictor( String fieldName, double coefficient )
     {
-    super( name );
+    super( fieldName );
     this.coefficient = coefficient;
     }
 
-  public NumericPredictor( String name, double coefficient, long exponent )
+  public NumericPredictor( String fieldName, double coefficient, long exponent )
     {
-    super( name );
+    super( fieldName );
     this.coefficient = coefficient;
     this.exponent = exponent;
     }

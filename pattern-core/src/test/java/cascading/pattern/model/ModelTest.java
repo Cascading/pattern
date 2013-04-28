@@ -30,8 +30,10 @@ import cascading.pattern.model.generalregression.GeneralRegressionTable;
 import cascading.pattern.model.generalregression.LinkFunction;
 import cascading.pattern.model.generalregression.Parameter;
 import cascading.pattern.model.generalregression.predictor.CovariantPredictor;
+import cascading.pattern.model.normalization.SoftMaxNormalization;
 import cascading.pattern.model.randomforest.RandomForestFunction;
 import cascading.pattern.model.randomforest.RandomForestSpec;
+import cascading.pattern.model.regression.ClassifierRegressionFunction;
 import cascading.pattern.model.regression.RegressionFunction;
 import cascading.pattern.model.regression.RegressionSpec;
 import cascading.pattern.model.regression.RegressionTable;
@@ -392,5 +394,100 @@ public class ModelTest extends CascadingTestCase
     TupleListCollector collector = invokeFunction( regressionFunction, tupleArguments, predictedFields );
 
     assertEquals( 1.0d, collector.entryIterator().next().getTuple().getDouble( 0 ), 0.00001d );
+    }
+
+  /**
+   * <RegressionModel modelName="multinom_Model" functionName="classification" algorithmName="multinom" normalizationMethod="softmax">
+   * <MiningSchema>
+   * <MiningField name="species" usageType="predicted"/>
+   * <MiningField name="sepal_length" usageType="active"/>
+   * <MiningField name="sepal_width" usageType="active"/>
+   * <MiningField name="petal_length" usageType="active"/>
+   * <MiningField name="petal_width" usageType="active"/>
+   * </MiningSchema>
+   * <Output>
+   * <OutputField name="species" feature="predictedValue"/>
+   * <OutputField name="Probability_setosa" optype="continuous" dataType="double" feature="probability" value="setosa"/>
+   * <OutputField name="Probability_versicolor" optype="continuous" dataType="double" feature="probability" value="versicolor"/>
+   * <OutputField name="Probability_virginica" optype="continuous" dataType="double" feature="probability" value="virginica"/>
+   * </Output>
+   * <RegressionTable intercept="86.7061379450354" targetCategory="versicolor">
+   * <NumericPredictor name="sepal_length" exponent="1" coefficient="-11.3336819785783"/>
+   * <NumericPredictor name="sepal_width" exponent="1" coefficient="-40.8601511206805"/>
+   * <NumericPredictor name="petal_length" exponent="1" coefficient="38.439099544679"/>
+   * <NumericPredictor name="petal_width" exponent="1" coefficient="-12.2920287460217"/>
+   * </RegressionTable>
+   * <RegressionTable intercept="-111.666532867146" targetCategory="virginica">
+   * <NumericPredictor name="sepal_length" exponent="1" coefficient="-47.1170644419116"/>
+   * <NumericPredictor name="sepal_width" exponent="1" coefficient="-51.6805606658275"/>
+   * <NumericPredictor name="petal_length" exponent="1" coefficient="108.27736751831"/>
+   * <NumericPredictor name="petal_width" exponent="1" coefficient="54.0277175236148"/>
+   * </RegressionTable>
+   * <RegressionTable intercept="0.0" targetCategory="setosa"/>
+   * </RegressionModel>
+   */
+  public void testClassifierRegressionFunction()
+    {
+    Fields predictedFields = new Fields( "species", String.class );
+
+    Fields expectedFields = Fields.NONE
+      .append( new Fields( "sepal_length", double.class ) )
+      .append( new Fields( "sepal_width", double.class ) )
+      .append( new Fields( "petal_length", double.class ) )
+      .append( new Fields( "petal_width", double.class ) );
+
+    ModelSchema modelSchema = new ModelSchema( expectedFields, predictedFields );
+
+    modelSchema.setPredictedCategories( "species", "setosa", "versicolor", "virginica" );
+
+    RegressionSpec regressionSpec = new RegressionSpec( modelSchema );
+
+    regressionSpec.setNormalization( new SoftMaxNormalization() );
+
+    {
+    RegressionTable regressionTable = new RegressionTable( "versicolor", 86.7061379450354d );
+
+    regressionTable.addPredictor( new NumericPredictor( "sepal_length", -11.3336819785783d ) );
+    regressionTable.addPredictor( new NumericPredictor( "sepal_width", -40.8601511206805d ) );
+    regressionTable.addPredictor( new NumericPredictor( "petal_length", 38.439099544679d ) );
+    regressionTable.addPredictor( new NumericPredictor( "petal_width", -12.2920287460217d ) );
+
+    regressionSpec.addRegressionTable( regressionTable );
+    }
+
+    {
+    RegressionTable regressionTable = new RegressionTable( "virginica", -111.666532867146d );
+
+    regressionTable.addPredictor( new NumericPredictor( "sepal_length", -47.1170644419116d ) );
+    regressionTable.addPredictor( new NumericPredictor( "sepal_width", -51.6805606658275d ) );
+    regressionTable.addPredictor( new NumericPredictor( "petal_length", 108.27736751831d ) );
+    regressionTable.addPredictor( new NumericPredictor( "petal_width", 54.0277175236148d ) );
+
+    regressionSpec.addRegressionTable( regressionTable );
+    }
+
+    {
+    RegressionTable regressionTable = new RegressionTable( "setosa", 0d );
+
+    regressionSpec.addRegressionTable( regressionTable );
+    }
+
+    ClassifierRegressionFunction regressionFunction = new ClassifierRegressionFunction( regressionSpec );
+
+    {
+    TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 7d, 3.2d, 4.7d, 1.4d ) );
+
+    TupleListCollector collector = invokeFunction( regressionFunction, tupleArguments, predictedFields );
+
+    assertEquals( new Tuple( "versicolor" ), collector.entryIterator().next().getTuple() );
+    }
+
+    {
+    TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 5.8d, 4d, 1.2d, 0.2d ) );
+
+    TupleListCollector collector = invokeFunction( regressionFunction, tupleArguments, predictedFields );
+
+    assertEquals( new Tuple( "setosa" ), collector.entryIterator().next().getTuple() );
+    }
     }
   }

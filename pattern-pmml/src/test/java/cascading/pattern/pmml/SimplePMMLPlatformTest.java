@@ -73,7 +73,6 @@ public class SimplePMMLPlatformTest extends PMMLPlatformTestCase
     }
 
   @Test
-  @Ignore
   public void testIrisMultiNom() throws IOException
     {
     pmmlTest( "iris.multinom", new Fields( "species" ), Fields.LAST );

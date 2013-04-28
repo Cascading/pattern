@@ -27,7 +27,7 @@ import cascading.operation.OperationCall;
 import cascading.tuple.Tuple;
 
 
-public abstract class ClassifierFunction<S extends Spec, P> extends BaseOperation<ClassifierFunction.Context<P>> implements Function<ClassifierFunction.Context<P>>
+public abstract class ModelScoringFunction<S extends Spec, P> extends BaseOperation<ModelScoringFunction.Context<P>> implements Function<ModelScoringFunction.Context<P>>
   {
   protected S spec;
 
@@ -45,7 +45,7 @@ public abstract class ClassifierFunction<S extends Spec, P> extends BaseOperatio
       }
     }
 
-  protected ClassifierFunction( S spec )
+  protected ModelScoringFunction( S spec )
     {
     super( spec.getModelSchema().getInputFields().size(), spec.getModelSchema().getDeclaredFields() );
     this.spec = spec;
@@ -57,8 +57,8 @@ public abstract class ClassifierFunction<S extends Spec, P> extends BaseOperatio
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<ClassifierFunction.Context<P>> operationCall )
+  public void prepare( FlowProcess flowProcess, OperationCall<ModelScoringFunction.Context<P>> operationCall )
     {
-    operationCall.setContext( new ClassifierFunction.Context() );
+    operationCall.setContext( new ModelScoringFunction.Context() );
     }
   }

@@ -33,8 +33,8 @@ import java.util.Set;
 import cascading.flow.AssemblyPlanner;
 import cascading.flow.planner.PlannerException;
 import cascading.pattern.PatternException;
-import cascading.pattern.model.ClassifierFunction;
 import cascading.pattern.model.ModelSchema;
+import cascading.pattern.model.ModelScoringFunction;
 import cascading.pattern.model.clustering.ClusteringFunction;
 import cascading.pattern.model.clustering.ClusteringSpec;
 import cascading.pattern.model.clustering.DistanceCluster;
@@ -44,8 +44,12 @@ import cascading.pattern.model.generalregression.GeneralRegressionFunction;
 import cascading.pattern.model.generalregression.GeneralRegressionSpec;
 import cascading.pattern.model.generalregression.GeneralRegressionTable;
 import cascading.pattern.model.generalregression.LinkFunction;
+import cascading.pattern.model.normalization.Normalization;
+import cascading.pattern.model.normalization.NullNormalization;
+import cascading.pattern.model.normalization.SoftMaxNormalization;
 import cascading.pattern.model.randomforest.RandomForestFunction;
 import cascading.pattern.model.randomforest.RandomForestSpec;
+import cascading.pattern.model.regression.ClassifierRegressionFunction;
 import cascading.pattern.model.regression.RegressionFunction;
 import cascading.pattern.model.regression.RegressionSpec;
 import cascading.pattern.model.regression.predictor.Predictor;
@@ -449,14 +453,39 @@ public class PMMLPlanner implements AssemblyPlanner
 
   private Pipe handleRegressionModel( Pipe tail, RegressionModel model )
     {
-    if( model.getFunctionName() != MiningFunctionType.REGRESSION )
-      throw new UnsupportedOperationException( "only regression function supported, got: " + model.getFunctionName() );
+    if( model.getFunctionName() == MiningFunctionType.REGRESSION )
+      return handleContinuousRegressionModel( tail, model );
 
+    if( model.getFunctionName() == MiningFunctionType.CLASSIFICATION )
+      return handleClassifierRegressionModel( tail, model );
+
+    throw new UnsupportedOperationException( "unsupported mining type, got: " + model.getFunctionName() );
+    }
+
+  private Pipe handleClassifierRegressionModel( Pipe tail, RegressionModel model )
+    {
+    ModelSchema modelSchema = createModelSchema( model );
+
+    RegressionSpec regressionSpec = new RegressionSpec( modelSchema );
+
+    regressionSpec.setNormalization( getNormalizationMethod( model ) );
+
+    for( RegressionTable regressionTable : model.getRegressionTables() )
+      {
+      String targetCategory = regressionTable.getTargetCategory();
+      double intercept = regressionTable.getIntercept();
+      List<Predictor> predictors = RegressionUtil.createPredictors( regressionTable );
+
+      regressionSpec.addRegressionTable( new cascading.pattern.model.regression.RegressionTable( targetCategory, intercept, predictors ) );
+      }
+
+    return create( tail, modelSchema, new ClassifierRegressionFunction( regressionSpec ) );
+    }
+
+  private Pipe handleContinuousRegressionModel( Pipe tail, RegressionModel model )
+    {
     if( model.getRegressionTables().size() != 1 )
       throw new UnsupportedOperationException( "regression model only supports a single regression table, got: " + model.getRegressionTables().size() );
-
-    if( !model.getAlgorithmName().equals( "least squares" ) )
-      throw new UnsupportedOperationException( "unsupported regression algorithm: " + model.getAlgorithmName() );
 
     ModelSchema modelSchema = createModelSchema( model );
 
@@ -524,7 +553,7 @@ public class PMMLPlanner implements AssemblyPlanner
     return tail;
     }
 
-  private Pipe create( Pipe tail, ModelSchema schemaParam, ClassifierFunction function )
+  private Pipe create( Pipe tail, ModelSchema schemaParam, ModelScoringFunction function )
     {
     Fields inputFields = schemaParam.getInputFields();
     Fields declaredFields = schemaParam.getDeclaredFields();
@@ -536,18 +565,45 @@ public class PMMLPlanner implements AssemblyPlanner
 
   private ModelSchema createModelSchema( Model model )
     {
-    ModelSchema schemaParam = new ModelSchema();
+    ModelSchema modelSchema = new ModelSchema();
 
     for( MiningField miningField : model.getMiningSchema().getMiningFields() )
       {
       DataField dataField = getPMMLModel().getDataField( miningField.getName() );
 
       if( miningField.getUsageType() == FieldUsageType.ACTIVE )
-        schemaParam.addExpectedField( createDataFields( dataField ) );
+        modelSchema.addExpectedField( createDataFields( dataField ) );
       else if( miningField.getUsageType() == FieldUsageType.PREDICTED )
-        schemaParam.setPredictedFields( createDataFields( dataField ) );
+        modelSchema.setPredictedFields( createDataFields( dataField ) );
       }
 
-    return schemaParam;
+    return modelSchema;
+    }
+
+  private Normalization getNormalizationMethod( RegressionModel model )
+    {
+    switch( model.getNormalizationMethod() )
+      {
+      case NONE:
+        return new NullNormalization();
+      case SIMPLEMAX:
+        break;
+      case SOFTMAX:
+        return new SoftMaxNormalization();
+      case LOGIT:
+        break;
+      case PROBIT:
+        break;
+      case CLOGLOG:
+        break;
+      case EXP:
+        break;
+      case LOGLOG:
+        break;
+      case CAUCHIT:
+        break;
+      }
+
+    throw new UnsupportedOperationException( "unsupported normalization method: " + model.getNormalizationMethod() );
     }
   }

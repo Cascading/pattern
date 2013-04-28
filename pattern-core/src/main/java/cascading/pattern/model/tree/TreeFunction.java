@@ -23,7 +23,7 @@ package cascading.pattern.model.tree;
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
 import cascading.operation.OperationCall;
-import cascading.pattern.model.ClassifierFunction;
+import cascading.pattern.model.ModelScoringFunction;
 import cascading.pattern.model.tree.decision.DecisionTree;
 import cascading.pattern.model.tree.decision.FinalDecision;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class TreeFunction extends ClassifierFunction<TreeSpec, DecisionTree>
+public class TreeFunction extends ModelScoringFunction<TreeSpec, DecisionTree>
   {
   private static final Logger LOG = LoggerFactory.getLogger( TreeFunction.class );
 
