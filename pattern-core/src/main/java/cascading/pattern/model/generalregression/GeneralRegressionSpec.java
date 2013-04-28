@@ -20,41 +20,52 @@
 
 package cascading.pattern.model.generalregression;
 
-import java.util.Set;
-
 import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.Spec;
 
 
 public class GeneralRegressionSpec extends Spec
   {
-  PPMatrix ppMatrix;
-  ParamMatrix paramMatrix;
-  Set<String> covariates;
-  Set<String> factors;
-  Set<String> parameters;
+  GeneralRegressionTable generalRegressionTable;
   LinkFunction linkFunction;
 
-  public GeneralRegressionSpec( ModelSchema schemaParam, PPMatrix ppMatrix, ParamMatrix paramMatrix, Set<String> parameters, Set<String> covariates, Set<String> factors, LinkFunction linkFunction )
+  public GeneralRegressionSpec( ModelSchema modelSchema, GeneralRegressionTable generalRegressionTable, LinkFunction linkFunction )
     {
-    super( schemaParam );
-    this.ppMatrix = ppMatrix;
-    this.paramMatrix = paramMatrix;
-    this.parameters = parameters;
-    this.covariates = covariates;
-    this.factors = factors;
+    super( modelSchema );
+    this.generalRegressionTable = generalRegressionTable;
+    this.linkFunction = linkFunction;
+    }
+
+  public GeneralRegressionSpec( ModelSchema modelSchema )
+    {
+    super( modelSchema );
+    }
+
+  public void setGeneralRegressionTable( GeneralRegressionTable generalRegressionTable )
+    {
+    this.generalRegressionTable = generalRegressionTable;
+    }
+
+  public GeneralRegressionTable getGeneralRegressionTable()
+    {
+    return generalRegressionTable;
+    }
+
+  public LinkFunction getLinkFunction()
+    {
+    return linkFunction;
+    }
+
+  public void setLinkFunction( LinkFunction linkFunction )
+    {
     this.linkFunction = linkFunction;
     }
 
   @Override
   public String toString()
     {
-    final StringBuilder sb = new StringBuilder( "GeneralRegressionParam{" );
-    sb.append( "ppMatrix=" ).append( ppMatrix );
-    sb.append( ", paramMatrix=" ).append( paramMatrix );
-    sb.append( ", covariates=" ).append( covariates );
-    sb.append( ", factors=" ).append( factors );
-    sb.append( ", parameters=" ).append( parameters );
+    final StringBuilder sb = new StringBuilder( "GeneralRegressionSpec{" );
+    sb.append( "generalRegressionMatrix=" ).append( generalRegressionTable );
     sb.append( ", linkFunction=" ).append( linkFunction );
     sb.append( '}' );
     return sb.toString();

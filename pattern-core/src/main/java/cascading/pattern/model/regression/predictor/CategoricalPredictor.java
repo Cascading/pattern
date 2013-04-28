@@ -45,7 +45,7 @@ public class CategoricalPredictor extends Predictor<String>
     }
 
   @Override
-  public double calcTerm( String value )
+  public double calculate( String value )
     {
     Double result = categories.get( value );
 
@@ -53,7 +53,7 @@ public class CategoricalPredictor extends Predictor<String>
       result = 0.0d;
 
     if( LOG.isDebugEnabled() )
-      LOG.debug( String.format( "calc: %s, %s, %e", name, value, result ) );
+      LOG.debug( String.format( "calc: %s, %s, %e", fieldName, value, result ) );
 
     return result;
     }

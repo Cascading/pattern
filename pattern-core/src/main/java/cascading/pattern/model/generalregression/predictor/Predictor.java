@@ -18,13 +18,24 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.generalregression;
+package cascading.pattern.model.generalregression.predictor;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.io.Serializable;
 
-
-/** This Class represents PPMatrix */
-public class PPMatrix extends LinkedHashMap<String, ArrayList<PPCell>>
+/**
+ *
+ */
+public class Predictor implements Serializable
   {
+  protected final String fieldName;
+
+  public Predictor( String fieldName )
+    {
+    this.fieldName = fieldName;
+    }
+
+  public String getFieldName()
+    {
+    return fieldName;
+    }
   }

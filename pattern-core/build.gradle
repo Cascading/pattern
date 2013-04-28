@@ -20,9 +20,6 @@
 
 dependencies {
   compile( group: 'cascading', name: 'cascading-core', version: cascadingVersion )
-  compile( group: 'org.jpmml', name: 'pmml-manager', version: '1.0.0' )
-  compile( group: 'org.jpmml', name: 'pmml-model', version: '1.0.0' )
-  compile( group: 'org.jpmml', name: 'pmml-evaluator', version: '1.0.0' )
 
   compile group: 'com.google.guava', name: 'guava', version: '14.0.1'
 

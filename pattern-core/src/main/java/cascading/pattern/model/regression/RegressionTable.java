@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import cascading.pattern.model.regression.predictor.Predictor;
+import cascading.tuple.Fields;
 
 /**
  *
@@ -53,7 +54,7 @@ public class RegressionTable implements Serializable
 
   public void addPredictor( Predictor predictor )
     {
-    this.predictors.put( predictor.getName(), predictor );
+    this.predictors.put( predictor.getFieldName(), predictor );
     }
 
   public Map<String, Predictor> getPredictors()
@@ -67,5 +68,28 @@ public class RegressionTable implements Serializable
 
     for( Predictor predictor : predictors )
       addPredictor( predictor );
+    }
+
+  public ExpressionEvaluator bind( Fields argumentFields )
+    {
+    Predictor[] orderedPredictors;
+    orderedPredictors = new Predictor[ predictors.size() ];
+
+    int i = 0;
+
+    for( Comparable comparable : argumentFields )
+      orderedPredictors[ i++ ] = predictors.get( comparable.toString() );
+
+    return new ExpressionEvaluator( intercept, orderedPredictors );
+    }
+
+  @Override
+  public String toString()
+    {
+    final StringBuilder sb = new StringBuilder( "RegressionTable{" );
+    sb.append( "intercept=" ).append( intercept );
+    sb.append( ", predictors=" ).append( predictors );
+    sb.append( '}' );
+    return sb.toString();
     }
   }

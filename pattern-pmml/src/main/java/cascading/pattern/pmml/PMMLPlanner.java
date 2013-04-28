@@ -42,9 +42,8 @@ import cascading.pattern.model.clustering.Euclidean;
 import cascading.pattern.model.clustering.SquaredEuclidean;
 import cascading.pattern.model.generalregression.GeneralRegressionFunction;
 import cascading.pattern.model.generalregression.GeneralRegressionSpec;
+import cascading.pattern.model.generalregression.GeneralRegressionTable;
 import cascading.pattern.model.generalregression.LinkFunction;
-import cascading.pattern.model.generalregression.PPMatrix;
-import cascading.pattern.model.generalregression.ParamMatrix;
 import cascading.pattern.model.randomforest.RandomForestFunction;
 import cascading.pattern.model.randomforest.RandomForestSpec;
 import cascading.pattern.model.regression.RegressionFunction;
@@ -435,14 +434,15 @@ public class PMMLPlanner implements AssemblyPlanner
     {
     ModelSchema modelSchema = createModelSchema( model );
 
-    PPMatrix ppMatrix = GLMUtil.createPPMatrix( model );
-    ParamMatrix paramMatrix = GLMUtil.createParamMatrix( model );
     Set<String> parameterList = GLMUtil.createParameters( model );
     Set<String> covariateList = GLMUtil.createCovariates( model );
     Set<String> factorsList = GLMUtil.createFactors( model );
+
+    GeneralRegressionTable generalRegressionTable = GLMUtil.createPPMatrix( model, parameterList, factorsList, covariateList );
+
     LinkFunction linkFunction = LinkFunction.getFunction( model.getLinkFunction().value() );
 
-    GeneralRegressionSpec modelParam = new GeneralRegressionSpec( modelSchema, ppMatrix, paramMatrix, parameterList, covariateList, factorsList, linkFunction );
+    GeneralRegressionSpec modelParam = new GeneralRegressionSpec( modelSchema, generalRegressionTable, linkFunction );
 
     return create( tail, modelSchema, new GeneralRegressionFunction( modelParam ) );
     }

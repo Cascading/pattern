@@ -18,13 +18,31 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.generalregression;
+package cascading.pattern.model.generalregression.predictor;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
-/** This Class represents ParamMatrix */
-public class ParamMatrix extends LinkedHashMap<String, ArrayList<PCell>> implements Serializable
+/**
+ *
+ */
+public class CovariantPredictor extends Predictor
   {
+  private final double exponent;
+
+  public CovariantPredictor( String fieldName )
+    {
+    super( fieldName );
+
+    this.exponent = 1.0d;
+    }
+
+  public CovariantPredictor( String fieldName, double exponent )
+    {
+    super( fieldName );
+
+    this.exponent = exponent;
+    }
+
+  public double calculate( double value )
+    {
+    return Math.pow( value, exponent );
+    }
   }

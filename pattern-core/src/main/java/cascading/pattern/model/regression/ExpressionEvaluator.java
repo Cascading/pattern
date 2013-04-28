@@ -18,24 +18,32 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.regression.predictor;
+package cascading.pattern.model.regression;
 
-import java.io.Serializable;
+import cascading.pattern.model.regression.predictor.Predictor;
+import cascading.tuple.TupleEntry;
 
-
-public abstract class Predictor<T> implements Serializable
+/**
+ *
+ */
+public class ExpressionEvaluator
   {
-  public String fieldName;
+  private final double intercept;
+  private final Predictor[] orderedPredictors;
 
-  protected Predictor( String fieldName )
+  public ExpressionEvaluator( double intercept, Predictor[] orderedPredictors )
     {
-    this.fieldName = fieldName;
+    this.intercept = intercept;
+    this.orderedPredictors = orderedPredictors;
     }
 
-  public String getFieldName()
+  public double calculate( TupleEntry tupleEntry )
     {
-    return fieldName;
-    }
+    double result = intercept;
 
-  public abstract double calculate( T value );
+    for( int i = 0; i < tupleEntry.size(); i++ )
+      result += orderedPredictors[ i ].calculate( tupleEntry.getObject( i ) );
+
+    return result;
+    }
   }

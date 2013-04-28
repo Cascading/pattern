@@ -24,6 +24,12 @@ import cascading.CascadingTestCase;
 import cascading.pattern.model.clustering.ClusteringFunction;
 import cascading.pattern.model.clustering.ClusteringSpec;
 import cascading.pattern.model.clustering.SquaredEuclidean;
+import cascading.pattern.model.generalregression.GeneralRegressionFunction;
+import cascading.pattern.model.generalregression.GeneralRegressionSpec;
+import cascading.pattern.model.generalregression.GeneralRegressionTable;
+import cascading.pattern.model.generalregression.LinkFunction;
+import cascading.pattern.model.generalregression.Parameter;
+import cascading.pattern.model.generalregression.predictor.CovariantPredictor;
 import cascading.pattern.model.randomforest.RandomForestFunction;
 import cascading.pattern.model.randomforest.RandomForestSpec;
 import cascading.pattern.model.regression.RegressionFunction;
@@ -313,5 +319,78 @@ public class ModelTest extends CascadingTestCase
     TupleListCollector collector = invokeFunction( randomForestFunction, tupleArguments, predictedFields );
 
     assertEquals( new Tuple( "1" ), collector.entryIterator().next().getTuple() );
+    }
+
+  /**
+   * <MiningSchema>
+   * <MiningField name="setosa" usageType="predicted"/>
+   * <MiningField name="sepal_length" usageType="active"/>
+   * <MiningField name="sepal_width" usageType="active"/>
+   * <MiningField name="petal_length" usageType="active"/>
+   * <MiningField name="petal_width" usageType="active"/>
+   * </MiningSchema>
+   * <ParameterList>
+   * <Parameter name="p0" label="(Intercept)"/>
+   * <Parameter name="p1" label="sepal_length"/>
+   * <Parameter name="p2" label="sepal_width"/>
+   * <Parameter name="p3" label="petal_length"/>
+   * <Parameter name="p4" label="petal_width"/>
+   * </ParameterList>
+   * <FactorList/>
+   * <CovariateList>
+   * <Predictor name="sepal_length"/>
+   * <Predictor name="sepal_width"/>
+   * <Predictor name="petal_length"/>
+   * <Predictor name="petal_width"/>
+   * </CovariateList>
+   * <PPMatrix>
+   * <PPCell value="1" predictorName="sepal_length" parameterName="p1"/>
+   * <PPCell value="1" predictorName="sepal_width" parameterName="p2"/>
+   * <PPCell value="1" predictorName="petal_length" parameterName="p3"/>
+   * <PPCell value="1" predictorName="petal_width" parameterName="p4"/>
+   * </PPMatrix>
+   * <ParamMatrix>
+   * <PCell parameterName="p0" df="1" beta="-16.9456960387809"/>
+   * <PCell parameterName="p1" df="1" beta="11.7592159418536"/>
+   * <PCell parameterName="p2" df="1" beta="7.84157781514097"/>
+   * <PCell parameterName="p3" df="1" beta="-20.0880078273996"/>
+   * <PCell parameterName="p4" df="1" beta="-21.6076488529538"/>
+   * </ParamMatrix>
+   *
+   * @throws Exception
+   */
+  public void testGeneralRegressionFunction() throws Exception
+    {
+    Fields predictedFields = new Fields( "setosa", String.class );
+
+    Fields expectedFields = Fields.NONE
+      .append( new Fields( "sepal_length", double.class ) )
+      .append( new Fields( "sepal_width", double.class ) )
+      .append( new Fields( "petal_length", double.class ) )
+      .append( new Fields( "petal_width", double.class ) );
+
+    ModelSchema modelSchema = new ModelSchema( expectedFields, predictedFields );
+
+    GeneralRegressionSpec regressionSpec = new GeneralRegressionSpec( modelSchema );
+
+    regressionSpec.setLinkFunction( LinkFunction.LOGIT );
+
+    GeneralRegressionTable table = new GeneralRegressionTable();
+
+    table.addParameter( new Parameter( "p0", -16.9456960387809d ) );
+    table.addParameter( new Parameter( "p1", 11.7592159418536d, new CovariantPredictor( "sepal_length" ) ) );
+    table.addParameter( new Parameter( "p2", 7.84157781514097d, new CovariantPredictor( "sepal_width" ) ) );
+    table.addParameter( new Parameter( "p3", -20.0880078273996d, new CovariantPredictor( "petal_length" ) ) );
+    table.addParameter( new Parameter( "p4", -21.6076488529538d, new CovariantPredictor( "petal_width" ) ) );
+
+    regressionSpec.setGeneralRegressionTable( table );
+
+    GeneralRegressionFunction regressionFunction = new GeneralRegressionFunction( regressionSpec );
+
+    TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 5.1d, 3.8d, 1.6d, 0.2d ) );
+
+    TupleListCollector collector = invokeFunction( regressionFunction, tupleArguments, predictedFields );
+
+    assertEquals( 1.0d, collector.entryIterator().next().getTuple().getDouble( 0 ), 0.00001d );
     }
   }

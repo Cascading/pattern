@@ -18,24 +18,29 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.regression.predictor;
+package cascading.pattern.model.generalregression.predictor;
 
-import java.io.Serializable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-
-public abstract class Predictor<T> implements Serializable
+/**
+ *
+ */
+public class FactorPredictor extends Predictor
   {
-  public String fieldName;
+  private static final Logger LOG = LoggerFactory.getLogger( FactorPredictor.class );
 
-  protected Predictor( String fieldName )
+  private final String factor;
+
+  public FactorPredictor( String fieldName, String factor )
     {
-    this.fieldName = fieldName;
+    super( fieldName );
+
+    this.factor = factor;
     }
 
-  public String getFieldName()
+  public boolean matches( String value )
     {
-    return fieldName;
+    return factor.equals( value );
     }
-
-  public abstract double calculate( T value );
   }

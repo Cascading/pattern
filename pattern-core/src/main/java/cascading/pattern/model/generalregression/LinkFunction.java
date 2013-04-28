@@ -25,41 +25,41 @@ public enum LinkFunction
   {
     NONE( "none" )
       {
-      public String calc( double value )
+      public double calculate( double value )
         {
-        return Double.toString( Double.NaN );
+        return value;
         }
       },
 
     LOGIT( "logit" )
       {
-      public String calc( double value )
+      public double calculate( double value )
         {
-        return Double.toString( 1.0 / ( 1.0 + Math.exp( -value ) ) );
+        return 1.0 / ( 1.0 + Math.exp( -value ) );
         }
       },
 
     CLOGLOG( "cloglog" )
       {
-      public String calc( double value )
+      public double calculate( double value )
         {
-        return Double.toString( 1.0 - Math.exp( -Math.exp( value ) ) );
+        return 1.0 - Math.exp( -Math.exp( value ) );
         }
       },
 
     LOGLOG( "loglog" )
       {
-      public String calc( double value )
+      public double calculate( double value )
         {
-        return Double.toString( Math.exp( -Math.exp( -value ) ) );
+        return Math.exp( -Math.exp( -value ) );
         }
       },
 
     CAUCHIT( "cauchit" )
       {
-      public String calc( double value )
+      public double calculate( double value )
         {
-        return Double.toString( 0.5 + ( 1.0 / Math.PI ) * Math.atan( value ) );
+        return 0.5 + 1.0 / Math.PI * Math.atan( value );
         }
       };
 
@@ -86,5 +86,5 @@ public enum LinkFunction
     return LinkFunction.NONE;
     }
 
-  public abstract String calc( double value );
+  public abstract double calculate( double value );
   }

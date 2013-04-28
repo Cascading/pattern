@@ -21,17 +21,16 @@
 package cascading.pattern.pmml.generalregression;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import cascading.pattern.model.generalregression.PCell;
-import cascading.pattern.model.generalregression.PPCell;
-import cascading.pattern.model.generalregression.PPMatrix;
-import cascading.pattern.model.generalregression.ParamMatrix;
+import cascading.pattern.model.generalregression.GeneralRegressionTable;
+import cascading.pattern.model.generalregression.predictor.CovariantPredictor;
+import cascading.pattern.model.generalregression.predictor.FactorPredictor;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.dmg.pmml.GeneralRegressionModel;
 import org.dmg.pmml.Parameter;
 import org.dmg.pmml.Predictor;
@@ -45,30 +44,9 @@ public class GLMUtil
   {
   private static final Logger LOG = LoggerFactory.getLogger( GLMUtil.class );
 
-  public static PPMatrix createPPMatrix( GeneralRegressionModel model )
+  public static GeneralRegressionTable createPPMatrix( GeneralRegressionModel model, Set<String> parameterList, Set<String> factorsList, Set<String> covariateList )
     {
-    PPMatrix ppMatrix = new PPMatrix();
-
-    for( org.dmg.pmml.PPCell modelPPCell : model.getPPMatrix().getPPCells() )
-      {
-      String parameterName = modelPPCell.getParameterName();
-      String predictorName = modelPPCell.getPredictorName().getValue();
-      String value = modelPPCell.getValue();
-
-      if( !ppMatrix.containsKey( parameterName ) )
-        ppMatrix.put( parameterName, new ArrayList<PPCell>() );
-
-      ppMatrix.get( parameterName ).add( new PPCell( parameterName, predictorName, value ) );
-
-      LOG.debug( "PMML add DataField: {}", ppMatrix.get( parameterName ) );
-      }
-
-    return ppMatrix;
-    }
-
-  public static ParamMatrix createParamMatrix( GeneralRegressionModel model )
-    {
-    ParamMatrix paramMatrix = new ParamMatrix();
+    GeneralRegressionTable generalRegressionTable = new GeneralRegressionTable();
 
     for( org.dmg.pmml.PCell modelPCell : model.getParamMatrix().getPCells() )
       {
@@ -76,15 +54,33 @@ public class GLMUtil
       double beta = modelPCell.getBeta();
       BigInteger df = modelPCell.getDf();
 
-      if( !paramMatrix.containsKey( parameterName ) )
-        paramMatrix.put( parameterName, new ArrayList<PCell>() );
-
-      paramMatrix.get( parameterName ).add( new PCell( parameterName, beta, df ) );
-
-      LOG.debug( "PMML add DataField: {}" + paramMatrix.get( parameterName ) );
+      generalRegressionTable.addParameter( new cascading.pattern.model.generalregression.Parameter( parameterName, beta, df.intValue() ) );
       }
 
-    return paramMatrix;
+    for( org.dmg.pmml.PPCell modelPPCell : model.getPPMatrix().getPPCells() )
+      {
+      String parameterName = modelPPCell.getParameterName();
+      String predictorName = modelPPCell.getPredictorName().getValue();
+      String value = modelPPCell.getValue();
+
+      cascading.pattern.model.generalregression.predictor.Predictor predictor;
+
+      if( factorsList.contains( predictorName ) )
+        predictor = new FactorPredictor( predictorName, value );
+      else if( covariateList.contains( predictorName ) )
+        predictor = new CovariantPredictor( predictorName, Double.parseDouble( value ) );
+      else
+        throw new IllegalStateException( "unknown predictor name: " + predictorName );
+
+      generalRegressionTable.getParameter( parameterName ).addPredictor( predictor );
+      }
+
+    Set<String> parameterNames = generalRegressionTable.getParameterNames();
+
+    if( !parameterNames.containsAll( parameterList ) )
+      LOG.warn( "different set of parameters: {}", Sets.difference( parameterNames, parameterList ) );
+
+    return generalRegressionTable;
     }
 
   public static Set<String> createFactors( GeneralRegressionModel model )
@@ -98,7 +94,7 @@ public class GLMUtil
       }
     } );
 
-    return new HashSet<String>( list );
+    return new LinkedHashSet<String>( list );
     }
 
   public static Set<String> createCovariates( GeneralRegressionModel model )
@@ -112,7 +108,7 @@ public class GLMUtil
       }
     } );
 
-    return new HashSet<String>( list );
+    return new LinkedHashSet<String>( list );
     }
 
   public static Set<String> createParameters( GeneralRegressionModel model )
@@ -126,6 +122,6 @@ public class GLMUtil
       }
     } );
 
-    return new HashSet<String>( list );
+    return new LinkedHashSet<String>( list );
     }
   }

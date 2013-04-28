@@ -21,14 +21,11 @@
 package cascading.pattern.model.regression;
 
 import java.util.List;
-import java.util.Map;
 
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
 import cascading.operation.OperationCall;
 import cascading.pattern.model.ClassifierFunction;
-import cascading.pattern.model.regression.predictor.Predictor;
-import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,14 +33,9 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class RegressionFunction extends ClassifierFunction<RegressionSpec, RegressionFunction.Payload>
+public class RegressionFunction extends ClassifierFunction<RegressionSpec, ExpressionEvaluator[]>
   {
   private static final Logger LOG = LoggerFactory.getLogger( RegressionFunction.class );
-
-  protected static class Payload
-    {
-    public Predictor[][] predictors;
-    }
 
   public RegressionFunction( RegressionSpec param )
     {
@@ -51,42 +43,26 @@ public class RegressionFunction extends ClassifierFunction<RegressionSpec, Regre
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<Context<Payload>> operationCall )
+  public void prepare( FlowProcess flowProcess, OperationCall<Context<ExpressionEvaluator[]>> operationCall )
     {
     super.prepare( flowProcess, operationCall );
 
-    operationCall.getContext().payload = new Payload();
-
     List<RegressionTable> tables = spec.getRegressionTables();
 
-    Predictor[][] orderedPredictors = new Predictor[ tables.size() ][];
+    ExpressionEvaluator[] evaluators = new ExpressionEvaluator[ tables.size() ];
 
     for( int i = 0; i < tables.size(); i++ )
-      {
-      Map<String, Predictor> predictors = tables.get( i ).predictors;
-      orderedPredictors[ i ] = new Predictor[ predictors.size() ];
+      evaluators[ i ] = tables.get( i ).bind( operationCall.getArgumentFields() );
 
-      int j = 0;
-
-      for( Comparable comparable : operationCall.getArgumentFields() )
-        orderedPredictors[ i ][ j++ ] = predictors.get( comparable.toString() );
-      }
-
-    operationCall.getContext().payload.predictors = orderedPredictors;
+    operationCall.getContext().payload = evaluators;
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context<Payload>> functionCall )
+  public void operate( FlowProcess flowProcess, FunctionCall<Context<ExpressionEvaluator[]>> functionCall )
     {
     TupleEntry arguments = functionCall.getArguments();
-    Tuple values = arguments.getTuple();
 
-    Predictor[][] predictors = functionCall.getContext().payload.predictors;
-
-    double result = getSpec().getRegressionTables().get( 0 ).intercept;
-
-    for( int i = 0; i < values.size(); i++ )
-      result += predictors[ 0 ][ i ].calcTerm( values.getObject( i ) );
+    double result = functionCall.getContext().payload[ 0 ].calculate( arguments );
 
     LOG.debug( "result: " + result );
 

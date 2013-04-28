@@ -46,11 +46,11 @@ public class NumericPredictor extends Predictor<Double>
     }
 
   @Override
-  public double calcTerm( Double value )
+  public double calculate( Double value )
     {
     double result = Math.pow( value, exponent ) * coefficient;
 
-    LOG.debug( String.format( "calc: %s, %e, %d, %e, %e", name, value, exponent, coefficient, result ) );
+    LOG.debug( String.format( "calc: %s, %e, %d, %e, %e", fieldName, value, exponent, coefficient, result ) );
 
     return result;
     }
@@ -59,6 +59,6 @@ public class NumericPredictor extends Predictor<Double>
   @Override
   public String toString()
     {
-    return String.format( "NumericPredictor: %s, %d, %e", name, exponent, coefficient );
+    return String.format( "NumericPredictor: %s, %d, %e", fieldName, exponent, coefficient );
     }
   }
