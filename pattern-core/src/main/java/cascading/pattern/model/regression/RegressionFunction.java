@@ -20,8 +20,6 @@
 
 package cascading.pattern.model.regression;
 
-import java.util.List;
-
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
 import cascading.operation.OperationCall;
@@ -47,14 +45,7 @@ public class RegressionFunction extends ModelScoringFunction<RegressionSpec, Exp
     {
     super.prepare( flowProcess, operationCall );
 
-    List<RegressionTable> tables = spec.getRegressionTables();
-
-    ExpressionEvaluator[] evaluators = new ExpressionEvaluator[ tables.size() ];
-
-    for( int i = 0; i < tables.size(); i++ )
-      evaluators[ i ] = tables.get( i ).bind( operationCall.getArgumentFields() );
-
-    operationCall.getContext().payload = evaluators;
+    operationCall.getContext().payload = getSpec().getRegressionTableEvaluators( operationCall.getArgumentFields() );
     }
 
   @Override

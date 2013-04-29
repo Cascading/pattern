@@ -34,8 +34,13 @@ public abstract class ModelScoringFunction<S extends Spec, P> extends BaseOperat
   /** Class Context is used to hold intermediate values. */
   protected static class Context<Payload>
     {
-    public Tuple tuple = Tuple.size( 1 );
+    public final Tuple tuple;
     public Payload payload;
+
+    public Context( int size )
+      {
+      tuple = Tuple.size( size );
+      }
 
     public Tuple result( Object label )
       {
@@ -59,6 +64,6 @@ public abstract class ModelScoringFunction<S extends Spec, P> extends BaseOperat
   @Override
   public void prepare( FlowProcess flowProcess, OperationCall<ModelScoringFunction.Context<P>> operationCall )
     {
-    operationCall.setContext( new ModelScoringFunction.Context() );
+    operationCall.setContext( new ModelScoringFunction.Context( getFieldDeclaration().size() ) );
     }
   }

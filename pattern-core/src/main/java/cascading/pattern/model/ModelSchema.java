@@ -23,6 +23,7 @@ package cascading.pattern.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,9 +42,10 @@ public class ModelSchema implements Serializable
   /** Field LOG */
   private static final Logger LOG = LoggerFactory.getLogger( ModelSchema.class );
 
-  public Map<String, DataField> dictionary = new LinkedHashMap<String, DataField>();
-  public List<String> expectedFields = new LinkedList<String>();
-  public List<String> predictedFields = new LinkedList<String>();
+  Map<String, DataField> dictionary = new LinkedHashMap<String, DataField>();
+  List<String> expectedFields = new LinkedList<String>();
+  List<String> predictedFields = new LinkedList<String>();
+  boolean includePredictedCategories = false;
 
   public ModelSchema()
     {
@@ -53,6 +55,16 @@ public class ModelSchema implements Serializable
     {
     addExpectedFields( expectedFields );
     setPredictedFields( predictedFields );
+    }
+
+  public boolean isIncludePredictedCategories()
+    {
+    return includePredictedCategories;
+    }
+
+  public void setIncludePredictedCategories( boolean includePredictedCategories )
+    {
+    this.includePredictedCategories = includePredictedCategories;
     }
 
   public DataField getPredictedField( String name )
@@ -102,6 +114,11 @@ public class ModelSchema implements Serializable
       ( (CategoricalDataField) dataField ).setCategories( categories );
 
     dictionary.put( fieldName, dataField );
+    }
+
+  public List<String> getExpectedFieldNames()
+    {
+    return expectedFields;
     }
 
   public DataField getExpectedField( String name )
@@ -189,12 +206,7 @@ public class ModelSchema implements Serializable
    */
   public Fields getInputFields()
     {
-    Fields fields = Fields.NONE;
-
-    for( String name : expectedFields )
-      fields = fields.append( new Fields( name, dictionary.get( name ).type ) );
-
-    return fields;
+    return createFields( expectedFields );
     }
 
   public Fields getDeclaredFields()
@@ -202,6 +214,34 @@ public class ModelSchema implements Serializable
     if( predictedFields.isEmpty() )
       return new Fields( "predict", String.class );
 
-    return new Fields( predictedFields.get( 0 ), dictionary.get( predictedFields.get( 0 ) ).type );
+    String field = predictedFields.get( 0 );
+    Fields fields = createField( field );
+
+    if( isIncludePredictedCategories() )
+      {
+      DataField dataField = dictionary.get( field );
+
+      if( dataField instanceof CategoricalDataField )
+        {
+        for( String category : ( (CategoricalDataField) dataField ).getCategories() )
+          fields = fields.append( new Fields( category, boolean.class ) );
+        }
+      }
+
+    return fields;
+    }
+
+  private Fields createFields( Collection<String> fieldsList )
+    {
+    Fields fields = Fields.NONE;
+
+    for( String name : fieldsList )
+      fields = fields.append( createField( name ) );
+    return fields;
+    }
+
+  private Fields createField( String field )
+    {
+    return new Fields( field, dictionary.get( field ).type );
     }
   }

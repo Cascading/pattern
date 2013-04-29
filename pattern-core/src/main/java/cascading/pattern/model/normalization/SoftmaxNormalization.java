@@ -20,12 +20,25 @@
 
 package cascading.pattern.model.normalization;
 
-import java.io.Serializable;
-
 /**
  *
  */
-public abstract class Normalization implements Serializable
+public class SoftMaxNormalization extends Normalization
   {
-  public abstract double[] normalize( double[] values );
+  @Override
+  public double[] normalize( double[] values )
+    {
+    double sum = 0.0d;
+
+    for( int i = 0; i < values.length; i++ )
+      {
+      values[ i ] = Math.exp( values[ i ] );
+      sum += values[ i ];
+      }
+
+    for( int i = 0; i < values.length; i++ )
+      values[ i ] = values[ i ] / sum;
+
+    return values;
+    }
   }

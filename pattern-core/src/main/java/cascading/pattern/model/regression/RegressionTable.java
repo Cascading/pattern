@@ -66,6 +66,16 @@ public class RegressionTable implements Serializable
     setPredictors( predictors );
     }
 
+  public String getTargetCategory()
+    {
+    return targetCategory;
+    }
+
+  public void setTargetCategory( String targetCategory )
+    {
+    this.targetCategory = targetCategory;
+    }
+
   public void setIntercept( double intercept )
     {
     this.intercept = intercept;

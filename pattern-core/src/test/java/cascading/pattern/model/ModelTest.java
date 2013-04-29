@@ -477,17 +477,17 @@ public class ModelTest extends CascadingTestCase
     {
     TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 7d, 3.2d, 4.7d, 1.4d ) );
 
-    TupleListCollector collector = invokeFunction( regressionFunction, tupleArguments, predictedFields );
+    TupleListCollector collector = invokeFunction( regressionFunction, tupleArguments, modelSchema.getDeclaredFields() );
 
-    assertEquals( new Tuple( "versicolor" ), collector.entryIterator().next().getTuple() );
+    assertEquals( "versicolor", collector.entryIterator().next().getTuple().getObject( 0 ) );
     }
 
     {
     TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 5.8d, 4d, 1.2d, 0.2d ) );
 
-    TupleListCollector collector = invokeFunction( regressionFunction, tupleArguments, predictedFields );
+    TupleListCollector collector = invokeFunction( regressionFunction, tupleArguments, modelSchema.getDeclaredFields() );
 
-    assertEquals( new Tuple( "setosa" ), collector.entryIterator().next().getTuple() );
+    assertEquals( "setosa", collector.entryIterator().next().getTuple().getObject( 0 ) );
     }
     }
   }

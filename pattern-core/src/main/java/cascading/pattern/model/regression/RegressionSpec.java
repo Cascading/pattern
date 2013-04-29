@@ -24,9 +24,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cascading.pattern.datafield.CategoricalDataField;
+import cascading.pattern.datafield.DataField;
 import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.Spec;
 import cascading.pattern.model.normalization.Normalization;
+import cascading.tuple.Fields;
+import com.google.common.base.Function;
+import com.google.common.collect.Ordering;
 
 public class RegressionSpec extends Spec
   {
@@ -56,5 +61,34 @@ public class RegressionSpec extends Spec
   public Normalization getNormalization()
     {
     return normalization;
+    }
+
+  public ExpressionEvaluator[] getRegressionTableEvaluators( Fields argumentFields )
+    {
+    List<RegressionTable> tables = new ArrayList<RegressionTable>( regressionTables );
+
+    final DataField predictedField = getModelSchema().getPredictedField( getModelSchema().getPredictedFieldNames().get( 0 ) );
+
+    // order tables in category order as this is the declared field name order
+    if( predictedField instanceof CategoricalDataField )
+      {
+      Ordering<RegressionTable> ordering = Ordering.natural().onResultOf( new Function<RegressionTable, Comparable>()
+      {
+      @Override
+      public Comparable apply( RegressionTable regressionTable )
+        {
+        return ( (CategoricalDataField) predictedField ).getCategories().indexOf( regressionTable.getTargetCategory() );
+        }
+      } );
+
+      Collections.sort( tables, ordering );
+      }
+
+    ExpressionEvaluator[] evaluators = new ExpressionEvaluator[ tables.size() ];
+
+    for( int i = 0; i < tables.size(); i++ )
+      evaluators[ i ] = tables.get( i ).bind( argumentFields );
+
+    return evaluators;
     }
   }

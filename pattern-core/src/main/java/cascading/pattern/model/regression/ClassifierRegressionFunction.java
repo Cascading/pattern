@@ -25,6 +25,7 @@ import cascading.operation.FunctionCall;
 import cascading.pattern.datafield.CategoricalDataField;
 import cascading.pattern.datafield.DataField;
 import cascading.pattern.model.ModelSchema;
+import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
 import com.google.common.primitives.Doubles;
 import org.slf4j.Logger;
@@ -81,6 +82,19 @@ public class ClassifierRegressionFunction extends RegressionFunction
 
     LOG.debug( "category: {}", category );
 
-    functionCall.getOutputCollector().add( functionCall.getContext().result( category ) );
+    if( !getSpec().getModelSchema().isIncludePredictedCategories() )
+      {
+      functionCall.getOutputCollector().add( functionCall.getContext().result( category ) );
+      return;
+      }
+
+    Tuple result = functionCall.getContext().tuple;
+
+    result.set( 0, category );
+
+    for( int i = 0; i < results.length; i++ )
+      result.set( i + 1, results[ i ] );
+
+    functionCall.getOutputCollector().add( result );
     }
   }
