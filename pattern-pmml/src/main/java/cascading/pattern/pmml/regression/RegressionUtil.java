@@ -21,12 +21,11 @@
 package cascading.pattern.pmml.regression;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import cascading.pattern.model.regression.predictor.Predictor;
+import cascading.pattern.model.generalregression.GeneralRegressionTable;
+import cascading.pattern.model.generalregression.Parameter;
+import cascading.pattern.model.generalregression.predictor.CovariantPredictor;
+import cascading.pattern.model.generalregression.predictor.FactorPredictor;
 import org.dmg.pmml.CategoricalPredictor;
 import org.dmg.pmml.NumericPredictor;
 import org.dmg.pmml.RegressionTable;
@@ -36,11 +35,18 @@ import org.dmg.pmml.RegressionTable;
  */
 public class RegressionUtil
   {
-  public static List<Predictor> createPredictors( RegressionTable regressionTable )
+  public static GeneralRegressionTable createTable( RegressionTable regressionTable )
     {
-    List<Predictor> predictors = new ArrayList<Predictor>();
+    GeneralRegressionTable generalRegressionTable = new GeneralRegressionTable();
 
-    Map<String, cascading.pattern.model.regression.predictor.CategoricalPredictor> categories = new HashMap<String, cascading.pattern.model.regression.predictor.CategoricalPredictor>();
+    String targetCategory = regressionTable.getTargetCategory();
+
+    if( targetCategory != null )
+      generalRegressionTable.setTargetCategory( targetCategory );
+
+    generalRegressionTable.addParameter( new Parameter( "intercept", regressionTable.getIntercept() ) );
+
+    int count = 0;
 
     for( CategoricalPredictor predictor : regressionTable.getCategoricalPredictors() )
       {
@@ -48,16 +54,12 @@ public class RegressionUtil
       String value = predictor.getValue();
       double coefficient = predictor.getCoefficient();
 
-      if( !categories.containsKey( name ) )
-        categories.put( name, new cascading.pattern.model.regression.predictor.CategoricalPredictor( name ) );
-
-      categories.get( name ).addCategory( value, coefficient );
+      generalRegressionTable.addParameter( new Parameter( "f" + count++, coefficient, new FactorPredictor( name, value ) ) );
       }
-
-    predictors.addAll( categories.values() );
 
     for( NumericPredictor predictor : regressionTable.getNumericPredictors() )
       {
+      String name = predictor.getName().getValue();
       long exponent = predictor.getExponent().longValue(); // maybe losing data here
 
       if( !predictor.getExponent().equals( BigInteger.valueOf( exponent ) ) )
@@ -65,8 +67,9 @@ public class RegressionUtil
 
       double coefficient = predictor.getCoefficient();
 
-      predictors.add( new cascading.pattern.model.regression.predictor.NumericPredictor( predictor.getName().getValue(), coefficient, exponent ) );
+      generalRegressionTable.addParameter( new Parameter( "f" + count++, coefficient, new CovariantPredictor( name, exponent ) ) );
       }
-    return predictors;
+
+    return generalRegressionTable;
     }
   }

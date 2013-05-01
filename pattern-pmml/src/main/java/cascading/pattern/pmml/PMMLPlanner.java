@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,6 +41,7 @@ import cascading.pattern.model.clustering.ClusteringSpec;
 import cascading.pattern.model.clustering.DistanceCluster;
 import cascading.pattern.model.clustering.Euclidean;
 import cascading.pattern.model.clustering.SquaredEuclidean;
+import cascading.pattern.model.generalregression.ClassifierGeneralRegressionFunction;
 import cascading.pattern.model.generalregression.GeneralRegressionFunction;
 import cascading.pattern.model.generalregression.GeneralRegressionSpec;
 import cascading.pattern.model.generalregression.GeneralRegressionTable;
@@ -49,10 +51,6 @@ import cascading.pattern.model.normalization.NullNormalization;
 import cascading.pattern.model.normalization.SoftMaxNormalization;
 import cascading.pattern.model.randomforest.RandomForestFunction;
 import cascading.pattern.model.randomforest.RandomForestSpec;
-import cascading.pattern.model.regression.ClassifierRegressionFunction;
-import cascading.pattern.model.regression.RegressionFunction;
-import cascading.pattern.model.regression.RegressionSpec;
-import cascading.pattern.model.regression.predictor.Predictor;
 import cascading.pattern.model.tree.Tree;
 import cascading.pattern.model.tree.TreeFunction;
 import cascading.pattern.model.tree.TreeSpec;
@@ -466,20 +464,19 @@ public class PMMLPlanner implements AssemblyPlanner
     {
     ModelSchema modelSchema = createModelSchema( model );
 
-    RegressionSpec regressionSpec = new RegressionSpec( modelSchema );
+    List<String> predictedCategories = new ArrayList<String>( modelSchema.getPredictedCategories( modelSchema.getPredictedFieldNames().get( 0 ) ) );
+
+    if( predictedCategories.isEmpty() )
+      throw new PatternException( "no categories specified" );
+
+    GeneralRegressionSpec regressionSpec = new GeneralRegressionSpec( modelSchema );
 
     regressionSpec.setNormalization( getNormalizationMethod( model ) );
 
     for( RegressionTable regressionTable : model.getRegressionTables() )
-      {
-      String targetCategory = regressionTable.getTargetCategory();
-      double intercept = regressionTable.getIntercept();
-      List<Predictor> predictors = RegressionUtil.createPredictors( regressionTable );
+      regressionSpec.addRegressionTable( RegressionUtil.createTable( regressionTable ) );
 
-      regressionSpec.addRegressionTable( new cascading.pattern.model.regression.RegressionTable( targetCategory, intercept, predictors ) );
-      }
-
-    return create( tail, modelSchema, new ClassifierRegressionFunction( regressionSpec ) );
+    return create( tail, modelSchema, new ClassifierGeneralRegressionFunction( regressionSpec ) );
     }
 
   private Pipe handleContinuousRegressionModel( Pipe tail, RegressionModel model )
@@ -491,14 +488,13 @@ public class PMMLPlanner implements AssemblyPlanner
 
     RegressionTable regressionTable = model.getRegressionTables().get( 0 );
 
-    RegressionSpec regressionSpec = new RegressionSpec( modelSchema );
+    GeneralRegressionSpec regressionSpec = new GeneralRegressionSpec( modelSchema );
 
-    double intercept = regressionTable.getIntercept();
-    List<Predictor> predictors = RegressionUtil.createPredictors( regressionTable );
+    regressionSpec.setLinkFunction( LinkFunction.NONE );
 
-    regressionSpec.addRegressionTable( new cascading.pattern.model.regression.RegressionTable( intercept, predictors ) );
+    regressionSpec.addRegressionTable( RegressionUtil.createTable( regressionTable ) );
 
-    return create( tail, modelSchema, new RegressionFunction( regressionSpec ) );
+    return create( tail, modelSchema, new GeneralRegressionFunction( regressionSpec ) );
     }
 
   private Pipe handleClusteringModel( Pipe tail, ClusteringModel model )

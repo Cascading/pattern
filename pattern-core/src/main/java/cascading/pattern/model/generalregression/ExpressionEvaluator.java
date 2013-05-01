@@ -32,11 +32,13 @@ public class ExpressionEvaluator
   private static final Logger LOG = LoggerFactory.getLogger( ExpressionEvaluator.class );
 
   private final String name;
+  private final String targetCategory;
   private final ParameterExpression[] expressions;
 
-  public ExpressionEvaluator( ParameterExpression[] expressions )
+  public ExpressionEvaluator( String targetCategory, ParameterExpression[] expressions )
     {
     this.name = createName( expressions );
+    this.targetCategory = targetCategory;
     this.expressions = expressions;
     }
 
@@ -48,6 +50,11 @@ public class ExpressionEvaluator
       name += "." + expressions[ i ].getName();
 
     return name;
+    }
+
+  public String getTargetCategory()
+    {
+    return targetCategory;
     }
 
   public double calculate( TupleEntry tupleEntry )

@@ -24,21 +24,17 @@ import cascading.CascadingTestCase;
 import cascading.pattern.model.clustering.ClusteringFunction;
 import cascading.pattern.model.clustering.ClusteringSpec;
 import cascading.pattern.model.clustering.SquaredEuclidean;
+import cascading.pattern.model.generalregression.ClassifierGeneralRegressionFunction;
 import cascading.pattern.model.generalregression.GeneralRegressionFunction;
 import cascading.pattern.model.generalregression.GeneralRegressionSpec;
 import cascading.pattern.model.generalregression.GeneralRegressionTable;
 import cascading.pattern.model.generalregression.LinkFunction;
 import cascading.pattern.model.generalregression.Parameter;
 import cascading.pattern.model.generalregression.predictor.CovariantPredictor;
+import cascading.pattern.model.generalregression.predictor.FactorPredictor;
 import cascading.pattern.model.normalization.SoftMaxNormalization;
 import cascading.pattern.model.randomforest.RandomForestFunction;
 import cascading.pattern.model.randomforest.RandomForestSpec;
-import cascading.pattern.model.regression.ClassifierRegressionFunction;
-import cascading.pattern.model.regression.RegressionFunction;
-import cascading.pattern.model.regression.RegressionSpec;
-import cascading.pattern.model.regression.RegressionTable;
-import cascading.pattern.model.regression.predictor.CategoricalPredictor;
-import cascading.pattern.model.regression.predictor.NumericPredictor;
 import cascading.pattern.model.tree.Tree;
 import cascading.pattern.model.tree.TreeFunction;
 import cascading.pattern.model.tree.TreeSpec;
@@ -49,6 +45,7 @@ import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
 import cascading.tuple.TupleListCollector;
+import org.junit.Test;
 
 /**
  *
@@ -88,6 +85,7 @@ public class ModelTest extends CascadingTestCase
    *
    * @throws Exception
    */
+  @Test
   public void testClusteringFunction() throws Exception
     {
     Fields predictedFields = new Fields( "predicted", String.class );
@@ -134,6 +132,7 @@ public class ModelTest extends CascadingTestCase
    * <CategoricalPredictor name="species" value="virginica" coefficient="-0.61868924203063"/>
    * </RegressionTable>
    */
+  @Test
   public void testRegressionFunction()
     {
     Fields predictedFields = new Fields( "sepal_length", double.class );
@@ -146,25 +145,23 @@ public class ModelTest extends CascadingTestCase
 
     ModelSchema modelSchema = new ModelSchema( expectedFields, predictedFields );
 
-    RegressionSpec regressionSpec = new RegressionSpec( modelSchema );
+    GeneralRegressionSpec regressionSpec = new GeneralRegressionSpec( modelSchema );
 
-    RegressionTable regressionTable = new RegressionTable();
-    regressionTable.setIntercept( 2.24166872421148d );
+    GeneralRegressionTable regressionTable = new GeneralRegressionTable();
 
-    regressionTable.addPredictor( new NumericPredictor( "sepal_width", 0.53448203205212d ) );
-    regressionTable.addPredictor( new NumericPredictor( "petal_length", 0.691035562908626d ) );
-    regressionTable.addPredictor( new NumericPredictor( "petal_width", -0.21488157609202d ) );
+    regressionTable.addParameter( new Parameter( "intercept", 2.24166872421148d ) );
 
-    CategoricalPredictor species = new CategoricalPredictor( "species" );
-    species.addCategory( "setosa", 0d );
-    species.addCategory( "versicolor", -0.43150751368126d );
-    species.addCategory( "virginica", -0.61868924203063d );
+    regressionTable.addParameter( new Parameter( "p1", 0.53448203205212d, new CovariantPredictor( "sepal_width" ) ) );
+    regressionTable.addParameter( new Parameter( "p2", 0.691035562908626d, new CovariantPredictor( "petal_length" ) ) );
+    regressionTable.addParameter( new Parameter( "p3", -0.21488157609202d, new CovariantPredictor( "petal_width" ) ) );
 
-    regressionTable.addPredictor( species );
+    regressionTable.addParameter( new Parameter( "p4", 0d, new FactorPredictor( "species", "setosa" ) ) );
+    regressionTable.addParameter( new Parameter( "p5", -0.43150751368126d, new FactorPredictor( "species", "versicolor" ) ) );
+    regressionTable.addParameter( new Parameter( "p6", -0.61868924203063d, new FactorPredictor( "species", "virginica" ) ) );
 
     regressionSpec.addRegressionTable( regressionTable );
 
-    RegressionFunction regressionFunction = new RegressionFunction( regressionSpec );
+    GeneralRegressionFunction regressionFunction = new GeneralRegressionFunction( regressionSpec );
 
     TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 3d, 1.3d, 0.2d, "setosa" ) );
 
@@ -173,6 +170,7 @@ public class ModelTest extends CascadingTestCase
     assertEquals( new Tuple( 4.70048473693065d ), collector.entryIterator().next().getTuple() );
     }
 
+  @Test
   public void testTree()
     {
     Fields predictedFields = new Fields( "label", double.class );
@@ -271,6 +269,7 @@ public class ModelTest extends CascadingTestCase
    * label	var0	var1	var2	order_id	predict
    * 1	0	1	0	6f8e1014	1
    */
+  @Test
   public void testRandomForest()
     {
     Fields predictedFields = new Fields( "label", String.class );
@@ -361,6 +360,7 @@ public class ModelTest extends CascadingTestCase
    *
    * @throws Exception
    */
+  @Test
   public void testGeneralRegressionFunction() throws Exception
     {
     Fields predictedFields = new Fields( "setosa", String.class );
@@ -385,7 +385,7 @@ public class ModelTest extends CascadingTestCase
     table.addParameter( new Parameter( "p3", -20.0880078273996d, new CovariantPredictor( "petal_length" ) ) );
     table.addParameter( new Parameter( "p4", -21.6076488529538d, new CovariantPredictor( "petal_width" ) ) );
 
-    regressionSpec.setGeneralRegressionTable( table );
+    regressionSpec.addRegressionTable( table );
 
     GeneralRegressionFunction regressionFunction = new GeneralRegressionFunction( regressionSpec );
 
@@ -426,6 +426,7 @@ public class ModelTest extends CascadingTestCase
    * <RegressionTable intercept="0.0" targetCategory="setosa"/>
    * </RegressionModel>
    */
+  @Test
   public void testClassifierRegressionFunction()
     {
     Fields predictedFields = new Fields( "species", String.class );
@@ -440,39 +441,43 @@ public class ModelTest extends CascadingTestCase
 
     modelSchema.setPredictedCategories( "species", "setosa", "versicolor", "virginica" );
 
-    RegressionSpec regressionSpec = new RegressionSpec( modelSchema );
+    GeneralRegressionSpec regressionSpec = new GeneralRegressionSpec( modelSchema );
 
     regressionSpec.setNormalization( new SoftMaxNormalization() );
 
     {
-    RegressionTable regressionTable = new RegressionTable( "versicolor", 86.7061379450354d );
+    GeneralRegressionTable regressionTable = new GeneralRegressionTable( "versicolor" );
 
-    regressionTable.addPredictor( new NumericPredictor( "sepal_length", -11.3336819785783d ) );
-    regressionTable.addPredictor( new NumericPredictor( "sepal_width", -40.8601511206805d ) );
-    regressionTable.addPredictor( new NumericPredictor( "petal_length", 38.439099544679d ) );
-    regressionTable.addPredictor( new NumericPredictor( "petal_width", -12.2920287460217d ) );
-
-    regressionSpec.addRegressionTable( regressionTable );
-    }
-
-    {
-    RegressionTable regressionTable = new RegressionTable( "virginica", -111.666532867146d );
-
-    regressionTable.addPredictor( new NumericPredictor( "sepal_length", -47.1170644419116d ) );
-    regressionTable.addPredictor( new NumericPredictor( "sepal_width", -51.6805606658275d ) );
-    regressionTable.addPredictor( new NumericPredictor( "petal_length", 108.27736751831d ) );
-    regressionTable.addPredictor( new NumericPredictor( "petal_width", 54.0277175236148d ) );
+    regressionTable.addParameter( new Parameter( "intercept", 86.7061379450354d ) );
+    regressionTable.addParameter( new Parameter( "p0", -11.3336819785783d, new CovariantPredictor( "sepal_length" ) ) );
+    regressionTable.addParameter( new Parameter( "p1", -40.8601511206805d, new CovariantPredictor( "sepal_width" ) ) );
+    regressionTable.addParameter( new Parameter( "p2", 38.439099544679d, new CovariantPredictor( "petal_length" ) ) );
+    regressionTable.addParameter( new Parameter( "p3", -12.2920287460217d, new CovariantPredictor( "petal_width" ) ) );
 
     regressionSpec.addRegressionTable( regressionTable );
     }
 
     {
-    RegressionTable regressionTable = new RegressionTable( "setosa", 0d );
+    GeneralRegressionTable regressionTable = new GeneralRegressionTable( "virginica" );
+
+    regressionTable.addParameter( new Parameter( "intercept", -111.666532867146d ) );
+    regressionTable.addParameter( new Parameter( "p0", -47.1170644419116d, new CovariantPredictor( "sepal_length" ) ) );
+    regressionTable.addParameter( new Parameter( "p1", -51.6805606658275d, new CovariantPredictor( "sepal_width" ) ) );
+    regressionTable.addParameter( new Parameter( "p2", 108.27736751831d, new CovariantPredictor( "petal_length" ) ) );
+    regressionTable.addParameter( new Parameter( "p3", 54.0277175236148d, new CovariantPredictor( "petal_width" ) ) );
 
     regressionSpec.addRegressionTable( regressionTable );
     }
 
-    ClassifierRegressionFunction regressionFunction = new ClassifierRegressionFunction( regressionSpec );
+    {
+    GeneralRegressionTable regressionTable = new GeneralRegressionTable( "setosa" );
+
+    regressionTable.addParameter( new Parameter( "intercept", 0d ) );
+
+    regressionSpec.addRegressionTable( regressionTable );
+    }
+
+    ClassifierGeneralRegressionFunction regressionFunction = new ClassifierGeneralRegressionFunction( regressionSpec );
 
     {
     TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 7d, 3.2d, 4.7d, 1.4d ) );

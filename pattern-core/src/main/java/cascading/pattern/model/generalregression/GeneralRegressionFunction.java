@@ -24,13 +24,14 @@ import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
 import cascading.operation.OperationCall;
 import cascading.pattern.model.ModelScoringFunction;
+import cascading.tuple.Fields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  */
-public class GeneralRegressionFunction extends ModelScoringFunction<GeneralRegressionSpec, ExpressionEvaluator>
+public class GeneralRegressionFunction extends ModelScoringFunction<GeneralRegressionSpec, ExpressionEvaluator[]>
   {
   private static final Logger LOG = LoggerFactory.getLogger( GeneralRegressionFunction.class );
 
@@ -40,19 +41,19 @@ public class GeneralRegressionFunction extends ModelScoringFunction<GeneralRegre
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<Context<ExpressionEvaluator>> operationCall )
+  public void prepare( FlowProcess flowProcess, OperationCall<Context<ExpressionEvaluator[]>> operationCall )
     {
     super.prepare( flowProcess, operationCall );
 
-    ExpressionEvaluator expression = getSpec().getGeneralRegressionTable().bind( operationCall.getArgumentFields() );
+    Fields argumentFields = operationCall.getArgumentFields();
 
-    operationCall.getContext().payload = expression;
+    operationCall.getContext().payload = getSpec().getRegressionTableEvaluators( argumentFields );
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context<ExpressionEvaluator>> functionCall )
+  public void operate( FlowProcess flowProcess, FunctionCall<Context<ExpressionEvaluator[]>> functionCall )
     {
-    ExpressionEvaluator evaluator = functionCall.getContext().payload;
+    ExpressionEvaluator evaluator = functionCall.getContext().payload[ 0 ];
     LinkFunction linkFunction = getSpec().linkFunction;
 
     double result = evaluator.calculate( functionCall.getArguments() );

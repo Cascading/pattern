@@ -29,7 +29,28 @@ import cascading.tuple.Fields;
 
 public class GeneralRegressionTable implements Serializable
   {
+  private String targetCategory;
+
   Map<String, Parameter> parameters = new LinkedHashMap<String, Parameter>();
+
+  public GeneralRegressionTable()
+    {
+    }
+
+  public GeneralRegressionTable( String targetCategory )
+    {
+    this.targetCategory = targetCategory;
+    }
+
+  public String getTargetCategory()
+    {
+    return targetCategory;
+    }
+
+  public void setTargetCategory( String targetCategory )
+    {
+    this.targetCategory = targetCategory;
+    }
 
   public void addParameter( Parameter parameter )
     {
@@ -52,7 +73,7 @@ public class GeneralRegressionTable implements Serializable
     for( Parameter parameter : parameters.values() )
       expressions[ count++ ] = parameter.createExpression( argumentFields );
 
-    return new ExpressionEvaluator( expressions );
+    return new ExpressionEvaluator( targetCategory, expressions );
     }
 
   public Set<String> getParameterNames()
@@ -64,7 +85,8 @@ public class GeneralRegressionTable implements Serializable
   public String toString()
     {
     final StringBuilder sb = new StringBuilder( "GeneralRegressionTable{" );
-    sb.append( "parameters=" ).append( parameters );
+    sb.append( "targetCategory='" ).append( targetCategory ).append( '\'' );
+    sb.append( ", parameters=" ).append( parameters );
     sb.append( '}' );
     return sb.toString();
     }

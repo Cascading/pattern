@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -114,6 +115,16 @@ public class ModelSchema implements Serializable
       ( (CategoricalDataField) dataField ).setCategories( categories );
 
     dictionary.put( fieldName, dataField );
+    }
+
+  public List<String> getPredictedCategories( String fieldName )
+    {
+    DataField dataField = dictionary.get( fieldName );
+
+    if( dataField instanceof ContinuousDataField )
+      throw new IllegalArgumentException( "field is not categorical: " + fieldName );
+
+    return Collections.unmodifiableList( ( (CategoricalDataField) dataField ).getCategories() );
     }
 
   public List<String> getExpectedFieldNames()

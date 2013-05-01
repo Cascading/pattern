@@ -20,20 +20,32 @@
 
 package cascading.pattern.model.generalregression;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import cascading.pattern.datafield.CategoricalDataField;
+import cascading.pattern.datafield.DataField;
 import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.Spec;
+import cascading.pattern.model.normalization.Normalization;
+import cascading.tuple.Fields;
+import com.google.common.base.Function;
+import com.google.common.collect.Ordering;
 
 
 public class GeneralRegressionSpec extends Spec
   {
-  GeneralRegressionTable generalRegressionTable;
-  LinkFunction linkFunction;
+  List<GeneralRegressionTable> generalRegressionTables = new ArrayList<GeneralRegressionTable>();
+  LinkFunction linkFunction = LinkFunction.NONE;
+  private Normalization normalization;
 
   public GeneralRegressionSpec( ModelSchema modelSchema, GeneralRegressionTable generalRegressionTable, LinkFunction linkFunction )
     {
     super( modelSchema );
-    this.generalRegressionTable = generalRegressionTable;
     this.linkFunction = linkFunction;
+
+    addRegressionTable( generalRegressionTable );
     }
 
   public GeneralRegressionSpec( ModelSchema modelSchema )
@@ -41,14 +53,24 @@ public class GeneralRegressionSpec extends Spec
     super( modelSchema );
     }
 
-  public void setGeneralRegressionTable( GeneralRegressionTable generalRegressionTable )
+  public void addRegressionTable( GeneralRegressionTable generalRegressionTable )
     {
-    this.generalRegressionTable = generalRegressionTable;
+    generalRegressionTables.add( generalRegressionTable );
     }
 
-  public GeneralRegressionTable getGeneralRegressionTable()
+  public List<GeneralRegressionTable> getGeneralRegressionTables()
     {
-    return generalRegressionTable;
+    return generalRegressionTables;
+    }
+
+  public void setNormalization( Normalization normalization )
+    {
+    this.normalization = normalization;
+    }
+
+  public Normalization getNormalization()
+    {
+    return normalization;
     }
 
   public LinkFunction getLinkFunction()
@@ -61,12 +83,42 @@ public class GeneralRegressionSpec extends Spec
     this.linkFunction = linkFunction;
     }
 
+  public ExpressionEvaluator[] getRegressionTableEvaluators( Fields argumentFields )
+    {
+    List<GeneralRegressionTable> tables = new ArrayList<GeneralRegressionTable>( generalRegressionTables );
+
+    final DataField predictedField = getModelSchema().getPredictedField( getModelSchema().getPredictedFieldNames().get( 0 ) );
+
+    // order tables in category order as this is the declared field name order
+    if( predictedField instanceof CategoricalDataField )
+      {
+      Ordering<GeneralRegressionTable> ordering = Ordering.natural().onResultOf( new Function<GeneralRegressionTable, Comparable>()
+      {
+      @Override
+      public Comparable apply( GeneralRegressionTable regressionTable )
+        {
+        return ( (CategoricalDataField) predictedField ).getCategories().indexOf( regressionTable.getTargetCategory() );
+        }
+      } );
+
+      Collections.sort( tables, ordering );
+      }
+
+    ExpressionEvaluator[] evaluators = new ExpressionEvaluator[ tables.size() ];
+
+    for( int i = 0; i < tables.size(); i++ )
+      evaluators[ i ] = tables.get( i ).bind( argumentFields );
+
+    return evaluators;
+    }
+
   @Override
   public String toString()
     {
     final StringBuilder sb = new StringBuilder( "GeneralRegressionSpec{" );
-    sb.append( "generalRegressionMatrix=" ).append( generalRegressionTable );
+    sb.append( "generalRegressionTables=" ).append( generalRegressionTables );
     sb.append( ", linkFunction=" ).append( linkFunction );
+    sb.append( ", normalization=" ).append( normalization );
     sb.append( '}' );
     return sb.toString();
     }

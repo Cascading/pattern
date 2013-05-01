@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.regression;
+package cascading.pattern.model.generalregression;
 
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
@@ -34,11 +34,11 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class ClassifierRegressionFunction extends RegressionFunction
+public class ClassifierGeneralRegressionFunction extends GeneralRegressionFunction
   {
-  private static final Logger LOG = LoggerFactory.getLogger( ClassifierRegressionFunction.class );
+  private static final Logger LOG = LoggerFactory.getLogger( ClassifierGeneralRegressionFunction.class );
 
-  public ClassifierRegressionFunction( RegressionSpec regressionSpec )
+  public ClassifierGeneralRegressionFunction( GeneralRegressionSpec regressionSpec )
     {
     super( regressionSpec );
 
@@ -52,7 +52,7 @@ public class ClassifierRegressionFunction extends RegressionFunction
     if( !( predictedField instanceof CategoricalDataField ) )
       throw new IllegalArgumentException( "predicted field must be categorical" );
 
-    if( ( (CategoricalDataField) predictedField ).getCategories().size() != regressionSpec.getRegressionTables().size() )
+    if( ( (CategoricalDataField) predictedField ).getCategories().size() != regressionSpec.getGeneralRegressionTables().size() )
       throw new IllegalArgumentException( "predicted field categories must be same size as the number of regression tables" );
     }
 
@@ -68,7 +68,13 @@ public class ClassifierRegressionFunction extends RegressionFunction
       results[ i ] = expressions[ i ].calculate( arguments );
 
     if( LOG.isDebugEnabled() )
-      LOG.debug( "regression: {}", results );
+      LOG.debug( "raw regression: {}", results );
+
+    for( int i = 0; i < expressions.length; i++ )
+      results[ i ] = getSpec().getLinkFunction().calculate( results[ i ] );
+
+    if( LOG.isDebugEnabled() )
+      LOG.debug( "link regression: {}", results );
 
     results = getSpec().getNormalization().normalize( results );
 
