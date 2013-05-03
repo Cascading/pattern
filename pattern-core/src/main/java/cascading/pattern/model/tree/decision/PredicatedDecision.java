@@ -36,9 +36,9 @@ class PredicatedDecision extends ParentDecision
   private final Predicate predicate;
   private TupleEntry narrowEntry;
 
-  public PredicatedDecision( Fields expectedFields, Tree tree, Node node )
+  public PredicatedDecision( String[] categories, Fields expectedFields, Tree tree, Node node )
     {
-    super( expectedFields, tree, node );
+    super( categories, expectedFields, tree, node );
 
     this.predicate = node.getPredicate();
 

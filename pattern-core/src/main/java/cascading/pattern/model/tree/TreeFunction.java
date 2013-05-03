@@ -58,6 +58,6 @@ public class TreeFunction extends ModelScoringFunction<TreeSpec, DecisionTree>
 
     LOG.debug( "final decision: {}", finalDecision );
 
-    functionCall.getOutputCollector().add( functionCall.getContext().result( finalDecision.getScore() ) );
+    functionCall.getOutputCollector().add( functionCall.getContext().result( finalDecision.getCategory() ) );
     }
   }

@@ -20,6 +20,8 @@
 
 package cascading.pattern.model.tree.decision;
 
+import java.util.Arrays;
+
 import cascading.pattern.model.tree.Node;
 import cascading.pattern.model.tree.Tree;
 import cascading.tuple.TupleEntry;
@@ -33,21 +35,32 @@ public class FinalDecision extends Decision
   {
   private static final Logger LOG = LoggerFactory.getLogger( FinalDecision.class );
 
-  private final String score;
+  private final String category;
+  private final int index;
 
-  public FinalDecision( Tree tree, Node node )
+  public FinalDecision( String[] categories, Tree tree, Node node )
     {
     super( tree, node );
 
-    this.score = node.getScore();
+    this.category = node.getCategory();
 
-    if( this.score == null )
+    if( this.category == null )
       throw new IllegalStateException( "score may not be null, likely missing leaf node in tree at: " + getName() );
+
+    if( categories != null )
+      this.index = Arrays.asList( categories ).indexOf( this.category );
+    else
+      this.index = -1;
     }
 
-  public String getScore()
+  public String getCategory()
     {
-    return score;
+    return category;
+    }
+
+  public int getIndex()
+    {
+    return index;
     }
 
   @Override
@@ -63,7 +76,7 @@ public class FinalDecision extends Decision
     {
     final StringBuilder sb = new StringBuilder( "FinalDecision{" );
     sb.append( "name='" ).append( getName() ).append( '\'' );
-    sb.append( ",score='" ).append( score ).append( '\'' );
+    sb.append( ",score='" ).append( category ).append( '\'' );
     sb.append( '}' );
     return sb.toString();
     }

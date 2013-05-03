@@ -231,6 +231,8 @@ public class ModelTest extends CascadingTestCase
 
     ModelSchema modelSchema = new ModelSchema( expectedFields, predictedFields );
 
+    modelSchema.setPredictedCategories( "label", "0", "1" );
+
     RandomForestSpec randomForestSpec = new RandomForestSpec( modelSchema );
 
     {

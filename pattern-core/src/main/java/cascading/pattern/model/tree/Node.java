@@ -28,7 +28,7 @@ public class Node implements Serializable
   {
   String id;
   Predicate predicate = null;
-  String score = null;
+  String category = null;
 
   public Node( String id, Predicate predicate )
     {
@@ -37,11 +37,11 @@ public class Node implements Serializable
     this.predicate = predicate;
     }
 
-  public Node( String id, Predicate predicate, String score )
+  public Node( String id, Predicate predicate, String category )
     {
     this( id );
     this.predicate = predicate;
-    this.score = score;
+    this.category = category;
     }
 
   public Node( String id )
@@ -62,16 +62,14 @@ public class Node implements Serializable
     return predicate;
     }
 
-  /** @param score evaluated model score */
-  public void setScore( String score )
+  public void setCategory( String category )
     {
-    this.score = score;
+    this.category = category;
     }
 
-  /** @return String */
-  public String getScore()
+  public String getCategory()
     {
-    return score;
+    return category;
     }
 
   @Override
@@ -80,7 +78,7 @@ public class Node implements Serializable
     final StringBuilder sb = new StringBuilder( "Node{" );
     sb.append( "id='" ).append( id ).append( '\'' );
     sb.append( ", predicate=" ).append( predicate );
-    sb.append( ", score='" ).append( score ).append( '\'' );
+    sb.append( ", category='" ).append( category ).append( '\'' );
     sb.append( '}' );
     return sb.toString();
     }

@@ -20,85 +20,117 @@
 
 package cascading.pattern.model.randomforest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
 import cascading.operation.OperationCall;
+import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.ModelScoringFunction;
-import cascading.pattern.model.tree.Tree;
 import cascading.pattern.model.tree.decision.DecisionTree;
 import cascading.pattern.model.tree.decision.FinalDecision;
 import cascading.tuple.Fields;
+import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
-import com.google.common.collect.LinkedHashMultiset;
-import com.google.common.collect.Multiset;
+import com.google.common.collect.Sets;
+import com.google.common.primitives.Ints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.google.common.collect.Sets.newHashSet;
 
 /**
  *
  */
-public class RandomForestFunction extends ModelScoringFunction<RandomForestSpec, DecisionTree[]>
+public class RandomForestFunction extends ModelScoringFunction<RandomForestSpec, RandomForestFunction.DecisionContext>
   {
   private static final Logger LOG = LoggerFactory.getLogger( RandomForestFunction.class );
 
-  public RandomForestFunction( RandomForestSpec param )
+  protected static class DecisionContext
     {
-    super( param );
+    public String[] categories;
+    public DecisionTree[] trees;
+    public int[] results;
+    }
+
+  public RandomForestFunction( RandomForestSpec randomForestSpec )
+    {
+    super( randomForestSpec );
+
+    ModelSchema modelSchema = randomForestSpec.getModelSchema();
+
+    String predictedFieldName = modelSchema.getPredictedFieldNames().get( 0 );
+
+    List<String> predictedCategories = modelSchema.getPredictedCategories( predictedFieldName );
+
+    if( modelSchema.isIncludePredictedCategories() && predictedCategories.isEmpty() )
+      throw new IllegalArgumentException( "no predicted categories were set, but include predicted is true" );
+
+    List<String> nodeCategories = randomForestSpec.getNodeCategories();
+    Sets.SetView<String> difference = Sets.difference( newHashSet( predictedCategories ), newHashSet( nodeCategories ) );
+
+    if( !difference.isEmpty() && !predictedCategories.isEmpty() )
+      throw new IllegalArgumentException( "forest declares differing categories than declared by the predicted field: " + difference );
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<Context<DecisionTree[]>> operationCall )
+  public void prepare( FlowProcess flowProcess, OperationCall<Context<DecisionContext>> operationCall )
     {
     super.prepare( flowProcess, operationCall );
 
     Fields argumentFields = operationCall.getArgumentFields();
-    List<Tree> trees = getSpec().getTrees();
-    DecisionTree[] decisionTrees = new DecisionTree[ trees.size() ];
+    String[] categories = spec.getCategories();
+    DecisionTree[] decisionTrees = getSpec().getDecisionTrees( categories, argumentFields );
 
-    for( int i = 0; i < trees.size(); i++ )
-      decisionTrees[ i ] = trees.get( i ).createDecisionTree( argumentFields );
-
-    operationCall.getContext().payload = decisionTrees;
+    operationCall.getContext().payload = new DecisionContext();
+    operationCall.getContext().payload.categories = categories;
+    operationCall.getContext().payload.trees = decisionTrees;
+    operationCall.getContext().payload.results = new int[ categories.length ];
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context<DecisionTree[]>> functionCall )
+  public void operate( FlowProcess flowProcess, FunctionCall<Context<DecisionContext>> functionCall )
     {
     TupleEntry arguments = functionCall.getArguments();
 
-    // todo: pluggable voting strategy
-    Multiset<String> votes = LinkedHashMultiset.create();
+    String[] categories = functionCall.getContext().payload.categories;
+    int[] results = functionCall.getContext().payload.results;
 
-    DecisionTree[] decisionTrees = functionCall.getContext().payload;
+    Arrays.fill( results, 0 ); // clear before use
+
+    DecisionTree[] decisionTrees = functionCall.getContext().payload.trees;
 
     for( int i = 0; i < decisionTrees.length; i++ )
       {
       FinalDecision finalDecision = decisionTrees[ i ].decide( arguments );
 
-      String score = finalDecision.getScore();
+      if( LOG.isDebugEnabled() )
+        LOG.debug( "segment: {}, returned category: {}", i, finalDecision.getCategory() );
 
-      LOG.debug( "segment: {}, returned decision: {}", i, finalDecision );
-
-      votes.add( score );
+      results[ finalDecision.getIndex() ]++;
       }
 
-    // determine the winning score
-    int count = 0;
-    String score = null;
+    int max = Ints.max( results );
+    int index = Ints.indexOf( results, max );
 
-    for( Multiset.Entry<String> entry : votes.entrySet() )
+    String category = categories[ index ];
+
+    LOG.debug( "winning score: {}, with votes: {}", categories, max );
+
+    if( !getSpec().getModelSchema().isIncludePredictedCategories() )
       {
-      if( entry.getCount() < count )
-        continue;
-
-      count = entry.getCount();
-      score = entry.getElement();
+      functionCall.getOutputCollector().add( functionCall.getContext().result( category ) );
+      return;
       }
 
-    LOG.debug( "winning score: {}, with votes: {}", score, count );
+    Tuple result = functionCall.getContext().tuple;
 
-    functionCall.getOutputCollector().add( functionCall.getContext().result( score ) );
+    result.set( 0, category );
+
+    for( int i = 0; i < results.length; i++ )
+      result.set( i + 1, results[ i ] );
+
+    functionCall.getOutputCollector().add( result );
     }
   }

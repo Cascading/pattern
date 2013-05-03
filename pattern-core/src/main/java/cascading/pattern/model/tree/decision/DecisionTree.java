@@ -30,9 +30,9 @@ import cascading.tuple.TupleEntry;
  */
 public class DecisionTree extends ParentDecision
   {
-  public DecisionTree( Fields expectedFields, Tree tree, Node node )
+  public DecisionTree( String[] categories, Fields expectedFields, Tree tree, Node node )
     {
-    super( expectedFields, tree, node );
+    super( categories, expectedFields, tree, node );
     }
 
   @Override

@@ -29,18 +29,13 @@ import cascading.pattern.model.tree.predicate.Predicate;
 import cascading.tuple.Fields;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.SimpleDirectedGraph;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class Tree implements Serializable
   {
-  /** Field LOG */
-  private static final Logger LOG = LoggerFactory.getLogger( Tree.class );
-
   private transient Map<String, Node> nodes = new HashMap<String, Node>();
-  public SimpleDirectedGraph<Node, Integer> graph = new SimpleDirectedGraph<Node, Integer>( Integer.class );
-  public Node root;
+  protected SimpleDirectedGraph<Node, Integer> graph = new SimpleDirectedGraph<Node, Integer>( Integer.class );
+  protected Node root;
 
   private int count = 0;
 
@@ -66,12 +61,12 @@ public class Tree implements Serializable
     addPredicate( from, to, predicate, null );
     }
 
-  public void addPredicate( String from, String to, Predicate predicate, String score )
+  public void addPredicate( String from, String to, Predicate predicate, String category )
     {
     if( nodes.containsKey( to ) )
       throw new IllegalArgumentException( "duplicate node name: " + to );
 
-    Node toNode = new Node( to, predicate, score );
+    Node toNode = new Node( to, predicate, category );
 
     nodes.put( to, toNode );
     graph.addVertex( toNode );
@@ -80,6 +75,11 @@ public class Tree implements Serializable
 
   public DecisionTree createDecisionTree( Fields argumentFields )
     {
-    return new DecisionTree( argumentFields, this, this.getRoot() );
+    return createDecisionTree( null, argumentFields );
+    }
+
+  public DecisionTree createDecisionTree( String[] categories, Fields argumentFields )
+    {
+    return new DecisionTree( categories, argumentFields, this, this.getRoot() );
     }
   }

@@ -27,31 +27,27 @@ import cascading.pattern.model.tree.Tree;
 import cascading.tuple.Fields;
 import cascading.tuple.TupleEntry;
 import org.jgrapht.Graphs;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 abstract class ParentDecision extends Decision
   {
-  private static final Logger LOG = LoggerFactory.getLogger( PredicatedDecision.class );
-
   protected final Decision[] children;
 
-  public ParentDecision( Fields expectedFields, Tree tree, Node node )
+  public ParentDecision( String[] categories, Fields expectedFields, Tree tree, Node node )
     {
     super( tree, node );
 
-    this.children = createChildren( expectedFields, tree, node );
+    this.children = createChildren( categories, expectedFields, tree, node );
     }
 
-  protected Decision[] createChildren( Fields expectedFields, Tree tree, Node node )
+  protected Decision[] createChildren( String[] categories, Fields expectedFields, Tree tree, Node node )
     {
     List<Node> successors = Graphs.successorListOf( tree.getGraph(), node );
 
     if( successors.size() == 0 )
-      return new Decision[]{new FinalDecision( tree, node )};
+      return new Decision[]{new FinalDecision( categories, tree, node )};
 
     Decision[] children = new Decision[ successors.size() ];
 
@@ -59,7 +55,7 @@ abstract class ParentDecision extends Decision
       {
       Node childNode = successors.get( i );
 
-      children[ i ] = new PredicatedDecision( expectedFields, tree, childNode );
+      children[ i ] = new PredicatedDecision( categories, expectedFields, tree, childNode );
       }
 
     return children;
