@@ -22,6 +22,7 @@ package cascading.pattern.model.generalregression;
 
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
+import cascading.operation.OperationCall;
 import cascading.pattern.datafield.CategoricalDataField;
 import cascading.pattern.datafield.DataField;
 import cascading.pattern.model.ModelSchema;
@@ -34,11 +35,11 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class ClassifierGeneralRegressionFunction extends GeneralRegressionFunction
+public class ClassifierRegressionFunction extends BaseRegressionFunction
   {
-  private static final Logger LOG = LoggerFactory.getLogger( ClassifierGeneralRegressionFunction.class );
+  private static final Logger LOG = LoggerFactory.getLogger( ClassifierRegressionFunction.class );
 
-  public ClassifierGeneralRegressionFunction( GeneralRegressionSpec regressionSpec )
+  public ClassifierRegressionFunction( GeneralRegressionSpec regressionSpec )
     {
     super( regressionSpec );
 
@@ -52,34 +53,39 @@ public class ClassifierGeneralRegressionFunction extends GeneralRegressionFuncti
     if( !( predictedField instanceof CategoricalDataField ) )
       throw new IllegalArgumentException( "predicted field must be categorical" );
 
-    if( ( (CategoricalDataField) predictedField ).getCategories().size() != regressionSpec.getGeneralRegressionTables().size() )
+    if( ( (CategoricalDataField) predictedField ).getCategories().size() != regressionSpec.getRegressionTables().size() )
       throw new IllegalArgumentException( "predicted field categories must be same size as the number of regression tables" );
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context<ExpressionEvaluator[]>> functionCall )
+  public void prepare( FlowProcess flowProcess, OperationCall<Context<ExpressionContext>> operationCall )
+    {
+    super.prepare( flowProcess, operationCall );
+
+    // cache the result array
+    operationCall.getContext().payload.results = new double[ operationCall.getContext().payload.expressions.length ];
+    }
+
+  @Override
+  public void operate( FlowProcess flowProcess, FunctionCall<Context<BaseRegressionFunction.ExpressionContext>> functionCall )
     {
     TupleEntry arguments = functionCall.getArguments();
-    ExpressionEvaluator[] expressions = functionCall.getContext().payload;
-
-    double[] results = new double[ expressions.length ];
+    ExpressionEvaluator[] expressions = functionCall.getContext().payload.expressions;
+    double[] results = functionCall.getContext().payload.results;
 
     for( int i = 0; i < expressions.length; i++ )
       results[ i ] = expressions[ i ].calculate( arguments );
 
-    if( LOG.isDebugEnabled() )
-      LOG.debug( "raw regression: {}", results );
+    LOG.debug( "raw regression: {}", results );
 
     for( int i = 0; i < expressions.length; i++ )
       results[ i ] = getSpec().getLinkFunction().calculate( results[ i ] );
 
-    if( LOG.isDebugEnabled() )
-      LOG.debug( "link regression: {}", results );
+    LOG.debug( "link regression: {}", results );
 
     results = getSpec().getNormalization().normalize( results );
 
-    if( LOG.isDebugEnabled() )
-      LOG.debug( "probabilities: {}", results );
+    LOG.debug( "probabilities: {}", results );
 
     double max = Doubles.max( results );
     int index = Doubles.indexOf( results, max );

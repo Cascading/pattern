@@ -21,15 +21,17 @@
 package cascading.pattern.model;
 
 import cascading.CascadingTestCase;
+import cascading.pattern.model.clustering.Cluster;
 import cascading.pattern.model.clustering.ClusteringFunction;
 import cascading.pattern.model.clustering.ClusteringSpec;
-import cascading.pattern.model.clustering.SquaredEuclidean;
-import cascading.pattern.model.generalregression.ClassifierGeneralRegressionFunction;
-import cascading.pattern.model.generalregression.GeneralRegressionFunction;
+import cascading.pattern.model.clustering.compare.AbsoluteDifferenceCompareFunction;
+import cascading.pattern.model.clustering.measure.SquaredEuclideanMeasure;
+import cascading.pattern.model.generalregression.ClassifierRegressionFunction;
 import cascading.pattern.model.generalregression.GeneralRegressionSpec;
-import cascading.pattern.model.generalregression.GeneralRegressionTable;
 import cascading.pattern.model.generalregression.LinkFunction;
 import cascading.pattern.model.generalregression.Parameter;
+import cascading.pattern.model.generalregression.RegressionFunction;
+import cascading.pattern.model.generalregression.RegressionTable;
 import cascading.pattern.model.generalregression.predictor.CovariantPredictor;
 import cascading.pattern.model.generalregression.predictor.FactorPredictor;
 import cascading.pattern.model.normalization.SoftMaxNormalization;
@@ -100,9 +102,12 @@ public class ModelTest extends CascadingTestCase
 
     ClusteringSpec clusteringSpec = new ClusteringSpec( modelSchema );
 
-    clusteringSpec.addCluster( new SquaredEuclidean( "1", 5.006d, 3.428d, 1.462d, 0.246d ) );
-    clusteringSpec.addCluster( new SquaredEuclidean( "2", 5.9296875d, 2.7578125d, 4.4109375d, 1.4390625d ) );
-    clusteringSpec.addCluster( new SquaredEuclidean( "3", 6.85277777777778d, 3.075d, 5.78611111111111d, 2.09722222222222d ) );
+    clusteringSpec.setDefaultCompareFunction( new AbsoluteDifferenceCompareFunction() );
+    clusteringSpec.setComparisonMeasure( new SquaredEuclideanMeasure() );
+
+    clusteringSpec.addCluster( new Cluster( "1", 5.006d, 3.428d, 1.462d, 0.246d ) );
+    clusteringSpec.addCluster( new Cluster( "2", 5.9296875d, 2.7578125d, 4.4109375d, 1.4390625d ) );
+    clusteringSpec.addCluster( new Cluster( "3", 6.85277777777778d, 3.075d, 5.78611111111111d, 2.09722222222222d ) );
 
     ClusteringFunction clusteringFunction = new ClusteringFunction( clusteringSpec );
 
@@ -113,61 +118,6 @@ public class ModelTest extends CascadingTestCase
 
 //    assertEquals( new Tuple( "2" ), collector.entryIterator().next().getTuple() );
     assertEquals( new Tuple( "3" ), collector.entryIterator().next().getTuple() );
-    }
-
-  /**
-   * <MiningSchema>
-   * <MiningField name="sepal_length" usageType="predicted"/>
-   * <MiningField name="sepal_width" usageType="active"/>
-   * <MiningField name="petal_length" usageType="active"/>
-   * <MiningField name="petal_width" usageType="active"/>
-   * <MiningField name="species" usageType="active"/>
-   * </MiningSchema>
-   * <RegressionTable intercept="2.24166872421148">
-   * <NumericPredictor name="sepal_width" exponent="1" coefficient="0.53448203205212"/>
-   * <NumericPredictor name="petal_length" exponent="1" coefficient="0.691035562908626"/>
-   * <NumericPredictor name="petal_width" exponent="1" coefficient="-0.21488157609202"/>
-   * <CategoricalPredictor name="species" value="setosa" coefficient="0"/>
-   * <CategoricalPredictor name="species" value="versicolor" coefficient="-0.43150751368126"/>
-   * <CategoricalPredictor name="species" value="virginica" coefficient="-0.61868924203063"/>
-   * </RegressionTable>
-   */
-  @Test
-  public void testRegressionFunction()
-    {
-    Fields predictedFields = new Fields( "sepal_length", double.class );
-
-    Fields expectedFields = Fields.NONE
-      .append( new Fields( "sepal_width", double.class ) )
-      .append( new Fields( "petal_length", double.class ) )
-      .append( new Fields( "petal_width", double.class ) )
-      .append( new Fields( "species", String.class ) );
-
-    ModelSchema modelSchema = new ModelSchema( expectedFields, predictedFields );
-
-    GeneralRegressionSpec regressionSpec = new GeneralRegressionSpec( modelSchema );
-
-    GeneralRegressionTable regressionTable = new GeneralRegressionTable();
-
-    regressionTable.addParameter( new Parameter( "intercept", 2.24166872421148d ) );
-
-    regressionTable.addParameter( new Parameter( "p1", 0.53448203205212d, new CovariantPredictor( "sepal_width" ) ) );
-    regressionTable.addParameter( new Parameter( "p2", 0.691035562908626d, new CovariantPredictor( "petal_length" ) ) );
-    regressionTable.addParameter( new Parameter( "p3", -0.21488157609202d, new CovariantPredictor( "petal_width" ) ) );
-
-    regressionTable.addParameter( new Parameter( "p4", 0d, new FactorPredictor( "species", "setosa" ) ) );
-    regressionTable.addParameter( new Parameter( "p5", -0.43150751368126d, new FactorPredictor( "species", "versicolor" ) ) );
-    regressionTable.addParameter( new Parameter( "p6", -0.61868924203063d, new FactorPredictor( "species", "virginica" ) ) );
-
-    regressionSpec.addRegressionTable( regressionTable );
-
-    GeneralRegressionFunction regressionFunction = new GeneralRegressionFunction( regressionSpec );
-
-    TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 3d, 1.3d, 0.2d, "setosa" ) );
-
-    TupleListCollector collector = invokeFunction( regressionFunction, tupleArguments, predictedFields );
-
-    assertEquals( new Tuple( 4.70048473693065d ), collector.entryIterator().next().getTuple() );
     }
 
   @Test
@@ -377,7 +327,7 @@ public class ModelTest extends CascadingTestCase
 
     regressionSpec.setLinkFunction( LinkFunction.LOGIT );
 
-    GeneralRegressionTable table = new GeneralRegressionTable();
+    RegressionTable table = new RegressionTable();
 
     table.addParameter( new Parameter( "p0", -16.9456960387809d ) );
     table.addParameter( new Parameter( "p1", 11.7592159418536d, new CovariantPredictor( "sepal_length" ) ) );
@@ -387,13 +337,68 @@ public class ModelTest extends CascadingTestCase
 
     regressionSpec.addRegressionTable( table );
 
-    GeneralRegressionFunction regressionFunction = new GeneralRegressionFunction( regressionSpec );
+    RegressionFunction regressionFunction = new RegressionFunction( regressionSpec );
 
     TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 5.1d, 3.8d, 1.6d, 0.2d ) );
 
     TupleListCollector collector = invokeFunction( regressionFunction, tupleArguments, predictedFields );
 
     assertEquals( 1.0d, collector.entryIterator().next().getTuple().getDouble( 0 ), 0.00001d );
+    }
+
+  /**
+   * <MiningSchema>
+   * <MiningField name="sepal_length" usageType="predicted"/>
+   * <MiningField name="sepal_width" usageType="active"/>
+   * <MiningField name="petal_length" usageType="active"/>
+   * <MiningField name="petal_width" usageType="active"/>
+   * <MiningField name="species" usageType="active"/>
+   * </MiningSchema>
+   * <RegressionTable intercept="2.24166872421148">
+   * <NumericPredictor name="sepal_width" exponent="1" coefficient="0.53448203205212"/>
+   * <NumericPredictor name="petal_length" exponent="1" coefficient="0.691035562908626"/>
+   * <NumericPredictor name="petal_width" exponent="1" coefficient="-0.21488157609202"/>
+   * <CategoricalPredictor name="species" value="setosa" coefficient="0"/>
+   * <CategoricalPredictor name="species" value="versicolor" coefficient="-0.43150751368126"/>
+   * <CategoricalPredictor name="species" value="virginica" coefficient="-0.61868924203063"/>
+   * </RegressionTable>
+   */
+  @Test
+  public void testRegressionFunctionWithFactors()
+    {
+    Fields predictedFields = new Fields( "sepal_length", double.class );
+
+    Fields expectedFields = Fields.NONE
+      .append( new Fields( "sepal_width", double.class ) )
+      .append( new Fields( "petal_length", double.class ) )
+      .append( new Fields( "petal_width", double.class ) )
+      .append( new Fields( "species", String.class ) );
+
+    ModelSchema modelSchema = new ModelSchema( expectedFields, predictedFields );
+
+    GeneralRegressionSpec regressionSpec = new GeneralRegressionSpec( modelSchema );
+
+    RegressionTable regressionTable = new RegressionTable();
+
+    regressionTable.addParameter( new Parameter( "intercept", 2.24166872421148d ) );
+
+    regressionTable.addParameter( new Parameter( "p1", 0.53448203205212d, new CovariantPredictor( "sepal_width" ) ) );
+    regressionTable.addParameter( new Parameter( "p2", 0.691035562908626d, new CovariantPredictor( "petal_length" ) ) );
+    regressionTable.addParameter( new Parameter( "p3", -0.21488157609202d, new CovariantPredictor( "petal_width" ) ) );
+
+    regressionTable.addParameter( new Parameter( "p4", 0d, new FactorPredictor( "species", "setosa" ) ) );
+    regressionTable.addParameter( new Parameter( "p5", -0.43150751368126d, new FactorPredictor( "species", "versicolor" ) ) );
+    regressionTable.addParameter( new Parameter( "p6", -0.61868924203063d, new FactorPredictor( "species", "virginica" ) ) );
+
+    regressionSpec.addRegressionTable( regressionTable );
+
+    RegressionFunction regressionFunction = new RegressionFunction( regressionSpec );
+
+    TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 3d, 1.3d, 0.2d, "setosa" ) );
+
+    TupleListCollector collector = invokeFunction( regressionFunction, tupleArguments, predictedFields );
+
+    assertEquals( new Tuple( 4.70048473693065d ), collector.entryIterator().next().getTuple() );
     }
 
   /**
@@ -446,7 +451,7 @@ public class ModelTest extends CascadingTestCase
     regressionSpec.setNormalization( new SoftMaxNormalization() );
 
     {
-    GeneralRegressionTable regressionTable = new GeneralRegressionTable( "versicolor" );
+    RegressionTable regressionTable = new RegressionTable( "versicolor" );
 
     regressionTable.addParameter( new Parameter( "intercept", 86.7061379450354d ) );
     regressionTable.addParameter( new Parameter( "p0", -11.3336819785783d, new CovariantPredictor( "sepal_length" ) ) );
@@ -458,7 +463,7 @@ public class ModelTest extends CascadingTestCase
     }
 
     {
-    GeneralRegressionTable regressionTable = new GeneralRegressionTable( "virginica" );
+    RegressionTable regressionTable = new RegressionTable( "virginica" );
 
     regressionTable.addParameter( new Parameter( "intercept", -111.666532867146d ) );
     regressionTable.addParameter( new Parameter( "p0", -47.1170644419116d, new CovariantPredictor( "sepal_length" ) ) );
@@ -470,14 +475,14 @@ public class ModelTest extends CascadingTestCase
     }
 
     {
-    GeneralRegressionTable regressionTable = new GeneralRegressionTable( "setosa" );
+    RegressionTable regressionTable = new RegressionTable( "setosa" );
 
     regressionTable.addParameter( new Parameter( "intercept", 0d ) );
 
     regressionSpec.addRegressionTable( regressionTable );
     }
 
-    ClassifierGeneralRegressionFunction regressionFunction = new ClassifierGeneralRegressionFunction( regressionSpec );
+    ClassifierRegressionFunction regressionFunction = new ClassifierRegressionFunction( regressionSpec );
 
     {
     TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 7d, 3.2d, 4.7d, 1.4d ) );

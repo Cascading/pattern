@@ -25,7 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import cascading.pattern.model.generalregression.GeneralRegressionTable;
+import cascading.pattern.model.generalregression.RegressionTable;
 import cascading.pattern.model.generalregression.predictor.CovariantPredictor;
 import cascading.pattern.model.generalregression.predictor.FactorPredictor;
 import com.google.common.base.Function;
@@ -44,9 +44,9 @@ public class GLMUtil
   {
   private static final Logger LOG = LoggerFactory.getLogger( GLMUtil.class );
 
-  public static GeneralRegressionTable createPPMatrix( GeneralRegressionModel model, Set<String> parameterList, Set<String> factorsList, Set<String> covariateList )
+  public static RegressionTable createPPMatrix( GeneralRegressionModel model, Set<String> parameterList, Set<String> factorsList, Set<String> covariateList )
     {
-    GeneralRegressionTable generalRegressionTable = new GeneralRegressionTable();
+    RegressionTable regressionTable = new RegressionTable();
 
     for( org.dmg.pmml.PCell modelPCell : model.getParamMatrix().getPCells() )
       {
@@ -54,7 +54,7 @@ public class GLMUtil
       double beta = modelPCell.getBeta();
       BigInteger df = modelPCell.getDf();
 
-      generalRegressionTable.addParameter( new cascading.pattern.model.generalregression.Parameter( parameterName, beta, df.intValue() ) );
+      regressionTable.addParameter( new cascading.pattern.model.generalregression.Parameter( parameterName, beta, df.intValue() ) );
       }
 
     for( org.dmg.pmml.PPCell modelPPCell : model.getPPMatrix().getPPCells() )
@@ -72,15 +72,15 @@ public class GLMUtil
       else
         throw new IllegalStateException( "unknown predictor name: " + predictorName );
 
-      generalRegressionTable.getParameter( parameterName ).addPredictor( predictor );
+      regressionTable.getParameter( parameterName ).addPredictor( predictor );
       }
 
-    Set<String> parameterNames = generalRegressionTable.getParameterNames();
+    Set<String> parameterNames = regressionTable.getParameterNames();
 
     if( !parameterNames.containsAll( parameterList ) )
       LOG.warn( "different set of parameters: {}", Sets.difference( parameterNames, parameterList ) );
 
-    return generalRegressionTable;
+    return regressionTable;
     }
 
   public static Set<String> createFactors( GeneralRegressionModel model )

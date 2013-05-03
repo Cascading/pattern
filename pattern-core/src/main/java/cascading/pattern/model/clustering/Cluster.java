@@ -21,18 +21,36 @@
 package cascading.pattern.model.clustering;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.google.common.primitives.Doubles;
 
 /**
  *
  */
-public abstract class Cluster implements Serializable
+public class Cluster implements Serializable
   {
   protected int ordinal; // set when added to spec
-  protected String name;
+  protected String targetCategory;
+  protected double[] points;
 
-  public Cluster( String name )
+  public Cluster( String targetCategory, double... points )
     {
-    this.name = name;
+    this( targetCategory );
+    this.points = new double[ points.length ];
+
+    System.arraycopy( points, 0, this.points, 0, points.length );
+    }
+
+  public Cluster( String targetCategory, List<Double> points )
+    {
+    this( targetCategory );
+    this.points = Doubles.toArray( points );
+    }
+
+  private Cluster( String targetCategory )
+    {
+    this.targetCategory = targetCategory;
     }
 
   protected void setOrdinal( int ordinal )
@@ -40,11 +58,16 @@ public abstract class Cluster implements Serializable
     this.ordinal = ordinal;
     }
 
-  public String getLabel()
+  public String getTargetCategory()
     {
-    if( name == null )
+    if( targetCategory == null )
       return Integer.toString( ordinal );
 
-    return name;
+    return targetCategory;
+    }
+
+  public double[] getPoints()
+    {
+    return points;
     }
   }

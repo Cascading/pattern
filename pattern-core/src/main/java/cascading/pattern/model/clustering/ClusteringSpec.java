@@ -24,8 +24,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cascading.pattern.datafield.CategoricalDataField;
+import cascading.pattern.datafield.DataField;
 import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.Spec;
+import cascading.pattern.model.clustering.compare.CompareFunction;
+import cascading.pattern.model.clustering.measure.ComparisonMeasure;
+import cascading.tuple.Fields;
+import com.google.common.base.Function;
+import com.google.common.collect.Ordering;
 
 /**
  *
@@ -33,11 +40,11 @@ import cascading.pattern.model.Spec;
 public class ClusteringSpec extends Spec
   {
   private List<Cluster> clusters = new ArrayList<Cluster>();
+  private CompareFunction defaultCompareFunction;
+  private ComparisonMeasure comparisonMeasure;
 
-  public ClusteringSpec( ModelSchema schemaParam, List<Cluster> clusters )
+  public ClusteringSpec()
     {
-    super( schemaParam );
-    setClusters( clusters );
     }
 
   public ClusteringSpec( ModelSchema schemaParam )
@@ -45,8 +52,30 @@ public class ClusteringSpec extends Spec
     super( schemaParam );
     }
 
-  public ClusteringSpec()
+  public ClusteringSpec( ModelSchema schemaParam, List<Cluster> clusters )
     {
+    super( schemaParam );
+    setClusters( clusters );
+    }
+
+  public void setDefaultCompareFunction( CompareFunction defaultCompareFunction )
+    {
+    this.defaultCompareFunction = defaultCompareFunction;
+    }
+
+  public CompareFunction getDefaultCompareFunction()
+    {
+    return defaultCompareFunction;
+    }
+
+  public void setComparisonMeasure( ComparisonMeasure comparisonMeasure )
+    {
+    this.comparisonMeasure = comparisonMeasure;
+    }
+
+  public ComparisonMeasure getComparisonMeasure()
+    {
+    return comparisonMeasure;
     }
 
   public List<Cluster> getClusters()
@@ -64,12 +93,41 @@ public class ClusteringSpec extends Spec
 
   public void addCluster( Cluster cluster )
     {
-    if( cluster instanceof DistanceCluster && getModelSchema().getExpectedFieldNames().size() != ( (DistanceCluster) cluster ).points.length )
+    if( getModelSchema().getExpectedFieldNames().size() != cluster.getPoints().length )
       throw new IllegalArgumentException( "given points must be same size as active fields" );
 
     cluster.setOrdinal( getClusters().size() + 1 );
 
     this.clusters.add( cluster );
+    }
+
+  public ClusterEvaluator[] getClusterEvaluator( Fields argumentFields )
+    {
+    List<Cluster> sorted = new ArrayList<Cluster>( clusters );
+
+    final DataField predictedField = getModelSchema().getPredictedField( getModelSchema().getPredictedFieldNames().get( 0 ) );
+
+    // order tables in category order as this is the declared field name order
+    if( predictedField instanceof CategoricalDataField )
+      {
+      Ordering<Cluster> ordering = Ordering.natural().onResultOf( new Function<Cluster, Comparable>()
+      {
+      @Override
+      public Comparable apply( Cluster cluster )
+        {
+        return ( (CategoricalDataField) predictedField ).getCategories().indexOf( cluster.getTargetCategory() );
+        }
+      } );
+
+      Collections.sort( sorted, ordering );
+      }
+
+    ClusterEvaluator[] clusterEvaluators = new ClusterEvaluator[ sorted.size() ];
+
+    for( int i = 0; i < sorted.size(); i++ )
+      clusterEvaluators[ i ] = new ClusterEvaluator( argumentFields, sorted.get( i ), getComparisonMeasure(), getDefaultCompareFunction() );
+
+    return clusterEvaluators;
     }
 
   @Override

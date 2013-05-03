@@ -18,24 +18,23 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.generalregression.predictor;
+package cascading.pattern.model.clustering.measure;
+
+import cascading.pattern.model.clustering.compare.CompareFunction;
+import cascading.tuple.Tuple;
 
 /**
  *
  */
-public class FactorPredictor extends Predictor
+public class EuclideanMeasure extends SquaredEuclideanMeasure
   {
-  private final String factor;
-
-  public FactorPredictor( String fieldName, String factor )
+  public EuclideanMeasure()
     {
-    super( fieldName );
-
-    this.factor = factor;
     }
 
-  public boolean matches( String value )
+  @Override
+  public double calculate( CompareFunction[] compareFunctions, Tuple values, double[] points )
     {
-    return factor.equals( value );
+    return Math.sqrt( super.calculate( compareFunctions, values, points ) );
     }
   }

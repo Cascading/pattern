@@ -18,41 +18,11 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.clustering;
-
-import java.util.List;
-
-import cascading.tuple.Tuple;
+package cascading.pattern.model.clustering.measure;
 
 /**
  *
  */
-public class SquaredEuclidean extends DistanceCluster
+public abstract class DistanceMeasure extends ComparisonMeasure
   {
-  public SquaredEuclidean( String name, Double... points )
-    {
-    super( name, points );
-    }
-
-  public SquaredEuclidean( String name, List<Double> points )
-    {
-    super( name, points );
-    }
-
-  /**
-   * Calculate the distance from this cluster for the given tuple.
-   *
-   *
-   * @param values array of tuple values
-   * @return double
-   */
-  public double calcDistance( Tuple values )
-    {
-    double sumOfSquares = 0.0;
-
-    for( int i = 0; i < points.length; i++ )
-      sumOfSquares += Math.pow( (Double) values.getObject( i ) - points[ i ], 2.0 );
-
-    return sumOfSquares;
-    }
   }

@@ -18,24 +18,16 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.generalregression.predictor;
+package cascading.pattern.model.clustering.compare;
 
 /**
  *
  */
-public class FactorPredictor extends Predictor
+public class AbsoluteDifferenceCompareFunction extends CompareFunction
   {
-  private final String factor;
-
-  public FactorPredictor( String fieldName, String factor )
+  @Override
+  public double result( double lhs, double rhs )
     {
-    super( fieldName );
-
-    this.factor = factor;
-    }
-
-  public boolean matches( String value )
-    {
-    return factor.equals( value );
+    return Math.abs( lhs - rhs );
     }
   }

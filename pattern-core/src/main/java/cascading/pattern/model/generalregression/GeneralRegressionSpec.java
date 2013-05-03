@@ -36,16 +36,16 @@ import com.google.common.collect.Ordering;
 
 public class GeneralRegressionSpec extends Spec
   {
-  List<GeneralRegressionTable> generalRegressionTables = new ArrayList<GeneralRegressionTable>();
+  List<RegressionTable> regressionTables = new ArrayList<RegressionTable>();
   LinkFunction linkFunction = LinkFunction.NONE;
-  private Normalization normalization;
+  Normalization normalization = Normalization.NULL;
 
-  public GeneralRegressionSpec( ModelSchema modelSchema, GeneralRegressionTable generalRegressionTable, LinkFunction linkFunction )
+  public GeneralRegressionSpec( ModelSchema modelSchema, RegressionTable regressionTable, LinkFunction linkFunction )
     {
     super( modelSchema );
     this.linkFunction = linkFunction;
 
-    addRegressionTable( generalRegressionTable );
+    addRegressionTable( regressionTable );
     }
 
   public GeneralRegressionSpec( ModelSchema modelSchema )
@@ -53,14 +53,14 @@ public class GeneralRegressionSpec extends Spec
     super( modelSchema );
     }
 
-  public void addRegressionTable( GeneralRegressionTable generalRegressionTable )
+  public void addRegressionTable( RegressionTable regressionTable )
     {
-    generalRegressionTables.add( generalRegressionTable );
+    regressionTables.add( regressionTable );
     }
 
-  public List<GeneralRegressionTable> getGeneralRegressionTables()
+  public List<RegressionTable> getRegressionTables()
     {
-    return generalRegressionTables;
+    return regressionTables;
     }
 
   public void setNormalization( Normalization normalization )
@@ -85,17 +85,17 @@ public class GeneralRegressionSpec extends Spec
 
   public ExpressionEvaluator[] getRegressionTableEvaluators( Fields argumentFields )
     {
-    List<GeneralRegressionTable> tables = new ArrayList<GeneralRegressionTable>( generalRegressionTables );
+    List<RegressionTable> tables = new ArrayList<RegressionTable>( regressionTables );
 
     final DataField predictedField = getModelSchema().getPredictedField( getModelSchema().getPredictedFieldNames().get( 0 ) );
 
     // order tables in category order as this is the declared field name order
     if( predictedField instanceof CategoricalDataField )
       {
-      Ordering<GeneralRegressionTable> ordering = Ordering.natural().onResultOf( new Function<GeneralRegressionTable, Comparable>()
+      Ordering<RegressionTable> ordering = Ordering.natural().onResultOf( new Function<RegressionTable, Comparable>()
       {
       @Override
-      public Comparable apply( GeneralRegressionTable regressionTable )
+      public Comparable apply( RegressionTable regressionTable )
         {
         return ( (CategoricalDataField) predictedField ).getCategories().indexOf( regressionTable.getTargetCategory() );
         }
@@ -116,7 +116,7 @@ public class GeneralRegressionSpec extends Spec
   public String toString()
     {
     final StringBuilder sb = new StringBuilder( "GeneralRegressionSpec{" );
-    sb.append( "generalRegressionTables=" ).append( generalRegressionTables );
+    sb.append( "generalRegressionTables=" ).append( regressionTables );
     sb.append( ", linkFunction=" ).append( linkFunction );
     sb.append( ", normalization=" ).append( normalization );
     sb.append( '}' );

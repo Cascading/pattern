@@ -77,7 +77,8 @@ public class PMMLPlatformTestCase extends PatternPlatformTestCase
 
     PMMLPlanner planner = new PMMLPlanner()
       .setPMMLInput( new FileInputStream( file ) )
-      .addDataTypes( predictorFields );
+      .addDataTypes( predictorFields )
+      .setDefaultPredictedFieldName( "predict" );
 
     Pipe pipe = new Pipe( "head" );
 

@@ -27,17 +27,17 @@ import java.util.Set;
 
 import cascading.tuple.Fields;
 
-public class GeneralRegressionTable implements Serializable
+public class RegressionTable implements Serializable
   {
   private String targetCategory;
 
   Map<String, Parameter> parameters = new LinkedHashMap<String, Parameter>();
 
-  public GeneralRegressionTable()
+  public RegressionTable()
     {
     }
 
-  public GeneralRegressionTable( String targetCategory )
+  public RegressionTable( String targetCategory )
     {
     this.targetCategory = targetCategory;
     }
@@ -65,11 +65,26 @@ public class GeneralRegressionTable implements Serializable
     return parameters.get( name );
     }
 
+  public boolean isNoOp()
+    {
+    for( Parameter parameter : parameters.values() )
+      {
+      if( !parameter.isNoOp() )
+        return false;
+      }
+
+    return true;
+    }
+
   public ExpressionEvaluator bind( Fields argumentFields )
     {
+    if( isNoOp() )
+      return new ExpressionEvaluator( targetCategory );
+
     ParameterExpression[] expressions = new ParameterExpression[ parameters.size() ];
 
     int count = 0;
+
     for( Parameter parameter : parameters.values() )
       expressions[ count++ ] = parameter.createExpression( argumentFields );
 

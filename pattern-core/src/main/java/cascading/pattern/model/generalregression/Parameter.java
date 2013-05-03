@@ -73,6 +73,11 @@ public class Parameter implements Serializable
     return name;
     }
 
+  public boolean isNoOp()
+    {
+    return beta == 0;
+    }
+
   public void addPredictors( List<Predictor> predictors )
     {
     for( Predictor predictor : predictors )

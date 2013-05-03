@@ -34,20 +34,20 @@ import java.util.Set;
 import cascading.flow.AssemblyPlanner;
 import cascading.flow.planner.PlannerException;
 import cascading.pattern.PatternException;
+import cascading.pattern.datafield.ContinuousDataField;
 import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.ModelScoringFunction;
 import cascading.pattern.model.clustering.ClusteringFunction;
 import cascading.pattern.model.clustering.ClusteringSpec;
-import cascading.pattern.model.clustering.DistanceCluster;
-import cascading.pattern.model.clustering.Euclidean;
-import cascading.pattern.model.clustering.SquaredEuclidean;
-import cascading.pattern.model.generalregression.ClassifierGeneralRegressionFunction;
-import cascading.pattern.model.generalregression.GeneralRegressionFunction;
+import cascading.pattern.model.clustering.compare.AbsoluteDifferenceCompareFunction;
+import cascading.pattern.model.clustering.measure.EuclideanMeasure;
+import cascading.pattern.model.clustering.measure.SquaredEuclideanMeasure;
+import cascading.pattern.model.generalregression.ClassifierRegressionFunction;
 import cascading.pattern.model.generalregression.GeneralRegressionSpec;
-import cascading.pattern.model.generalregression.GeneralRegressionTable;
 import cascading.pattern.model.generalregression.LinkFunction;
+import cascading.pattern.model.generalregression.RegressionFunction;
+import cascading.pattern.model.generalregression.RegressionTable;
 import cascading.pattern.model.normalization.Normalization;
-import cascading.pattern.model.normalization.NullNormalization;
 import cascading.pattern.model.normalization.SoftMaxNormalization;
 import cascading.pattern.model.randomforest.RandomForestFunction;
 import cascading.pattern.model.randomforest.RandomForestSpec;
@@ -65,6 +65,7 @@ import cascading.tuple.Fields;
 import cascading.util.Util;
 import org.dmg.pmml.Cluster;
 import org.dmg.pmml.ClusteringModel;
+import org.dmg.pmml.CompareFunctionType;
 import org.dmg.pmml.ComparisonMeasure;
 import org.dmg.pmml.DataField;
 import org.dmg.pmml.DataType;
@@ -79,7 +80,6 @@ import org.dmg.pmml.MultipleModelMethodType;
 import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMML;
 import org.dmg.pmml.RegressionModel;
-import org.dmg.pmml.RegressionTable;
 import org.dmg.pmml.Segment;
 import org.dmg.pmml.TreeModel;
 import org.jpmml.manager.IOUtil;
@@ -104,6 +104,7 @@ public class PMMLPlanner implements AssemblyPlanner
   private PMML pmml;
   private PMMLModel pmmlModel;
   private Fields retainIncomingFields;
+  private String defaultPredictedFieldName;
 
   public PMMLPlanner( File pmmlFile )
     {
@@ -141,6 +142,24 @@ public class PMMLPlanner implements AssemblyPlanner
     this.pmmlStream = pmmlStream;
 
     return this;
+    }
+
+  /**
+   * If a predicted data field is not declared, use this field name.
+   *
+   * @param defaultPredictedFieldName
+   * @return
+   */
+  public PMMLPlanner setDefaultPredictedFieldName( String defaultPredictedFieldName )
+    {
+    this.defaultPredictedFieldName = defaultPredictedFieldName;
+
+    return this;
+    }
+
+  public String getDefaultPredictedFieldName()
+    {
+    return defaultPredictedFieldName;
     }
 
   public String getHeadName()
@@ -440,13 +459,13 @@ public class PMMLPlanner implements AssemblyPlanner
     Set<String> covariateList = GLMUtil.createCovariates( model );
     Set<String> factorsList = GLMUtil.createFactors( model );
 
-    GeneralRegressionTable generalRegressionTable = GLMUtil.createPPMatrix( model, parameterList, factorsList, covariateList );
+    RegressionTable regressionTable = GLMUtil.createPPMatrix( model, parameterList, factorsList, covariateList );
 
     LinkFunction linkFunction = LinkFunction.getFunction( model.getLinkFunction().value() );
 
-    GeneralRegressionSpec modelParam = new GeneralRegressionSpec( modelSchema, generalRegressionTable, linkFunction );
+    GeneralRegressionSpec modelParam = new GeneralRegressionSpec( modelSchema, regressionTable, linkFunction );
 
-    return create( tail, modelSchema, new GeneralRegressionFunction( modelParam ) );
+    return create( tail, modelSchema, new RegressionFunction( modelParam ) );
     }
 
   private Pipe handleRegressionModel( Pipe tail, RegressionModel model )
@@ -473,10 +492,10 @@ public class PMMLPlanner implements AssemblyPlanner
 
     regressionSpec.setNormalization( getNormalizationMethod( model ) );
 
-    for( RegressionTable regressionTable : model.getRegressionTables() )
+    for( org.dmg.pmml.RegressionTable regressionTable : model.getRegressionTables() )
       regressionSpec.addRegressionTable( RegressionUtil.createTable( regressionTable ) );
 
-    return create( tail, modelSchema, new ClassifierGeneralRegressionFunction( regressionSpec ) );
+    return create( tail, modelSchema, new ClassifierRegressionFunction( regressionSpec ) );
     }
 
   private Pipe handleContinuousRegressionModel( Pipe tail, RegressionModel model )
@@ -486,7 +505,7 @@ public class PMMLPlanner implements AssemblyPlanner
 
     ModelSchema modelSchema = createModelSchema( model );
 
-    RegressionTable regressionTable = model.getRegressionTables().get( 0 );
+    org.dmg.pmml.RegressionTable regressionTable = model.getRegressionTables().get( 0 );
 
     GeneralRegressionSpec regressionSpec = new GeneralRegressionSpec( modelSchema );
 
@@ -494,7 +513,7 @@ public class PMMLPlanner implements AssemblyPlanner
 
     regressionSpec.addRegressionTable( RegressionUtil.createTable( regressionTable ) );
 
-    return create( tail, modelSchema, new GeneralRegressionFunction( regressionSpec ) );
+    return create( tail, modelSchema, new RegressionFunction( regressionSpec ) );
     }
 
   private Pipe handleClusteringModel( Pipe tail, ClusteringModel model )
@@ -517,26 +536,46 @@ public class PMMLPlanner implements AssemblyPlanner
 
     ClusteringSpec clusteringSpec = new ClusteringSpec( modelSchema );
 
+    if( isEuclidean )
+      clusteringSpec.setComparisonMeasure( new EuclideanMeasure() );
+    else if( isSquared )
+      clusteringSpec.setComparisonMeasure( new SquaredEuclideanMeasure() );
+    else
+      throw new UnsupportedOperationException( "unsupported comparison measure: " + comparisonMeasure );
+
+    clusteringSpec.setDefaultCompareFunction( setComparisonFunction( model ) );
+
     for( Cluster cluster : model.getClusters() )
       {
       List<Double> exemplar = PMMLUtil.parseArray( cluster.getArray() );
 
       LOG.debug( "exemplar: {}", exemplar );
 
-      DistanceCluster distanceCluster;
-
-      if( isEuclidean )
-        distanceCluster = new Euclidean( cluster.getName(), exemplar );
-      else if( isSquared )
-        distanceCluster = new SquaredEuclidean( cluster.getName(), exemplar );
-      else
-        throw new UnsupportedOperationException( "unsupported comparison measure: " + comparisonMeasure );
-
-
-      clusteringSpec.addCluster( distanceCluster );
+      clusteringSpec.addCluster( new cascading.pattern.model.clustering.Cluster( cluster.getName(), exemplar ) );
       }
 
     return create( tail, modelSchema, new ClusteringFunction( clusteringSpec ) );
+    }
+
+  private AbsoluteDifferenceCompareFunction setComparisonFunction( ClusteringModel model )
+    {
+    CompareFunctionType compareFunction = model.getComparisonMeasure().getCompareFunction();
+
+    switch( compareFunction )
+      {
+      case ABS_DIFF:
+        return new AbsoluteDifferenceCompareFunction();
+      case GAUSS_SIM:
+        break;
+      case DELTA:
+        break;
+      case EQUAL:
+        break;
+      case TABLE:
+        break;
+      }
+
+    throw new UnsupportedOperationException( "unknown comparison function type: " + compareFunction );
     }
 
   private Pipe handleMiningModel( Pipe tail, MiningModel model )
@@ -573,6 +612,9 @@ public class PMMLPlanner implements AssemblyPlanner
         modelSchema.setPredictedFields( createDataFields( dataField ) );
       }
 
+    if( modelSchema.getPredictedFieldNames().isEmpty() ) // todo: infer type from current model
+      modelSchema.setPredictedFields( new ContinuousDataField( defaultPredictedFieldName, String.class ) );
+
     return modelSchema;
     }
 
@@ -581,7 +623,7 @@ public class PMMLPlanner implements AssemblyPlanner
     switch( model.getNormalizationMethod() )
       {
       case NONE:
-        return new NullNormalization();
+        return Normalization.NULL;
       case SIMPLEMAX:
         break;
       case SOFTMAX:

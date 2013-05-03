@@ -27,5 +27,14 @@ import java.io.Serializable;
  */
 public abstract class Normalization implements Serializable
   {
+  public static final Normalization NULL = new Normalization()
+  {
+  @Override
+  public double[] normalize( double[] values )
+    {
+    return values;
+    }
+  };
+
   public abstract double[] normalize( double[] values );
   }

@@ -84,7 +84,9 @@ public class ParameterExpression
     for( int i = 0; i < parameter.factors.size(); i++ )
       {
       FactorPredictor predictor = parameter.factors.get( i );
-      factorInvokers[ i ] = new FactorInvoker( argumentsFields.getPos( predictor.getFieldName() ), predictor );
+      int pos = argumentsFields.getPos( predictor.getFieldName() );
+
+      factorInvokers[ i ] = new FactorInvoker( pos, predictor );
       }
 
     covariantInvokers = new CovariantInvoker[ parameter.covariants.size() ];
@@ -92,7 +94,9 @@ public class ParameterExpression
     for( int i = 0; i < parameter.covariants.size(); i++ )
       {
       CovariantPredictor predictor = parameter.covariants.get( i );
-      covariantInvokers[ i ] = new CovariantInvoker( argumentsFields.getPos( predictor.getFieldName() ), predictor );
+      int pos = argumentsFields.getPos( predictor.getFieldName() );
+
+      covariantInvokers[ i ] = new CovariantInvoker( pos, predictor );
       }
     }
 

@@ -22,22 +22,21 @@ package cascading.pattern.pmml.regression;
 
 import java.math.BigInteger;
 
-import cascading.pattern.model.generalregression.GeneralRegressionTable;
 import cascading.pattern.model.generalregression.Parameter;
+import cascading.pattern.model.generalregression.RegressionTable;
 import cascading.pattern.model.generalregression.predictor.CovariantPredictor;
 import cascading.pattern.model.generalregression.predictor.FactorPredictor;
 import org.dmg.pmml.CategoricalPredictor;
 import org.dmg.pmml.NumericPredictor;
-import org.dmg.pmml.RegressionTable;
 
 /**
  *
  */
 public class RegressionUtil
   {
-  public static GeneralRegressionTable createTable( RegressionTable regressionTable )
+  public static RegressionTable createTable( org.dmg.pmml.RegressionTable regressionTable )
     {
-    GeneralRegressionTable generalRegressionTable = new GeneralRegressionTable();
+    RegressionTable generalRegressionTable = new RegressionTable();
 
     String targetCategory = regressionTable.getTargetCategory();
 

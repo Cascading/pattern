@@ -22,38 +22,28 @@ package cascading.pattern.model.generalregression;
 
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
-import cascading.operation.OperationCall;
-import cascading.pattern.model.ModelScoringFunction;
-import cascading.tuple.Fields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  */
-public class GeneralRegressionFunction extends ModelScoringFunction<GeneralRegressionSpec, ExpressionEvaluator[]>
+public class RegressionFunction extends BaseRegressionFunction
   {
-  private static final Logger LOG = LoggerFactory.getLogger( GeneralRegressionFunction.class );
+  private static final Logger LOG = LoggerFactory.getLogger( RegressionFunction.class );
 
-  public GeneralRegressionFunction( GeneralRegressionSpec param )
+  public RegressionFunction( GeneralRegressionSpec param )
     {
     super( param );
+
+    if( getSpec().getRegressionTables().size() != 1 )
+      throw new IllegalArgumentException( "regression function only supports a single table, got: " + getSpec().getRegressionTables().size() );
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<Context<ExpressionEvaluator[]>> operationCall )
+  public void operate( FlowProcess flowProcess, FunctionCall<Context<BaseRegressionFunction.ExpressionContext>> functionCall )
     {
-    super.prepare( flowProcess, operationCall );
-
-    Fields argumentFields = operationCall.getArgumentFields();
-
-    operationCall.getContext().payload = getSpec().getRegressionTableEvaluators( argumentFields );
-    }
-
-  @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context<ExpressionEvaluator[]>> functionCall )
-    {
-    ExpressionEvaluator evaluator = functionCall.getContext().payload[ 0 ];
+    ExpressionEvaluator evaluator = functionCall.getContext().payload.expressions[ 0 ];
     LinkFunction linkFunction = getSpec().linkFunction;
 
     double result = evaluator.calculate( functionCall.getArguments() );

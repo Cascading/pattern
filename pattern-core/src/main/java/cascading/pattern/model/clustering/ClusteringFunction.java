@@ -22,13 +22,26 @@ package cascading.pattern.model.clustering;
 
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
+import cascading.operation.OperationCall;
 import cascading.pattern.model.ModelScoringFunction;
+import cascading.tuple.Tuple;
+import com.google.common.primitives.Doubles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
-public class ClusteringFunction extends ModelScoringFunction<ClusteringSpec, Void>
+public class ClusteringFunction extends ModelScoringFunction<ClusteringSpec, ClusteringFunction.EvaluatorContext>
   {
+  private static final Logger LOG = LoggerFactory.getLogger( ClusteringFunction.class );
+
+  protected static class EvaluatorContext
+    {
+    public ClusterEvaluator[] evaluators;
+    public double[] results;
+    }
+
   public ClusteringFunction( ClusteringSpec clusteringParam )
     {
     super( clusteringParam );
@@ -38,22 +51,49 @@ public class ClusteringFunction extends ModelScoringFunction<ClusteringSpec, Voi
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context<Void>> functionCall )
+  public void prepare( FlowProcess flowProcess, OperationCall<Context<EvaluatorContext>> operationCall )
     {
-    double bestDist = Double.MAX_VALUE;
-    String bestLabel = null;
+    super.prepare( flowProcess, operationCall );
 
-    for( Cluster cluster : getSpec().getClusters() )
+    operationCall.getContext().payload = new EvaluatorContext();
+
+    operationCall.getContext().payload.evaluators = getSpec().getClusterEvaluator( operationCall.getArgumentFields() );
+    operationCall.getContext().payload.results = new double[ getSpec().getClusters().size() ];
+    }
+
+  @Override
+  public void operate( FlowProcess flowProcess, FunctionCall<Context<EvaluatorContext>> functionCall )
+    {
+    ClusterEvaluator[] evaluators = functionCall.getContext().payload.evaluators;
+    double[] results = functionCall.getContext().payload.results;
+
+    for( int i = 0; i < evaluators.length; i++ )
+      results[ i ] = evaluators[ i ].evaluate( functionCall.getArguments() );
+
+    LOG.debug( "results: {}", results );
+
+    // calc min distance
+    double min = Doubles.min( results );
+    int index = Doubles.indexOf( results, min );
+
+    String category = evaluators[ index ].getTargetCategory();
+
+    LOG.debug( "category: {}", category );
+
+    // emit distance, and intermediate cluster category scores
+    if( !getSpec().getModelSchema().isIncludePredictedCategories() )
       {
-      double distance = ( (DistanceCluster) cluster ).calcDistance( functionCall.getArguments().getTuple() );
-
-      if( distance < bestDist )
-        {
-        bestDist = distance;
-        bestLabel = cluster.getLabel();
-        }
+      functionCall.getOutputCollector().add( functionCall.getContext().result( category ) );
+      return;
       }
 
-    functionCall.getOutputCollector().add( functionCall.getContext().result( bestLabel ) );
+    Tuple result = functionCall.getContext().tuple;
+
+    result.set( 0, category );
+
+    for( int i = 0; i < results.length; i++ )
+      result.set( i + 1, results[ i ] );
+
+    functionCall.getOutputCollector().add( result );
     }
   }

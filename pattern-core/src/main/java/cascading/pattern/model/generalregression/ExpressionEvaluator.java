@@ -21,35 +21,25 @@
 package cascading.pattern.model.generalregression;
 
 import cascading.tuple.TupleEntry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 public class ExpressionEvaluator
   {
-  private static final Logger LOG = LoggerFactory.getLogger( ExpressionEvaluator.class );
-
-  private final String name;
   private final String targetCategory;
   private final ParameterExpression[] expressions;
 
-  public ExpressionEvaluator( String targetCategory, ParameterExpression[] expressions )
+  public ExpressionEvaluator( String targetCategory )
     {
-    this.name = createName( expressions );
     this.targetCategory = targetCategory;
-    this.expressions = expressions;
+    this.expressions = new ParameterExpression[ 0 ];
     }
 
-  private String createName( ParameterExpression[] expressions )
+  public ExpressionEvaluator( String targetCategory, ParameterExpression[] expressions )
     {
-    String name = expressions[ 0 ].getName();
-
-    for( int i = 1; i < expressions.length; i++ )
-      name += "." + expressions[ i ].getName();
-
-    return name;
+    this.targetCategory = targetCategory;
+    this.expressions = expressions;
     }
 
   public String getTargetCategory()
@@ -66,8 +56,6 @@ public class ExpressionEvaluator
       if( expression.applies( tupleEntry ) )
         result += expression.calculate( tupleEntry );
       }
-
-    LOG.debug( "expression: {}, result: {}", name, result );
 
     return result;
     }

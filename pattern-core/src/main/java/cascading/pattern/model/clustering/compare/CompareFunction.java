@@ -18,40 +18,14 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.clustering;
+package cascading.pattern.model.clustering.compare;
 
-import java.util.List;
-
-import cascading.tuple.Tuple;
+import java.io.Serializable;
 
 /**
  *
  */
-public class Euclidean extends DistanceCluster
+public abstract class CompareFunction implements Serializable
   {
-  public Euclidean( String name, Double... points )
-    {
-    super( name, points );
-    }
-
-  public Euclidean( String name, List<Double> points )
-    {
-    super( name, points );
-    }
-
-  /**
-   * Calculate the distance from this cluster for the given tuple.
-   *
-   * @param values array of tuple values
-   * @return double
-   */
-  public double calcDistance( Tuple values )
-    {
-    double sumOfSquares = 0.0;
-
-    for( int i = 0; i < points.length; i++ )
-      sumOfSquares += Math.pow( (Double) values.getObject( i ) - points[ i ], 2.0 );
-
-    return Math.sqrt( sumOfSquares );
-    }
+  public abstract double result( double lhs, double rhs );
   }

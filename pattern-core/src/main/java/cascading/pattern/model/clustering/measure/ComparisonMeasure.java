@@ -18,16 +18,24 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.normalization;
+package cascading.pattern.model.clustering.measure;
+
+import java.io.Serializable;
+
+import cascading.pattern.model.clustering.compare.CompareFunction;
+import cascading.tuple.Tuple;
 
 /**
  *
  */
-public class NullNormalization extends Normalization
+public abstract class ComparisonMeasure implements Serializable
   {
-  @Override
-  public double[] normalize( double[] values )
-    {
-    return values;
-    }
+  /**
+   * Calculate the distance from this cluster for the given tuple.
+   *
+   * @param compareFunctions
+   * @param values           array of tuple values
+   * @return double
+   */
+  public abstract double calculate( CompareFunction[] compareFunctions, Tuple values, double[] points );
   }
