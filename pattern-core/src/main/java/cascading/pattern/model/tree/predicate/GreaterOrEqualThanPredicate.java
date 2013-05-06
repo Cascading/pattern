@@ -20,8 +20,6 @@
 
 package cascading.pattern.model.tree.predicate;
 
-import cascading.tuple.TupleEntry;
-
 /**
  *
  */
@@ -33,8 +31,11 @@ public class GreaterOrEqualThanPredicate extends ComparablePredicate<Comparable>
     }
 
   @Override
-  public boolean evaluate( TupleEntry tupleEntry )
+  public Boolean evaluate( Object argument )
     {
-    return ( (Comparable) tupleEntry.getObject( 0 ) ).compareTo( value ) >= 0;
+    if( argument == null )
+      return null;
+
+    return ( (Comparable) argument ).compareTo( value ) >= 0;
     }
   }

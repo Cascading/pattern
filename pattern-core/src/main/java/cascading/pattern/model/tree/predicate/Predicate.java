@@ -22,12 +22,9 @@ package cascading.pattern.model.tree.predicate;
 
 import java.io.Serializable;
 
-import cascading.tuple.TupleEntry;
-
 /**
  *
  */
 public abstract class Predicate implements Serializable
   {
-  public abstract boolean evaluate( TupleEntry tupleEntry );
   }

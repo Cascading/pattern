@@ -20,24 +20,19 @@
 
 package cascading.pattern.model.tree.predicate;
 
-import java.util.Collection;
-
 /**
  *
  */
-public class IsNotInSetPredicate extends SimpleSetPredicate
+public class FalsePredicate extends SimplePredicate
   {
-  public IsNotInSetPredicate( String field, Collection values )
+  public FalsePredicate()
     {
-    super( field, values );
+    super( null );
     }
 
   @Override
   public Boolean evaluate( Object argument )
     {
-    if( argument == null )
-      return null;
-
-    return !set.contains( argument );
+    return Boolean.FALSE;
     }
   }

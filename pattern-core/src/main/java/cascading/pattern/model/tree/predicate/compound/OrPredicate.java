@@ -18,26 +18,42 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.tree.predicate;
+package cascading.pattern.model.tree.predicate.compound;
 
-import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import cascading.pattern.model.tree.predicate.Predicate;
 
 /**
  *
  */
-public class IsNotInSetPredicate extends SimpleSetPredicate
+public class OrPredicate extends CompoundPredicate
   {
-  public IsNotInSetPredicate( String field, Collection values )
+  public OrPredicate( List<Predicate> children )
     {
-    super( field, values );
+    super( children );
+    }
+
+  public OrPredicate( Predicate... children )
+    {
+    super( children );
     }
 
   @Override
-  public Boolean evaluate( Object argument )
+  public Boolean evaluate( Iterator<Boolean> results )
     {
-    if( argument == null )
-      return null;
+    while( results.hasNext() )
+      {
+      Boolean result = results.next();
 
-    return !set.contains( argument );
+      if( result == null )
+        return null;
+
+      if( result )
+        return true;
+      }
+
+    return false;
     }
   }

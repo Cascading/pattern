@@ -18,33 +18,44 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.tree.predicate;
+package cascading.pattern.model.tree.predicate.compound;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+import cascading.pattern.model.tree.predicate.Predicate;
 
 /**
  *
  */
-public abstract class SimplePredicate extends Predicate
+public abstract class CompoundPredicate extends Predicate
   {
-  String field;
+  protected Predicate[] children;
 
-  public SimplePredicate( String field )
+  protected CompoundPredicate( List<Predicate> children )
     {
-    this.field = field;
+    this.children = children.toArray( new Predicate[ children.size() ] );
     }
 
-  public String getArgumentField()
+  protected CompoundPredicate( Predicate... children )
     {
-    return field;
+    this.children = children;
     }
 
-  public abstract Boolean evaluate( Object argument );
+  public Predicate[] getChildren()
+    {
+    return children;
+    }
+
+  public abstract Boolean evaluate( Iterator<Boolean> results );
 
   @Override
   public String toString()
     {
     final StringBuilder sb = new StringBuilder();
     sb.append( getClass().getSimpleName() ).append( "{" );
-    sb.append( "field='" ).append( field ).append( '\'' );
+    sb.append( "children=" ).append( Arrays.toString( children ) );
     sb.append( '}' );
     return sb.toString();
     }

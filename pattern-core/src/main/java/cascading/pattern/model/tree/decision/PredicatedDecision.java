@@ -22,41 +22,27 @@ package cascading.pattern.model.tree.decision;
 
 import cascading.pattern.model.tree.Node;
 import cascading.pattern.model.tree.Tree;
-import cascading.pattern.model.tree.predicate.Predicate;
-import cascading.pattern.model.tree.predicate.SimplePredicate;
 import cascading.tuple.Fields;
 import cascading.tuple.TupleEntry;
-import cascading.tuple.util.TupleViews;
 
 /**
  *
  */
 class PredicatedDecision extends ParentDecision
   {
-  private final Predicate predicate;
-  private TupleEntry narrowEntry;
+  private final PredicateEvaluator evaluator;
 
   public PredicatedDecision( String[] categories, Fields expectedFields, Tree tree, Node node )
     {
     super( categories, expectedFields, tree, node );
 
-    this.predicate = node.getPredicate();
-
-    // allows simple predicates to pull the first pos without a field name lookup
-    if( this.predicate instanceof SimplePredicate )
-      {
-      Fields fields = new Fields( ( (SimplePredicate) this.predicate ).getField() );
-      int[] pos = expectedFields.getPos( fields );
-      narrowEntry = new TupleEntry( fields, TupleViews.createNarrow( pos ) );
-      }
+    this.evaluator = new PredicateEvaluator( expectedFields, node.getPredicate() );
     }
 
   @Override
   protected FinalDecision decide( TupleEntry tupleEntry )
     {
-    TupleEntry entry = narrowEntry != null ? resetNarrow( tupleEntry ) : tupleEntry;
-
-    boolean result = predicate.evaluate( entry );
+    boolean result = evaluator.evaluate( tupleEntry );
 
     if( !result )
       return null;
@@ -64,10 +50,4 @@ class PredicatedDecision extends ParentDecision
     return super.decide( tupleEntry );
     }
 
-  private TupleEntry resetNarrow( TupleEntry tupleEntry )
-    {
-    TupleViews.reset( narrowEntry.getTuple(), tupleEntry.getTuple() );
-
-    return narrowEntry;
-    }
   }

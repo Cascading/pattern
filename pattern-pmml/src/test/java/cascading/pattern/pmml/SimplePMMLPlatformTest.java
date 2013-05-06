@@ -92,7 +92,6 @@ public class SimplePMMLPlatformTest extends PMMLPlatformTestCase
     }
 
   @Test
-  @Ignore
   public void testIrisRPart() throws IOException
     {
     pmmlTest( "iris.rpart", new Fields( "species" ), Fields.LAST );

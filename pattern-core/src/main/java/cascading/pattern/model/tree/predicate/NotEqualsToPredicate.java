@@ -20,8 +20,6 @@
 
 package cascading.pattern.model.tree.predicate;
 
-import cascading.tuple.TupleEntry;
-
 /**
  *
  */
@@ -33,8 +31,11 @@ public class NotEqualsToPredicate extends ComparablePredicate<Object>
     }
 
   @Override
-  public boolean evaluate( TupleEntry tupleEntry )
+  public Boolean evaluate( Object argument )
     {
-    return !tupleEntry.getObject( 0 ).equals( value );
+    if( argument == null )
+      return null;
+
+    return !argument.equals( value );
     }
   }

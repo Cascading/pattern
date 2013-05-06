@@ -33,42 +33,42 @@ import org.jgrapht.Graphs;
  */
 abstract class ParentDecision extends Decision
   {
-  protected final Decision[] children;
+  protected final Decision[] successors;
 
   public ParentDecision( String[] categories, Fields expectedFields, Tree tree, Node node )
     {
     super( tree, node );
 
-    this.children = createChildren( categories, expectedFields, tree, node );
+    this.successors = createSuccessors( categories, expectedFields, tree, node );
     }
 
-  protected Decision[] createChildren( String[] categories, Fields expectedFields, Tree tree, Node node )
+  protected Decision[] createSuccessors( String[] categories, Fields expectedFields, Tree tree, Node node )
     {
-    List<Node> successors = Graphs.successorListOf( tree.getGraph(), node );
+    List<Node> successorNodes = Graphs.successorListOf( tree.getGraph(), node );
 
-    if( successors.size() == 0 )
+    if( successorNodes.size() == 0 )
       return new Decision[]{new FinalDecision( categories, tree, node )};
 
-    Decision[] children = new Decision[ successors.size() ];
+    Decision[] successors = new Decision[ successorNodes.size() ];
 
-    for( int i = 0; i < successors.size(); i++ )
+    for( int i = 0; i < successorNodes.size(); i++ )
       {
-      Node childNode = successors.get( i );
+      Node successorNode = successorNodes.get( i );
 
-      children[ i ] = new PredicatedDecision( categories, expectedFields, tree, childNode );
+      successors[ i ] = new PredicatedDecision( categories, expectedFields, tree, successorNode );
       }
 
-    return children;
+    return successors;
     }
 
   protected FinalDecision decide( TupleEntry tupleEntry )
     {
-    for( Decision child : children )
+    for( Decision child : successors )
       {
-      FinalDecision score = child.decide( tupleEntry );
+      FinalDecision decision = child.decide( tupleEntry );
 
-      if( score != null )
-        return score;
+      if( decision != null )
+        return decision;
       }
 
     return null;

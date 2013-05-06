@@ -27,19 +27,13 @@ import java.util.Set;
 /**
  *
  */
-public abstract class SimpleSetPredicate extends Predicate
+public abstract class SimpleSetPredicate extends SimplePredicate
   {
-  String field;
   Set set = new HashSet();
 
   public SimpleSetPredicate( String field, Collection values )
     {
-    this.field = field;
+    super( field );
     this.set.addAll( values );
-    }
-
-  public String getField()
-    {
-    return field;
     }
   }

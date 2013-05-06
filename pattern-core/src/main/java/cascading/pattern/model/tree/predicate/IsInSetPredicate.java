@@ -22,8 +22,6 @@ package cascading.pattern.model.tree.predicate;
 
 import java.util.Collection;
 
-import cascading.tuple.TupleEntry;
-
 /**
  *
  */
@@ -35,8 +33,11 @@ public class IsInSetPredicate extends SimpleSetPredicate
     }
 
   @Override
-  public boolean evaluate( TupleEntry tupleEntry )
+  public Boolean evaluate( Object argument )
     {
-    return set.contains( tupleEntry.getObject( 0 ) );
+    if( argument == null )
+      return null;
+
+    return set.contains( argument );
     }
   }

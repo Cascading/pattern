@@ -21,6 +21,7 @@
 package cascading.pattern.pmml.tree;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import cascading.pattern.datafield.DataField;
@@ -36,9 +37,14 @@ import cascading.pattern.model.tree.predicate.IsNotMissingPredicate;
 import cascading.pattern.model.tree.predicate.LessOrEqualThanPredicate;
 import cascading.pattern.model.tree.predicate.LessThanPredicate;
 import cascading.pattern.model.tree.predicate.NotEqualsToPredicate;
+import cascading.pattern.model.tree.predicate.compound.AndPredicate;
+import cascading.pattern.model.tree.predicate.compound.OrPredicate;
+import cascading.pattern.model.tree.predicate.compound.SurrogatePredicate;
+import cascading.pattern.model.tree.predicate.compound.XorPredicate;
 import cascading.pattern.pmml.PMMLUtil;
 import cascading.tuple.coerce.Coercions;
 import org.dmg.pmml.ArrayType;
+import org.dmg.pmml.CompoundPredicate;
 import org.dmg.pmml.Node;
 import org.dmg.pmml.Predicate;
 import org.dmg.pmml.SimplePredicate;
@@ -129,6 +135,30 @@ public class TreeUtil
         }
       }
 
-    throw new UnsupportedOperationException( "predicate typs is unsupported: " + predicate );
+    if( predicate instanceof CompoundPredicate )
+      {
+      CompoundPredicate compoundPredicate = (CompoundPredicate) predicate;
+
+      List<cascading.pattern.model.tree.predicate.Predicate> predicates = new ArrayList<cascading.pattern.model.tree.predicate.Predicate>();
+
+      for( Predicate child : compoundPredicate.getContent() )
+        predicates.add( getPredicateFor( modelSchema, child ) );
+
+      CompoundPredicate.BooleanOperator operator = compoundPredicate.getBooleanOperator();
+
+      switch( operator )
+        {
+        case OR:
+          return new OrPredicate( predicates );
+        case AND:
+          return new AndPredicate( predicates );
+        case XOR:
+          return new XorPredicate( predicates );
+        case SURROGATE:
+          return new SurrogatePredicate( predicates );
+        }
+      }
+
+    throw new UnsupportedOperationException( "predicate type is unsupported: " + predicate );
     }
   }

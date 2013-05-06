@@ -76,7 +76,7 @@ public class FinalDecision extends Decision
     {
     final StringBuilder sb = new StringBuilder( "FinalDecision{" );
     sb.append( "name='" ).append( getName() ).append( '\'' );
-    sb.append( ",score='" ).append( category ).append( '\'' );
+    sb.append( ",category='" ).append( category ).append( '\'' );
     sb.append( '}' );
     return sb.toString();
     }

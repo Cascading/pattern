@@ -20,8 +20,6 @@
 
 package cascading.pattern.model.tree.predicate;
 
-import cascading.tuple.TupleEntry;
-
 /**
  *
  */
@@ -33,8 +31,8 @@ public class IsMissingPredicate extends SimplePredicate
     }
 
   @Override
-  public boolean evaluate( TupleEntry tupleEntry )
+  public Boolean evaluate( Object argument )
     {
-    return tupleEntry.getObject( 0 ) == null;
+    return argument == null;
     }
   }

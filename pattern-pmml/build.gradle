@@ -26,8 +26,6 @@ dependencies {
   compile( group: 'org.jpmml', name: 'pmml-manager', version: '1.0.0' )
   compile( group: 'org.jpmml', name: 'pmml-model', version: '1.0.0' )
 
-  compile group: 'com.google.guava', name: 'guava', version: '14.0.1'
-
   compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
 
   testCompile group: 'cascading', name: 'cascading-core', version: cascadingVersion, classifier: 'tests', changing: true
