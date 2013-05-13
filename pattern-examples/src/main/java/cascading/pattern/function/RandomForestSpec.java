@@ -18,18 +18,13 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.randomforest;
+package cascading.pattern.function;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
-import cascading.pattern.datafield.CategoricalDataField;
-import cascading.pattern.datafield.DataField;
-import cascading.pattern.model.MiningSpec;
+import cascading.pattern.ensemble.EnsembleSpec;
 import cascading.pattern.model.ModelSchema;
-import cascading.pattern.model.tree.Node;
 import cascading.pattern.model.tree.Tree;
 import cascading.pattern.model.tree.TreeSpec;
 import cascading.pattern.model.tree.decision.DecisionTree;
@@ -38,7 +33,7 @@ import cascading.tuple.Fields;
 /**
  *
  */
-public class RandomForestSpec extends MiningSpec<TreeSpec>
+public class RandomForestSpec extends EnsembleSpec<TreeSpec>
   {
   public RandomForestSpec( ModelSchema modelSchema )
     {
@@ -52,14 +47,14 @@ public class RandomForestSpec extends MiningSpec<TreeSpec>
 
   public void addTreeSpec( TreeSpec treeSpec )
     {
-    addSegment( treeSpec );
+    addModelSpec( treeSpec );
     }
 
   public List<Tree> getTrees()
     {
     List<Tree> trees = new ArrayList<Tree>();
 
-    for( TreeSpec treeSpec : getSegments() )
+    for( TreeSpec treeSpec : getModelSpecs() )
       trees.add( treeSpec.getTree() );
 
     return trees;
@@ -74,39 +69,5 @@ public class RandomForestSpec extends MiningSpec<TreeSpec>
       decisionTrees[ i ] = trees.get( i ).createDecisionTree( categories, argumentFields );
 
     return decisionTrees;
-    }
-
-  public String[] getCategories()
-    {
-    DataField predictedField = getModelSchema().getPredictedField( getModelSchema().getPredictedFieldNames().get( 0 ) );
-
-    List<String> categories = new ArrayList<String>();
-
-    if( predictedField instanceof CategoricalDataField )
-      categories.addAll( ( (CategoricalDataField) predictedField ).getCategories() );
-    else
-      categories.addAll( getNodeCategories() );
-
-    return categories.toArray( new String[ categories.size() ] );
-    }
-
-  public List<String> getNodeCategories()
-    {
-    List<String> categories = new ArrayList<String>();
-
-    Set<String> set = new LinkedHashSet<String>();
-
-    for( Tree tree : getTrees() )
-      {
-      for( Node node : tree.getGraph().vertexSet() )
-        {
-        if( node.getCategory() != null )
-          set.add( node.getCategory() );
-        }
-      }
-
-    categories.addAll( set );
-
-    return categories;
     }
   }

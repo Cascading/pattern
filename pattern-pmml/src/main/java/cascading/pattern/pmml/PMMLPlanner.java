@@ -35,6 +35,8 @@ import cascading.flow.AssemblyPlanner;
 import cascading.flow.planner.PlannerException;
 import cascading.pattern.PatternException;
 import cascading.pattern.datafield.ContinuousDataField;
+import cascading.pattern.ensemble.EnsembleSpec;
+import cascading.pattern.ensemble.ParallelEnsembleAssembly;
 import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.ModelScoringFunction;
 import cascading.pattern.model.clustering.ClusteringFunction;
@@ -49,8 +51,6 @@ import cascading.pattern.model.generalregression.RegressionFunction;
 import cascading.pattern.model.generalregression.RegressionTable;
 import cascading.pattern.model.normalization.Normalization;
 import cascading.pattern.model.normalization.SoftMaxNormalization;
-import cascading.pattern.model.randomforest.RandomForestFunction;
-import cascading.pattern.model.randomforest.RandomForestSpec;
 import cascading.pattern.model.tree.Tree;
 import cascading.pattern.model.tree.TreeFunction;
 import cascading.pattern.model.tree.TreeSpec;
@@ -432,12 +432,15 @@ public class PMMLPlanner implements AssemblyPlanner
       TreeModel treeModel = (TreeModel) segment.getModel();
       Tree tree = TreeUtil.createTree( treeModel, modelSchema );
 
-      models.add( new TreeSpec( tree ) );
+      models.add( new TreeSpec( modelSchema, tree ) );
       }
 
-    RandomForestSpec miningSpec = new RandomForestSpec( modelSchema, models );
+    EnsembleSpec<TreeSpec> miningSpec = new EnsembleSpec<TreeSpec>( modelSchema, models );
 
-    return create( tail, modelSchema, new RandomForestFunction( miningSpec ) );
+    LOG.debug( "creating: {}, input: {}, output: {}", new Object[]{miningSpec, modelSchema.getInputFields(),
+                                                                   modelSchema.getDeclaredFields()} );
+
+    return new ParallelEnsembleAssembly( tail, miningSpec );
     }
 
   private Pipe handleTreeModel( Pipe tail, TreeModel model )
@@ -446,9 +449,9 @@ public class PMMLPlanner implements AssemblyPlanner
 
     Tree tree = TreeUtil.createTree( model, modelSchema );
 
-    TreeSpec modelParam = new TreeSpec( modelSchema, tree );
+    TreeSpec treeSpec = new TreeSpec( modelSchema, tree );
 
-    return create( tail, modelSchema, new TreeFunction( modelParam ) );
+    return create( tail, modelSchema, new TreeFunction( treeSpec ) );
     }
 
   private Pipe handleGeneralRegressionModel( Pipe tail, GeneralRegressionModel model )
@@ -580,6 +583,7 @@ public class PMMLPlanner implements AssemblyPlanner
 
   private Pipe handleMiningModel( Pipe tail, MiningModel model )
     {
+    // todo: support all models types, not just tree/random forest
     if( isRandomForest( model ) )
       tail = handleRandomForestModel( tail, model );
     else

@@ -19,8 +19,10 @@
   ~ limitations under the License.
   -->
 
-<PMML version="3.2" xmlns="http://www.dmg.org/PMML-3_2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-3_2 http://www.dmg.org/v3-2/pmml-3-2.xsd">
- <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)" description="Hierarchical cluster model">
+<PMML version="3.2" xmlns="http://www.dmg.org/PMML-3_2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.dmg.org/PMML-3_2 http://www.dmg.org/v3-2/pmml-3-2.xsd">
+ <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)"
+         description="Hierarchical cluster model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
   <Timestamp>2013-01-25 10:01:53</Timestamp>
@@ -31,7 +33,8 @@
   <DataField name="petal_length" optype="continuous" dataType="double"/>
   <DataField name="petal_width" optype="continuous" dataType="double"/>
  </DataDictionary>
- <ClusteringModel modelName="HClust_Model" functionName="clustering" algorithmName="HClust" modelClass="centerBased" numberOfClusters="3">
+ <ClusteringModel modelName="HClust_Model" functionName="clustering" algorithmName="HClust" modelClass="centerBased"
+                  numberOfClusters="3">
   <MiningSchema>
    <MiningField name="sepal_length" usageType="active"/>
    <MiningField name="sepal_width" usageType="active"/>

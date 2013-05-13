@@ -41,7 +41,6 @@ import org.junit.Test;
  */
 public class PredicateTest extends CascadingTestCase
   {
-
   private Fields expectedFields;
   private TupleEntry tupleEntry;
 
@@ -62,6 +61,7 @@ public class PredicateTest extends CascadingTestCase
       .append( new Fields( "var2", double.class ) );
 
     Tuple tuple = new Tuple( 0.d, "value", null );
+
     tupleEntry = new TupleEntry( expectedFields, tuple );
     }
 

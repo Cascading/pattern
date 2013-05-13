@@ -20,14 +20,15 @@
 
 package cascading.pattern;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import cascading.PlatformTestCase;
+import cascading.pattern.util.Logging;
 import cascading.tuple.Tuple;
 import junit.framework.AssertionFailedError;
 import junit.framework.ComparisonFailure;
-import org.apache.log4j.Level;
 
 /**
  *
@@ -36,12 +37,15 @@ public class PatternPlatformTestCase extends PlatformTestCase
   {
   public static void enableLogging( String log, String level )
     {
-    org.apache.log4j.Logger.getLogger( log ).setLevel( Level.toLevel( level.toUpperCase() ) );
+    Logging.setLogLevel( PatternPlatformTestCase.class, log, level );
     }
 
   public static void assertEquals( List<Tuple> lhs, List<Tuple> rhs, double delta )
     {
     assertEquals( "not same number of results", lhs.size(), rhs.size() );
+
+    Collections.sort( lhs );
+    Collections.sort( rhs );
 
     Iterator<Tuple> lhsIterator = lhs.iterator();
     Iterator<Tuple> rhsIterator = rhs.iterator();

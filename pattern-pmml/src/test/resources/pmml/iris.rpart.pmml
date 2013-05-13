@@ -19,8 +19,10 @@
   ~ limitations under the License.
   -->
 
-<PMML version="3.2" xmlns="http://www.dmg.org/PMML-3_2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-3_2 http://www.dmg.org/v3-2/pmml-3-2.xsd">
- <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)" description="RPart Decision Tree Model">
+<PMML version="3.2" xmlns="http://www.dmg.org/PMML-3_2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.dmg.org/PMML-3_2 http://www.dmg.org/v3-2/pmml-3-2.xsd">
+ <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)"
+         description="RPart Decision Tree Model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
   <Timestamp>2013-01-25 10:01:53</Timestamp>
@@ -36,7 +38,8 @@
   <DataField name="petal_length" optype="continuous" dataType="double"/>
   <DataField name="petal_width" optype="continuous" dataType="double"/>
  </DataDictionary>
- <TreeModel modelName="RPart_Model" functionName="classification" algorithmName="rpart" splitCharacteristic="binarySplit" missingValueStrategy="defaultChild">
+ <TreeModel modelName="RPart_Model" functionName="classification" algorithmName="rpart"
+            splitCharacteristic="binarySplit" missingValueStrategy="defaultChild">
   <MiningSchema>
    <MiningField name="species" usageType="predicted"/>
    <MiningField name="sepal_length" usageType="active"/>
@@ -47,8 +50,10 @@
   <Output>
    <OutputField name="species" optype="categorical" dataType="string" feature="predictedValue"/>
    <OutputField name="Probability_setosa" optype="continuous" dataType="double" feature="probability" value="setosa"/>
-   <OutputField name="Probability_versicolor" optype="continuous" dataType="double" feature="probability" value="versicolor"/>
-   <OutputField name="Probability_virginica" optype="continuous" dataType="double" feature="probability" value="virginica"/>
+   <OutputField name="Probability_versicolor" optype="continuous" dataType="double" feature="probability"
+                value="versicolor"/>
+   <OutputField name="Probability_virginica" optype="continuous" dataType="double" feature="probability"
+                value="virginica"/>
   </Output>
   <Node id="1" score="setosa" recordCount="100" defaultChild="3">
    <True/>

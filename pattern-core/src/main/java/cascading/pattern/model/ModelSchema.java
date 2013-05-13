@@ -44,6 +44,7 @@ public class ModelSchema implements Serializable
   private static final Logger LOG = LoggerFactory.getLogger( ModelSchema.class );
 
   Map<String, DataField> dictionary = new LinkedHashMap<String, DataField>();
+  List<String> keyFields = new LinkedList<String>();
   List<String> expectedFields = new LinkedList<String>();
   List<String> predictedFields = new LinkedList<String>();
   boolean includePredictedCategories = false;
@@ -66,6 +67,29 @@ public class ModelSchema implements Serializable
   public void setIncludePredictedCategories( boolean includePredictedCategories )
     {
     this.includePredictedCategories = includePredictedCategories;
+    }
+
+  public List<String> getKeyFieldNames()
+    {
+    return keyFields;
+    }
+
+  public DataField getKeyField( String name )
+    {
+    if( keyFields.contains( name ) )
+      return dictionary.get( name );
+
+    return null;
+    }
+
+  public void addKeyFields( Fields fields )
+    {
+    List<DataField> dataFields = toDataFields( fields );
+
+    addToDictionary( dataFields );
+
+    for( DataField dataField : dataFields )
+      keyFields.add( dataField.getName() );
     }
 
   public DataField getPredictedField( String name )
@@ -210,6 +234,19 @@ public class ModelSchema implements Serializable
     return dataFields;
     }
 
+  public Fields getPredictedFields()
+    {
+    if( predictedFields.isEmpty() )
+      return new Fields( "predict", String.class );
+
+    return createField( predictedFields.get( 0 ) );
+    }
+
+  public Fields getKeyFields()
+    {
+    return createFields( keyFields );
+    }
+
   /**
    * Returns a Fields data structure naming the input tuple fields.
    *
@@ -222,15 +259,11 @@ public class ModelSchema implements Serializable
 
   public Fields getDeclaredFields()
     {
-    if( predictedFields.isEmpty() )
-      return new Fields( "predict", String.class );
-
-    String field = predictedFields.get( 0 );
-    Fields fields = createField( field );
+    Fields fields = getPredictedFields();
 
     if( isIncludePredictedCategories() )
       {
-      DataField dataField = dictionary.get( field );
+      DataField dataField = dictionary.get( fields.get( 0 ).toString() );
 
       if( dataField instanceof CategoricalDataField )
         {
@@ -248,6 +281,7 @@ public class ModelSchema implements Serializable
 
     for( String name : fieldsList )
       fields = fields.append( createField( name ) );
+
     return fields;
     }
 

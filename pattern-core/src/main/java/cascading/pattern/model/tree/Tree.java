@@ -22,7 +22,9 @@ package cascading.pattern.model.tree;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import cascading.pattern.model.tree.decision.DecisionTree;
 import cascading.pattern.model.tree.predicate.Predicate;
@@ -39,9 +41,9 @@ public class Tree implements Serializable
 
   private int count = 0;
 
-  public Tree( String id )
+  public Tree( String rootID )
     {
-    root = new Node( id );
+    root = new Node( rootID );
     nodes.put( root.getID(), root );
     graph.addVertex( root );
     }
@@ -51,26 +53,39 @@ public class Tree implements Serializable
     return root;
     }
 
+  public Set<String> getCategories()
+    {
+    Set<String> set = new LinkedHashSet<String>();
+
+    for( Node node : getGraph().vertexSet() )
+      {
+      if( node.getCategory() != null )
+        set.add( node.getCategory() );
+      }
+
+    return set;
+    }
+
   public DirectedGraph<Node, Integer> getGraph()
     {
     return graph;
     }
 
-  public void addPredicate( String from, String to, Predicate predicate )
+  public void addPredicate( String fromID, String toID, Predicate predicate )
     {
-    addPredicate( from, to, predicate, null );
+    addPredicate( fromID, toID, predicate, null );
     }
 
-  public void addPredicate( String from, String to, Predicate predicate, String category )
+  public void addPredicate( String fromID, String toID, Predicate predicate, String category )
     {
-    if( nodes.containsKey( to ) )
-      throw new IllegalArgumentException( "duplicate node name: " + to );
+    if( nodes.containsKey( toID ) )
+      throw new IllegalArgumentException( "duplicate node name: " + toID );
 
-    Node toNode = new Node( to, predicate, category );
+    Node toNode = new Node( toID, predicate, category );
 
-    nodes.put( to, toNode );
+    nodes.put( toID, toNode );
     graph.addVertex( toNode );
-    graph.addEdge( nodes.get( from ), toNode, count++ );
+    graph.addEdge( nodes.get( fromID ), toNode, count++ );
     }
 
   public DecisionTree createDecisionTree( Fields argumentFields )
@@ -81,5 +96,17 @@ public class Tree implements Serializable
   public DecisionTree createDecisionTree( String[] categories, Fields argumentFields )
     {
     return new DecisionTree( categories, argumentFields, this, this.getRoot() );
+    }
+
+  @Override
+  public String toString()
+    {
+    final StringBuilder sb = new StringBuilder( "Tree{" );
+    sb.append( "nodes=" ).append( nodes );
+    sb.append( ", graph=" ).append( graph );
+    sb.append( ", root=" ).append( root );
+    sb.append( ", count=" ).append( count );
+    sb.append( '}' );
+    return sb.toString();
     }
   }

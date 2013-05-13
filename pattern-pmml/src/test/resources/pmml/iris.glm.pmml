@@ -19,8 +19,10 @@
   ~ limitations under the License.
   -->
 
-<PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://www.dmg.org/v4-0/pmml-4-0.xsd">
- <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)" description="Generalized Linear Regression Model">
+<PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://www.dmg.org/v4-0/pmml-4-0.xsd">
+ <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)"
+         description="Generalized Linear Regression Model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
   <Timestamp>2013-01-25 10:01:54</Timestamp>
@@ -32,7 +34,8 @@
   <DataField name="petal_length" optype="continuous" dataType="double"/>
   <DataField name="petal_width" optype="continuous" dataType="double"/>
  </DataDictionary>
- <GeneralRegressionModel modelName="General_Regression_Model" modelType="generalizedLinear" functionName="regression" algorithmName="glm" distribution="binomial" linkFunction="logit">
+ <GeneralRegressionModel modelName="General_Regression_Model" modelType="generalizedLinear" functionName="regression"
+                         algorithmName="glm" distribution="binomial" linkFunction="logit">
   <MiningSchema>
    <MiningField name="setosa" usageType="predicted"/>
    <MiningField name="sepal_length" usageType="active"/>

@@ -36,9 +36,35 @@ public class TreeFunction extends ModelScoringFunction<TreeSpec, DecisionTree>
   {
   private static final Logger LOG = LoggerFactory.getLogger( TreeFunction.class );
 
-  public TreeFunction( TreeSpec treeParam )
+  Result<FinalDecision, ?> result;
+
+  public TreeFunction( TreeSpec treeSpec )
     {
-    super( treeParam );
+    this( treeSpec, false, SAFE_DEFAULT );
+    }
+
+  public TreeFunction( TreeSpec spec, boolean returnIndex, boolean safe )
+    {
+    super( spec, safe );
+
+    if( returnIndex )
+      result = new Result<FinalDecision, Integer>()
+      {
+      @Override
+      public Integer transform( FinalDecision finalDecision )
+        {
+        return finalDecision.getIndex();
+        }
+      };
+    else
+      result = new Result<FinalDecision, String>()
+      {
+      @Override
+      public String transform( FinalDecision finalDecision )
+        {
+        return finalDecision.getCategory();
+        }
+      };
     }
 
   @Override
@@ -46,7 +72,7 @@ public class TreeFunction extends ModelScoringFunction<TreeSpec, DecisionTree>
     {
     super.prepare( flowProcess, operationCall );
 
-    operationCall.getContext().payload = getSpec().getTree().createDecisionTree( operationCall.getArgumentFields() );
+    operationCall.getContext().payload = getSpec().getTree().createDecisionTree( getSpec().getCategoriesArray(), operationCall.getArgumentFields() );
     }
 
   @Override
@@ -58,6 +84,8 @@ public class TreeFunction extends ModelScoringFunction<TreeSpec, DecisionTree>
 
     LOG.debug( "final decision: {}", finalDecision );
 
-    functionCall.getOutputCollector().add( functionCall.getContext().result( finalDecision.getCategory() ) );
+    Object result = this.result.transform( finalDecision );
+
+    functionCall.getOutputCollector().add( functionCall.getContext().result( result ) );
     }
   }

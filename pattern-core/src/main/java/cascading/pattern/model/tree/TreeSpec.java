@@ -21,9 +21,7 @@
 package cascading.pattern.model.tree;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.Spec;
@@ -38,15 +36,9 @@ public class TreeSpec extends Spec
     super( modelSchema );
     }
 
-  public TreeSpec( Tree tree )
+  public TreeSpec( ModelSchema modelSchema, Tree tree )
     {
-    super( null );
-    this.tree = tree;
-    }
-
-  public TreeSpec( ModelSchema schemaParam, Tree tree )
-    {
-    super( schemaParam );
+    super( modelSchema );
     this.tree = tree;
     }
 
@@ -64,15 +56,7 @@ public class TreeSpec extends Spec
     {
     List<String> categories = new ArrayList<String>();
 
-    Set<String> set = new LinkedHashSet<String>();
-
-    for( Node node : tree.getGraph().vertexSet() )
-      {
-      if( node.getCategory() != null )
-        set.add( node.getCategory() );
-      }
-
-    categories.addAll( set );
+    categories.addAll( tree.getCategories() );
 
     return categories;
     }

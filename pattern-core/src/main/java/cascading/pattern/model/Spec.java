@@ -21,6 +21,11 @@
 package cascading.pattern.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import cascading.pattern.datafield.CategoricalDataField;
+import cascading.pattern.datafield.DataField;
 
 
 public abstract class Spec implements Serializable
@@ -47,5 +52,24 @@ public abstract class Spec implements Serializable
       modelSchema = new ModelSchema();
 
     return modelSchema;
+    }
+
+  public List<String> getCategories()
+    {
+    DataField predictedField = getModelSchema().getPredictedField( getModelSchema().getPredictedFieldNames().get( 0 ) );
+
+    List<String> categories = new ArrayList<String>();
+
+    if( predictedField instanceof CategoricalDataField )
+      categories.addAll( ( (CategoricalDataField) predictedField ).getCategories() );
+
+    return categories;
+    }
+
+  public String[] getCategoriesArray()
+    {
+    List<String> categories = getCategories();
+
+    return categories.toArray( new String[ categories.size() ] );
     }
   }

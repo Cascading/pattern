@@ -26,6 +26,9 @@ dependencies {
   compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
 
   testCompile group: 'cascading', name: 'cascading-core', version: cascadingVersion, classifier: 'tests', changing: true
+  testCompile group: 'cascading', name: 'cascading-platform', version: cascadingVersion, classifier: 'tests', changing: true
+
+//  testCompile group: 'commons-io', name: 'commons-io', version: '2.1'
 
   testRuntime group: 'log4j', name: 'log4j', version: '1.2.16'
   testRuntime group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'

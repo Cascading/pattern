@@ -20,6 +20,8 @@
 
 package cascading.pattern.model;
 
+import java.io.Serializable;
+
 import cascading.flow.FlowProcess;
 import cascading.operation.BaseOperation;
 import cascading.operation.Function;
@@ -29,7 +31,15 @@ import cascading.tuple.Tuple;
 
 public abstract class ModelScoringFunction<S extends Spec, P> extends BaseOperation<ModelScoringFunction.Context<P>> implements Function<ModelScoringFunction.Context<P>>
   {
+  public static final boolean SAFE_DEFAULT = false;
+
   protected S spec;
+  protected boolean isSafe = SAFE_DEFAULT;
+
+  protected static interface Result<In, Out> extends Serializable
+    {
+    Out transform( In object );
+    }
 
   /** Class Context is used to hold intermediate values. */
   protected static class Context<Payload>
@@ -50,6 +60,12 @@ public abstract class ModelScoringFunction<S extends Spec, P> extends BaseOperat
       }
     }
 
+  protected ModelScoringFunction( S spec, boolean safe )
+    {
+    this( spec );
+    isSafe = safe;
+    }
+
   protected ModelScoringFunction( S spec )
     {
     super( spec.getModelSchema().getInputFields().size(), spec.getModelSchema().getDeclaredFields() );
@@ -59,6 +75,12 @@ public abstract class ModelScoringFunction<S extends Spec, P> extends BaseOperat
   public S getSpec()
     {
     return spec;
+    }
+
+  @Override
+  public boolean isSafe()
+    {
+    return isSafe;
     }
 
   @Override

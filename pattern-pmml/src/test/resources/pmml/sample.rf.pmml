@@ -19,7 +19,8 @@
   ~ limitations under the License.
   -->
 
-<PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://www.dmg.org/v4-0/pmml-4-0.xsd">
+<PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.dmg.org/PMML-4_0 http://www.dmg.org/v4-0/pmml-4-0.xsd">
  <Header copyright="Copyright (c) 2013 ceteri" description="Random Forest Tree Model">
   <Extension name="user" value="ceteri" extender="Rattle/PMML"/>
   <Application name="Rattle/PMML" version="1.2.30"/>
@@ -44,7 +45,8 @@
   <Segmentation multipleModelMethod="majorityVote">
    <Segment id="1">
     <True/>
-    <TreeModel modelName="randomForest_Model" functionName="classification" algorithmName="randomForest" splitCharacteristic="binarySplit">
+    <TreeModel modelName="randomForest_Model" functionName="classification" algorithmName="randomForest"
+               splitCharacteristic="binarySplit">
      <MiningSchema>
       <MiningField name="label" usageType="predicted"/>
       <MiningField name="var0" usageType="active"/>
@@ -76,7 +78,8 @@
    </Segment>
    <Segment id="2">
     <True/>
-    <TreeModel modelName="randomForest_Model" functionName="classification" algorithmName="randomForest" splitCharacteristic="binarySplit">
+    <TreeModel modelName="randomForest_Model" functionName="classification" algorithmName="randomForest"
+               splitCharacteristic="binarySplit">
      <MiningSchema>
       <MiningField name="label" usageType="predicted"/>
       <MiningField name="var0" usageType="active"/>

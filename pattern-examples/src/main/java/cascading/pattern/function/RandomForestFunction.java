@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.randomforest;
+package cascading.pattern.function;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,9 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import static com.google.common.collect.Sets.newHashSet;
 
-/**
- *
- */
+/** Sample code if, for example, an ensemble should be executed as a single Function. */
 public class RandomForestFunction extends ModelScoringFunction<RandomForestSpec, RandomForestFunction.DecisionContext>
   {
   private static final Logger LOG = LoggerFactory.getLogger( RandomForestFunction.class );
@@ -67,7 +65,7 @@ public class RandomForestFunction extends ModelScoringFunction<RandomForestSpec,
     if( modelSchema.isIncludePredictedCategories() && predictedCategories.isEmpty() )
       throw new IllegalArgumentException( "no predicted categories were set, but include predicted is true" );
 
-    List<String> nodeCategories = randomForestSpec.getNodeCategories();
+    List<String> nodeCategories = randomForestSpec.getModelCategories();
     Sets.SetView<String> difference = Sets.difference( newHashSet( predictedCategories ), newHashSet( nodeCategories ) );
 
     if( !difference.isEmpty() && !predictedCategories.isEmpty() )
@@ -80,7 +78,7 @@ public class RandomForestFunction extends ModelScoringFunction<RandomForestSpec,
     super.prepare( flowProcess, operationCall );
 
     Fields argumentFields = operationCall.getArgumentFields();
-    String[] categories = spec.getCategories();
+    String[] categories = spec.getCategoriesArray();
     DecisionTree[] decisionTrees = getSpec().getDecisionTrees( categories, argumentFields );
 
     operationCall.getContext().payload = new DecisionContext();

@@ -21,6 +21,8 @@
 dependencies {
 
   compile project( ':pattern-core' )
+  testCompile project( path: ':pattern-core', configuration: 'testArtifacts' )
+
 
   compile( group: 'org.jpmml', name: 'pmml-evaluator', version: '1.0.0' )
   compile( group: 'org.jpmml', name: 'pmml-manager', version: '1.0.0' )
