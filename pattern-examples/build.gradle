@@ -19,8 +19,13 @@
  */
 
 dependencies {
+//  compile( group: 'cascading', name: 'cascading-core', version: cascadingVersion )
+  compile( group: 'cascading', name: 'cascading-hadoop', version: cascadingVersion )
+
   compile project( ':pattern-pmml' )
   compile project( ':pattern-local' )
+
+  compile( 'net.sf.jopt-simple:jopt-simple:4.3' )
 
 //  compile group: 'cascading', name: 'cascading-local', version: cascadingVersion, changing: true
 
@@ -38,7 +43,8 @@ jar {
   }
 
   manifest {
-    attributes( "Main-Class": "cascading.pattern.pmml.iris.RegressionFlowExample" )
+//    attributes( "Main-Class": "cascading.pattern.pmml.iris.RegressionFlowExample" )
+    attributes( "Main-Class": "cascading.pattern.Main" )
   }
 }
 
