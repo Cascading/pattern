@@ -18,15 +18,23 @@
  * limitations under the License.
  */
 
+ext.hadoopVersion = '1.0.4'
+
 dependencies {
 //  compile( group: 'cascading', name: 'cascading-core', version: cascadingVersion )
   compile( group: 'cascading', name: 'cascading-hadoop', version: cascadingVersion )
 
   compile project( ':pattern-pmml' )
+  compile project( ':pattern-hadoop' )
   compile project( ':pattern-local' )
 
-  compile( 'net.sf.jopt-simple:jopt-simple:4.3' )
+  compile( 'net.sf.jopt-simple:jopt-simple:4.4' )
 
+    // hadoop deps
+  runtime( group: 'org.apache.hadoop', name: 'hadoop-core', version: hadoopVersion ) {
+    exclude group: 'ant'
+    exclude group: 'junit'
+  }
 //  compile group: 'cascading', name: 'cascading-local', version: cascadingVersion, changing: true
 
   runtime group: 'log4j', name: 'log4j', version: '1.2.16'
