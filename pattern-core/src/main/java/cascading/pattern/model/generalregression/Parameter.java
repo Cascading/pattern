@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cascading.pattern.model.generalregression.expression.ParameterExpression;
 import cascading.pattern.model.generalregression.predictor.CovariantPredictor;
 import cascading.pattern.model.generalregression.predictor.FactorPredictor;
 import cascading.pattern.model.generalregression.predictor.Predictor;
@@ -71,6 +72,26 @@ public class Parameter implements Serializable
   public String getName()
     {
     return name;
+    }
+
+  public double getBeta()
+    {
+    return beta;
+    }
+
+  public int getDegreesOfFreedom()
+    {
+    return df;
+    }
+
+  public ArrayList<CovariantPredictor> getCovariants()
+    {
+    return covariants;
+    }
+
+  public ArrayList<FactorPredictor> getFactors()
+    {
+    return factors;
     }
 
   public boolean isNoOp()

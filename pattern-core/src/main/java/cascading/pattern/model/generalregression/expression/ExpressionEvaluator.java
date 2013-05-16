@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.generalregression;
+package cascading.pattern.model.generalregression.expression;
 
 import cascading.tuple.TupleEntry;
 

@@ -26,15 +26,15 @@ import cascading.pattern.model.clustering.ClusteringFunction;
 import cascading.pattern.model.clustering.ClusteringSpec;
 import cascading.pattern.model.clustering.compare.AbsoluteDifferenceCompareFunction;
 import cascading.pattern.model.clustering.measure.SquaredEuclideanMeasure;
-import cascading.pattern.model.generalregression.ClassifierRegressionFunction;
+import cascading.pattern.model.generalregression.CategoricalRegressionFunction;
 import cascading.pattern.model.generalregression.GeneralRegressionSpec;
 import cascading.pattern.model.generalregression.LinkFunction;
 import cascading.pattern.model.generalregression.Parameter;
-import cascading.pattern.model.generalregression.RegressionFunction;
+import cascading.pattern.model.generalregression.PredictionRegressionFunction;
 import cascading.pattern.model.generalregression.RegressionTable;
+import cascading.pattern.model.generalregression.normalization.SoftMaxNormalization;
 import cascading.pattern.model.generalregression.predictor.CovariantPredictor;
 import cascading.pattern.model.generalregression.predictor.FactorPredictor;
-import cascading.pattern.model.normalization.SoftMaxNormalization;
 import cascading.pattern.model.tree.Tree;
 import cascading.pattern.model.tree.TreeFunction;
 import cascading.pattern.model.tree.TreeSpec;
@@ -217,7 +217,7 @@ public class ModelTest extends CascadingTestCase
 
     regressionSpec.addRegressionTable( table );
 
-    RegressionFunction regressionFunction = new RegressionFunction( regressionSpec );
+    PredictionRegressionFunction regressionFunction = new PredictionRegressionFunction( regressionSpec );
 
     TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 5.1d, 3.8d, 1.6d, 0.2d ) );
 
@@ -272,7 +272,7 @@ public class ModelTest extends CascadingTestCase
 
     regressionSpec.addRegressionTable( regressionTable );
 
-    RegressionFunction regressionFunction = new RegressionFunction( regressionSpec );
+    PredictionRegressionFunction regressionFunction = new PredictionRegressionFunction( regressionSpec );
 
     TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 3d, 1.3d, 0.2d, "setosa" ) );
 
@@ -362,7 +362,7 @@ public class ModelTest extends CascadingTestCase
     regressionSpec.addRegressionTable( regressionTable );
     }
 
-    ClassifierRegressionFunction regressionFunction = new ClassifierRegressionFunction( regressionSpec );
+    CategoricalRegressionFunction regressionFunction = new CategoricalRegressionFunction( regressionSpec );
 
     {
     TupleEntry tupleArguments = new TupleEntry( expectedFields, new Tuple( 7d, 3.2d, 4.7d, 1.4d ) );

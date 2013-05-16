@@ -22,17 +22,18 @@ package cascading.pattern.model.generalregression;
 
 import cascading.flow.FlowProcess;
 import cascading.operation.FunctionCall;
+import cascading.pattern.model.generalregression.expression.ExpressionEvaluator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  */
-public class RegressionFunction extends BaseRegressionFunction
+public class PredictionRegressionFunction extends BaseRegressionFunction
   {
-  private static final Logger LOG = LoggerFactory.getLogger( RegressionFunction.class );
+  private static final Logger LOG = LoggerFactory.getLogger( PredictionRegressionFunction.class );
 
-  public RegressionFunction( GeneralRegressionSpec param )
+  public PredictionRegressionFunction( GeneralRegressionSpec param )
     {
     super( param );
 

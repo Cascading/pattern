@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.normalization;
+package cascading.pattern.model.generalregression.normalization;
 
 import java.io.Serializable;
 

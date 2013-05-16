@@ -18,8 +18,9 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.generalregression;
+package cascading.pattern.model.generalregression.expression;
 
+import cascading.pattern.model.generalregression.Parameter;
 import cascading.pattern.model.generalregression.predictor.CovariantPredictor;
 import cascading.pattern.model.generalregression.predictor.FactorPredictor;
 import cascading.tuple.Fields;
@@ -77,23 +78,23 @@ public class ParameterExpression
   public ParameterExpression( Fields argumentsFields, Parameter parameter )
     {
     this.name = parameter.getName();
-    this.beta = parameter.beta;
+    this.beta = parameter.getBeta();
 
-    factorInvokers = new FactorInvoker[ parameter.factors.size() ];
+    factorInvokers = new FactorInvoker[ parameter.getFactors().size() ];
 
-    for( int i = 0; i < parameter.factors.size(); i++ )
+    for( int i = 0; i < parameter.getFactors().size(); i++ )
       {
-      FactorPredictor predictor = parameter.factors.get( i );
+      FactorPredictor predictor = parameter.getFactors().get( i );
       int pos = argumentsFields.getPos( predictor.getFieldName() );
 
       factorInvokers[ i ] = new FactorInvoker( pos, predictor );
       }
 
-    covariantInvokers = new CovariantInvoker[ parameter.covariants.size() ];
+    covariantInvokers = new CovariantInvoker[ parameter.getCovariants().size() ];
 
-    for( int i = 0; i < parameter.covariants.size(); i++ )
+    for( int i = 0; i < parameter.getCovariants().size(); i++ )
       {
-      CovariantPredictor predictor = parameter.covariants.get( i );
+      CovariantPredictor predictor = parameter.getCovariants().get( i );
       int pos = argumentsFields.getPos( predictor.getFieldName() );
 
       covariantInvokers[ i ] = new CovariantInvoker( pos, predictor );

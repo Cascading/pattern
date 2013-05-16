@@ -47,13 +47,13 @@ import cascading.pattern.model.clustering.ClusteringSpec;
 import cascading.pattern.model.clustering.compare.AbsoluteDifferenceCompareFunction;
 import cascading.pattern.model.clustering.measure.EuclideanMeasure;
 import cascading.pattern.model.clustering.measure.SquaredEuclideanMeasure;
-import cascading.pattern.model.generalregression.ClassifierRegressionFunction;
+import cascading.pattern.model.generalregression.CategoricalRegressionFunction;
 import cascading.pattern.model.generalregression.GeneralRegressionSpec;
 import cascading.pattern.model.generalregression.LinkFunction;
-import cascading.pattern.model.generalregression.RegressionFunction;
+import cascading.pattern.model.generalregression.PredictionRegressionFunction;
 import cascading.pattern.model.generalregression.RegressionTable;
-import cascading.pattern.model.normalization.Normalization;
-import cascading.pattern.model.normalization.SoftMaxNormalization;
+import cascading.pattern.model.generalregression.normalization.Normalization;
+import cascading.pattern.model.generalregression.normalization.SoftMaxNormalization;
 import cascading.pattern.model.tree.Tree;
 import cascading.pattern.model.tree.TreeFunction;
 import cascading.pattern.model.tree.TreeSpec;
@@ -507,7 +507,7 @@ public class PMMLPlanner implements AssemblyPlanner
 
     GeneralRegressionSpec modelParam = new GeneralRegressionSpec( modelSchema, regressionTable, linkFunction );
 
-    return create( tail, modelSchema, new RegressionFunction( modelParam ) );
+    return create( tail, modelSchema, new PredictionRegressionFunction( modelParam ) );
     }
 
   private Pipe handleRegressionModel( Pipe tail, RegressionModel model )
@@ -537,7 +537,7 @@ public class PMMLPlanner implements AssemblyPlanner
     for( org.dmg.pmml.RegressionTable regressionTable : model.getRegressionTables() )
       regressionSpec.addRegressionTable( RegressionUtil.createTable( regressionTable ) );
 
-    return create( tail, modelSchema, new ClassifierRegressionFunction( regressionSpec ) );
+    return create( tail, modelSchema, new CategoricalRegressionFunction( regressionSpec ) );
     }
 
   private Pipe handleContinuousRegressionModel( Pipe tail, RegressionModel model )
@@ -555,7 +555,7 @@ public class PMMLPlanner implements AssemblyPlanner
 
     regressionSpec.addRegressionTable( RegressionUtil.createTable( regressionTable ) );
 
-    return create( tail, modelSchema, new RegressionFunction( regressionSpec ) );
+    return create( tail, modelSchema, new PredictionRegressionFunction( regressionSpec ) );
     }
 
   private Pipe handleClusteringModel( Pipe tail, ClusteringModel model )

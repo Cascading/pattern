@@ -25,6 +25,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import cascading.pattern.model.generalregression.expression.ExpressionEvaluator;
+import cascading.pattern.model.generalregression.expression.ParameterExpression;
 import cascading.tuple.Fields;
 
 public class RegressionTable implements Serializable

@@ -23,6 +23,7 @@ package cascading.pattern.model.generalregression;
 import cascading.flow.FlowProcess;
 import cascading.operation.OperationCall;
 import cascading.pattern.model.ModelScoringFunction;
+import cascading.pattern.model.generalregression.expression.ExpressionEvaluator;
 import cascading.tuple.Fields;
 
 /**

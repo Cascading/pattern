@@ -26,6 +26,7 @@ import cascading.operation.OperationCall;
 import cascading.pattern.datafield.CategoricalDataField;
 import cascading.pattern.datafield.DataField;
 import cascading.pattern.model.ModelSchema;
+import cascading.pattern.model.generalregression.expression.ExpressionEvaluator;
 import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
 import com.google.common.primitives.Doubles;
@@ -35,11 +36,11 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class ClassifierRegressionFunction extends BaseRegressionFunction
+public class CategoricalRegressionFunction extends BaseRegressionFunction
   {
-  private static final Logger LOG = LoggerFactory.getLogger( ClassifierRegressionFunction.class );
+  private static final Logger LOG = LoggerFactory.getLogger( CategoricalRegressionFunction.class );
 
-  public ClassifierRegressionFunction( GeneralRegressionSpec regressionSpec )
+  public CategoricalRegressionFunction( GeneralRegressionSpec regressionSpec )
     {
     super( regressionSpec );
 
