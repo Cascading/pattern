@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cascading.pattern.ensemble.function.InsertGUID;
-import cascading.pattern.ensemble.selection.ClassificationSelectionBuffer;
+import cascading.pattern.ensemble.selection.CategoricalSelectionBuffer;
 import cascading.pattern.ensemble.selection.PredictionSelectionBuffer;
 import cascading.pattern.ensemble.selection.SelectionBuffer;
 import cascading.pattern.model.ModelSchema;
@@ -53,12 +53,10 @@ public class ParallelEnsembleAssembly extends SubAssembly
     {
     super( pipe );
 
-    if( !ensembleSpec.getSelectionStrategy().isParallel() )
-      throw new IllegalArgumentException( "given selection strategy must support parallel models" );
+    if( !ensembleSpec.isParallel() )
+      throw new IllegalArgumentException( "given selection strategy must support parallel models, got: " + ensembleSpec.getSelectionStrategy() );
 
-    List<Spec> modelSpecs = ensembleSpec.getModelSpecs();
-
-    if( modelSpecs.size() < 2 )
+    if( ensembleSpec.getModelSpecs().size() < 2 )
       throw new IllegalArgumentException( "ensembles must have more than 1 model" );
 
     ModelSchema modelSchema = ensembleSpec.getModelSchema();
@@ -74,11 +72,12 @@ public class ParallelEnsembleAssembly extends SubAssembly
 
     boolean isCategorical = ensembleSpec.isPredictedCategorical();
 
+    // the parallel bits
     List<Pipe> pipes = new ArrayList<Pipe>();
 
-    for( int i = 0; i < modelSpecs.size(); i++ )
+    for( int i = 0; i < ensembleSpec.getModelSpecs().size(); i++ )
       {
-      Spec spec = modelSpecs.get( i );
+      Spec spec = (Spec) ensembleSpec.getModelSpecs().get( i );
 
       if( spec instanceof TreeSpec )
         pipes.add( createScoringPipe( i, pipe, modelSchema, new TreeFunction( (TreeSpec) spec, isCategorical, false ) ) );
@@ -89,7 +88,7 @@ public class ParallelEnsembleAssembly extends SubAssembly
     SelectionBuffer buffer;
 
     if( isCategorical )
-      buffer = new ClassificationSelectionBuffer( ensembleSpec );
+      buffer = new CategoricalSelectionBuffer( ensembleSpec );
     else
       buffer = new PredictionSelectionBuffer( ensembleSpec );
 

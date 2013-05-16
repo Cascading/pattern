@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class MajorityVote extends ClassificationSelector
+public class MajorityVote extends CategoricalSelector
   {
   private static final Logger LOG = LoggerFactory.getLogger( MajorityVote.class );
 

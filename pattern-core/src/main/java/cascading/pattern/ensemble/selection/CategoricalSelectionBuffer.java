@@ -35,12 +35,12 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class ClassificationSelectionBuffer extends SelectionBuffer<ClassificationSelectionBuffer.DecisionContext>
+public class CategoricalSelectionBuffer extends SelectionBuffer<CategoricalSelectionBuffer.DecisionContext>
   {
-  private static final Logger LOG = LoggerFactory.getLogger( ClassificationSelectionBuffer.class );
+  private static final Logger LOG = LoggerFactory.getLogger( CategoricalSelectionBuffer.class );
 
   private final String[] categories;
-  private ClassificationSelector selection;
+  private CategoricalSelector selection;
 
   protected class DecisionContext
     {
@@ -55,12 +55,16 @@ public class ClassificationSelectionBuffer extends SelectionBuffer<Classificatio
       }
     }
 
-  public ClassificationSelectionBuffer( EnsembleSpec ensembleSpec )
+  public CategoricalSelectionBuffer( EnsembleSpec ensembleSpec )
     {
     super( ensembleSpec.getModelSchema().getDeclaredFields(), ensembleSpec );
 
     this.categories = ensembleSpec.getCategoriesArray();
-    this.selection = (ClassificationSelector) ensembleSpec.getSelectionStrategy();
+
+    if( !( ensembleSpec.getSelectionStrategy() instanceof CategoricalSelector ) )
+      throw new IllegalArgumentException( "selection strategy must be Categorical, got: " + ensembleSpec.getSelectionStrategy() );
+
+    this.selection = (CategoricalSelector) ensembleSpec.getSelectionStrategy();
     }
 
   @Override
@@ -97,7 +101,7 @@ public class ClassificationSelectionBuffer extends SelectionBuffer<Classificatio
 
     String category = categories[ index ];
 
-    LOG.debug( "winning category: {}", category );
+    LOG.debug( "category: {}", category );
 
     if( !ensembleSpec.getModelSchema().isIncludePredictedCategories() )
       {

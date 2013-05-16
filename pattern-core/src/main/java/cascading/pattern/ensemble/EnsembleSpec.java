@@ -49,6 +49,11 @@ public class EnsembleSpec<S extends Spec> extends Spec implements Serializable
     this.modelSpecs = modelSpecs;
     }
 
+  public boolean isParallel()
+    {
+    return selectionStrategy.isParallel();
+    }
+
   public void addModelSpecs( List<S> modelSpec )
     {
     this.modelSpecs.addAll( modelSpec );
@@ -73,17 +78,6 @@ public class EnsembleSpec<S extends Spec> extends Spec implements Serializable
     {
     this.selectionStrategy = selectionStrategy;
     }
-
-//  @Override
-//  public List<String> getCategories()
-//    {
-//    List<String> categories = super.getCategories();
-//
-//    if( categories.isEmpty() )
-//      categories.addAll( getModelCategories() );
-//
-//    return categories;
-//    }
 
   public List<String> getModelCategories()
     {

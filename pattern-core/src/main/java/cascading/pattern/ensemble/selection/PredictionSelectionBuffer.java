@@ -58,6 +58,9 @@ public class PredictionSelectionBuffer extends SelectionBuffer<PredictionSelecti
     {
     super( ensembleSpec.getModelSchema().getDeclaredFields(), ensembleSpec );
 
+    if( !( ensembleSpec.getSelectionStrategy() instanceof PredictionSelector ) )
+      throw new IllegalArgumentException( "selection strategy must be Prediction, got: " + ensembleSpec.getSelectionStrategy() );
+
     this.selection = (PredictionSelector) ensembleSpec.getSelectionStrategy();
     }
 
@@ -82,8 +85,8 @@ public class PredictionSelectionBuffer extends SelectionBuffer<PredictionSelecti
     Arrays.fill( results, 0 ); // clear before use
 
     Iterator<TupleEntry> iterator = bufferCall.getArgumentsIterator();
-
     int count = 0;
+
     while( iterator.hasNext() )
       {
       TupleEntry next = iterator.next();

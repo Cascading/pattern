@@ -23,7 +23,7 @@ package cascading.pattern.ensemble.selection;
 /**
  *
  */
-public abstract class ClassificationSelector extends SelectionStrategy
+public abstract class CategoricalSelector extends SelectionStrategy
   {
   public abstract int select( int[] results );
   }
