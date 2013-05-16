@@ -30,18 +30,19 @@ import cascading.tuple.TupleEntry;
 /**
  *
  */
-public class ClusterEvaluator
+class ClusterEvaluator
   {
   private final Cluster cluster;
   private final ComparisonMeasure comparisonMeasure;
   private final CompareFunction[] compareFunctions;
+  private final double[] points;
 
   public ClusterEvaluator( Fields argumentFields, Cluster cluster, ComparisonMeasure comparisonMeasure, CompareFunction compareFunction )
     {
     this.cluster = cluster;
     this.comparisonMeasure = comparisonMeasure;
-
     this.compareFunctions = createCompareFunctions( argumentFields, compareFunction );
+    this.points = cluster.getPoints();
     }
 
   private CompareFunction[] createCompareFunctions( Fields fields, CompareFunction defaultFunction, CompareFunction... functions )
@@ -67,7 +68,7 @@ public class ClusterEvaluator
 
   double evaluate( TupleEntry tupleEntry )
     {
-    return comparisonMeasure.calculate( compareFunctions, tupleEntry.getTuple(), cluster.getPoints() );
+    return comparisonMeasure.calculate( compareFunctions, tupleEntry.getTuple(), points );
     }
 
   public String getTargetCategory()

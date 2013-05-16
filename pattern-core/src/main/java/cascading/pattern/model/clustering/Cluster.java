@@ -26,7 +26,8 @@ import java.util.List;
 import com.google.common.primitives.Doubles;
 
 /**
- *
+ * Class Cluster represents a point in space denoted by the given collection of {@code points} which
+ * in turn represents a particular {@code targetCategory}.
  */
 public class Cluster implements Serializable
   {
@@ -68,6 +69,15 @@ public class Cluster implements Serializable
 
   public double[] getPoints()
     {
-    return points;
+    double[] dest = new double[ points.length ];
+
+    System.arraycopy( points, 0, dest, 0, points.length );
+
+    return dest;
+    }
+
+  public int getPointsSize()
+    {
+    return points.length;
     }
   }

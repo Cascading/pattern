@@ -35,7 +35,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 
 /**
- *
+ * Class ClusteringSpec is used to define a cluster model for scoring.
  */
 public class ClusteringSpec extends Spec
   {
@@ -93,7 +93,7 @@ public class ClusteringSpec extends Spec
 
   public void addCluster( Cluster cluster )
     {
-    if( getModelSchema().getExpectedFieldNames().size() != cluster.getPoints().length )
+    if( getModelSchema().getExpectedFieldNames().size() != cluster.getPointsSize() )
       throw new IllegalArgumentException( "given points must be same size as active fields" );
 
     cluster.setOrdinal( getClusters().size() + 1 );

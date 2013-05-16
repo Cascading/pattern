@@ -30,7 +30,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Class ClusteringFunction applies a given {@link ClusteringSpec} model to a stream of data.
+ * <p/>
+ * Use the ClusteringSpec to define the incoming and result values.
+ * <p/>
+ * If {@link cascading.pattern.model.ModelSchema#isIncludePredictedCategories()} is {@code true} then
+ * a field named after every declared category will be emitted with the result of each {@link Cluster}.
  */
 public class ClusteringFunction extends ModelScoringFunction<ClusteringSpec, ClusteringFunction.EvaluatorContext>
   {
@@ -45,9 +50,6 @@ public class ClusteringFunction extends ModelScoringFunction<ClusteringSpec, Clu
   public ClusteringFunction( ClusteringSpec clusteringParam )
     {
     super( clusteringParam );
-
-    if( getFieldDeclaration().size() != 1 )
-      throw new IllegalArgumentException( "may only declare one field, was " + getFieldDeclaration().print() );
     }
 
   @Override

@@ -24,7 +24,8 @@ import cascading.pattern.model.clustering.compare.CompareFunction;
 import cascading.tuple.Tuple;
 
 /**
- *
+ * Class EuclideanMeasure calculates Euclidean distance between two points
+ * where the two points difference utilize the given {@link CompareFunction}.
  */
 public class EuclideanMeasure extends SquaredEuclideanMeasure
   {

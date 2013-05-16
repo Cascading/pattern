@@ -82,7 +82,7 @@ public class TreeFunction extends ModelScoringFunction<TreeSpec, DecisionTree>
 
     FinalDecision finalDecision = decisionTree.decide( functionCall.getArguments() );
 
-    LOG.debug( "final decision: {}", finalDecision );
+    LOG.debug( "decision: {}", finalDecision );
 
     Object result = this.result.transform( finalDecision );
 

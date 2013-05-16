@@ -61,8 +61,10 @@ import cascading.pattern.pmml.generalregression.GLMUtil;
 import cascading.pattern.pmml.regression.RegressionUtil;
 import cascading.pipe.Each;
 import cascading.pipe.Pipe;
+import cascading.pipe.assembly.Coerce;
 import cascading.pipe.assembly.Retain;
 import cascading.scheme.util.FieldTypeResolver;
+import cascading.tap.Tap;
 import cascading.tuple.Fields;
 import cascading.util.Util;
 import org.dmg.pmml.Cluster;
@@ -330,16 +332,43 @@ public class PMMLPlanner implements AssemblyPlanner
 
     Pipe tail = null;
 
-    if( context.getTails().size() == 0 && findHeadName( context ) != null )
-      tail = new Pipe( findHeadName( context ) );
+    String headName = findHeadName( context );
+
+    if( context.getTails().size() == 0 && headName != null )
+      tail = new Pipe( headName );
     else if( context.getTails().size() == 1 )
       tail = context.getTails().get( 0 );
+
+    tail = applyCoercion( tail, context.getFlow().getSource( headName ) );
 
     tail = resolveAssembly( tail ); // branch name is applied
 
     tail = new Pipe( findTailName( context ), tail ); // bind the tail to the sink tailName
 
     return Arrays.asList( tail );
+    }
+
+  private Pipe applyCoercion( Pipe tail, Tap source )
+    {
+    Fields sourceFields = source.getSourceFields();
+    FieldTypeResolver fieldTypeResolver = getFieldTypeResolver();
+
+    Fields coercedFields = Fields.NONE;
+
+    int count = 0;
+    for( Comparable sourceField : sourceFields )
+      {
+      Type incoming = sourceFields.getType( sourceField );
+      Type outgoing = fieldTypeResolver.inferTypeFrom( count++, sourceField.toString() );
+
+      if( incoming != outgoing )
+        coercedFields = coercedFields.append( new Fields( sourceField, outgoing ) );
+      }
+
+    if( coercedFields.isNone() )
+      return tail;
+
+    return new Coerce( tail, coercedFields );
     }
 
   private String findHeadName( Context context )
