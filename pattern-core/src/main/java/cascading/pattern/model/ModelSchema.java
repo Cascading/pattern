@@ -136,7 +136,7 @@ public class ModelSchema implements Serializable
     if( dataField instanceof ContinuousDataField )
       dataField = new CategoricalDataField( fieldName, String.class, categories );
     else
-      ( (CategoricalDataField) dataField ).setCategories( categories );
+      dataField = new CategoricalDataField( (CategoricalDataField) dataField, categories );
 
     dictionary.put( fieldName, dataField );
     }

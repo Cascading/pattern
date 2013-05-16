@@ -26,31 +26,55 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import cascading.tuple.Fields;
 
+
+/**
+ * Class CategoricalDataField represent a field with a fixed set of possible values.
+ * <p/>
+ * For example, if the field name is {@code SIZE}, it could have three possible categories,
+ * {@code small}, {@code medium), and {@code large}.
+ * <p/>
+ * Order of categories is retained so that indexes into the internal list of categories can be used
+ * to speed up some operations.
+ */
 public class CategoricalDataField extends DataField
   {
   protected List<String> categories = new ArrayList<String>();
 
-  public CategoricalDataField( String name, Type dataType, String... categories )
+  public CategoricalDataField( CategoricalDataField dataField, String... categories )
     {
-    this( name, dataType, Arrays.asList( categories ) );
+    this( dataField.name, dataField.getType(), categories );
     }
 
-  public CategoricalDataField( String name, Type dataType, List<String> categories )
+  public CategoricalDataField( Fields fields, String... categories )
     {
-    this.name = name;
-    this.type = dataType;
+    this( fields.get( 0 ).toString(), fields.getType( 0 ), categories );
+    }
+
+  public CategoricalDataField( Fields fields, List<String> categories )
+    {
+    this( fields.get( 0 ).toString(), fields.getType( 0 ), categories );
+    }
+
+  public CategoricalDataField( String name, Type type, String... categories )
+    {
+    this( name, type, Arrays.asList( categories ) );
+    }
+
+  public CategoricalDataField( String name, Type type, List<String> categories )
+    {
+    super( name, type );
     this.categories.addAll( categories );
     }
 
-  public void setCategories( String... categories )
-    {
-    this.categories.clear();
-    Collections.addAll( this.categories, categories );
-    }
-
+  /**
+   * Gets an unmodifiable list of the current categories.
+   *
+   * @return the categories
+   */
   public List<String> getCategories()
     {
-    return categories;
+    return Collections.unmodifiableList( categories );
     }
   }

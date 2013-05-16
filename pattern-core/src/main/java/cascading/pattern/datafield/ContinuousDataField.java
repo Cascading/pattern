@@ -22,12 +22,19 @@ package cascading.pattern.datafield;
 
 import java.lang.reflect.Type;
 
+import cascading.tuple.Fields;
 
+
+/** Class ContinuousDataField represent a field with a continuous set of values, like an {@link Double} value. */
 public class ContinuousDataField extends DataField
   {
-  public ContinuousDataField( String name, Type dataType )
+  public ContinuousDataField( Fields fields )
     {
-    this.name = name;
-    this.type = dataType;
+    super( fields );
+    }
+
+  public ContinuousDataField( String name, Type type )
+    {
+    super( name, type );
     }
   }

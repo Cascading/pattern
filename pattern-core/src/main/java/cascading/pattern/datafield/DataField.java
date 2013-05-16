@@ -23,11 +23,30 @@ package cascading.pattern.datafield;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 
+import cascading.tuple.Fields;
+
 
 public abstract class DataField implements Serializable
   {
   public String name;
   public Type type;
+
+  protected DataField( Fields fields )
+    {
+    this( fields.get( 0 ).toString(), fields.getType( 0 ) );
+    }
+
+  protected DataField( String name, Type type )
+    {
+    if( name == null || name.isEmpty() )
+      throw new IllegalArgumentException( "name may not be null or empty" );
+
+    if( type == null )
+      throw new IllegalArgumentException( "type may not be null" );
+
+    this.name = name;
+    this.type = type;
+    }
 
   public String getName()
     {

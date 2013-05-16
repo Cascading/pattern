@@ -108,7 +108,7 @@ public class PMMLPlanner implements AssemblyPlanner
   private PMML pmml;
   private PMMLModel pmmlModel;
   private Fields retainIncomingFields;
-  private String defaultPredictedFieldName;
+  private Fields defaultPredictedField;
 
   public PMMLPlanner( File pmmlFile )
     {
@@ -151,19 +151,19 @@ public class PMMLPlanner implements AssemblyPlanner
   /**
    * If a predicted data field is not declared, use this field name.
    *
-   * @param defaultPredictedFieldName
+   * @param defaultPredictedField
    * @return
    */
-  public PMMLPlanner setDefaultPredictedFieldName( String defaultPredictedFieldName )
+  public PMMLPlanner setDefaultPredictedField( Fields defaultPredictedField )
     {
-    this.defaultPredictedFieldName = defaultPredictedFieldName;
+    this.defaultPredictedField = defaultPredictedField;
 
     return this;
     }
 
-  public String getDefaultPredictedFieldName()
+  public Fields getDefaultPredictedField()
     {
-    return defaultPredictedFieldName;
+    return defaultPredictedField;
     }
 
   public String getHeadName()
@@ -676,8 +676,11 @@ public class PMMLPlanner implements AssemblyPlanner
         modelSchema.setPredictedFields( createDataFields( dataField ) );
       }
 
-    if( modelSchema.getPredictedFieldNames().isEmpty() ) // todo: infer type from current model
-      modelSchema.setPredictedFields( new ContinuousDataField( defaultPredictedFieldName, String.class ) );
+    if( modelSchema.getPredictedFieldNames().isEmpty() && defaultPredictedField == null )
+      throw new PatternException( "no predicted field name provided in PMML model, use setDefaultPredictedField() method" );
+
+    if( modelSchema.getPredictedFieldNames().isEmpty() )
+      modelSchema.setPredictedFields( new ContinuousDataField( defaultPredictedField ) );
 
     return modelSchema;
     }

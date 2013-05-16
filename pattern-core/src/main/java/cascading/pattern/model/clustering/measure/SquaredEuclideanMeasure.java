@@ -38,7 +38,7 @@ public class SquaredEuclideanMeasure extends DistanceMeasure
     double sumOfSquares = 0.0;
 
     for( int i = 0; i < points.length; i++ )
-      sumOfSquares += Math.pow( (Double) values.getObject( i ) - points[ i ], 2.0 );
+      sumOfSquares += Math.pow( values.getDouble( i ) - points[ i ], 2.0 );
 
     return sumOfSquares;
     }

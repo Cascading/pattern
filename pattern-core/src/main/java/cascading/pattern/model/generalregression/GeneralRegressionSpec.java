@@ -95,10 +95,12 @@ public class GeneralRegressionSpec extends Spec
       {
       Ordering<RegressionTable> ordering = Ordering.natural().onResultOf( new Function<RegressionTable, Comparable>()
       {
+      private List<String> categories = ( (CategoricalDataField) predictedField ).getCategories();
+
       @Override
       public Comparable apply( RegressionTable regressionTable )
         {
-        return ( (CategoricalDataField) predictedField ).getCategories().indexOf( regressionTable.getTargetCategory() );
+        return categories.indexOf( regressionTable.getTargetCategory() );
         }
       } );
 
