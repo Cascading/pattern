@@ -20,12 +20,10 @@
 
 package cascading.pattern.ensemble.selection;
 
-import java.io.Serializable;
-
 /**
  *
  */
-public abstract class SelectionStrategy implements Serializable
+public abstract class ClassificationSelector extends SelectionStrategy
   {
-  public abstract boolean isParallel();
+  public abstract int select( int[] results );
   }

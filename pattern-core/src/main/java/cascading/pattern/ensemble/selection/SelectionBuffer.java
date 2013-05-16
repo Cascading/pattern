@@ -20,101 +20,23 @@
 
 package cascading.pattern.ensemble.selection;
 
-import java.util.Arrays;
-import java.util.Iterator;
-
-import cascading.flow.FlowProcess;
 import cascading.operation.BaseOperation;
 import cascading.operation.Buffer;
-import cascading.operation.BufferCall;
-import cascading.operation.OperationCall;
 import cascading.pattern.ensemble.EnsembleSpec;
+import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
-import cascading.tuple.TupleEntry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  */
-public class SelectionBuffer extends BaseOperation<SelectionBuffer.DecisionContext> implements Buffer<SelectionBuffer.DecisionContext>
+public abstract class SelectionBuffer<Context> extends BaseOperation<Context> implements Buffer<Context>
   {
-  private static final Logger LOG = LoggerFactory.getLogger( SelectionBuffer.class );
+  protected final EnsembleSpec ensembleSpec;
 
-  private final EnsembleSpec ensembleSpec;
-  private final String[] categories;
-
-  protected class DecisionContext
+  public SelectionBuffer( Fields fieldDeclaration, EnsembleSpec ensembleSpec )
     {
-    public Tuple tuple;
-    public String[] categories;
-    public int[] results;
+    super( fieldDeclaration );
 
-    public Tuple result( Object value )
-      {
-      tuple.set( 0, value );
-
-      return tuple;
-      }
-    }
-
-  public SelectionBuffer( EnsembleSpec ensembleSpec )
-    {
-    super( ensembleSpec.getModelSchema().getDeclaredFields() );
     this.ensembleSpec = ensembleSpec;
-    this.categories = (String[]) ensembleSpec.getCategories().toArray( new String[ ensembleSpec.getCategories().size() ] );
-    }
-
-  @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<DecisionContext> operationCall )
-    {
-    ( (BufferCall) operationCall ).setRetainValues( true );
-
-    DecisionContext context = new DecisionContext();
-
-    context.tuple = Tuple.size( getFieldDeclaration().size() );
-    context.categories = this.categories;
-    context.results = new int[ categories.length ];
-
-    operationCall.setContext( context );
-    }
-
-  @Override
-  public void operate( FlowProcess flowProcess, BufferCall<DecisionContext> bufferCall )
-    {
-    int[] results = bufferCall.getContext().results;
-
-    Arrays.fill( results, 0 ); // clear before use
-
-    Iterator<TupleEntry> iterator = bufferCall.getArgumentsIterator();
-
-    while( iterator.hasNext() )
-      {
-      TupleEntry next = iterator.next();
-      Integer category = (Integer) next.getObject( 0 );
-
-      results[ category ] += 1;
-      }
-
-    int index = ensembleSpec.getSelectionStrategy().select( results );
-
-    String category = categories[ index ];
-
-    LOG.debug( "winning category: {}", category );
-
-    if( !ensembleSpec.getModelSchema().isIncludePredictedCategories() )
-      {
-      bufferCall.getOutputCollector().add( bufferCall.getContext().result( category ) );
-      return;
-      }
-
-    Tuple result = bufferCall.getContext().tuple;
-
-    result.set( 0, category );
-
-    for( int i = 0; i < results.length; i++ )
-      result.set( i + 1, results[ i ] );
-
-    bufferCall.getOutputCollector().add( result );
     }
   }

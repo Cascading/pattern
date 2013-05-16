@@ -35,27 +35,32 @@ public class FinalDecision extends Decision
   {
   private static final Logger LOG = LoggerFactory.getLogger( FinalDecision.class );
 
-  private final String category;
+  private final Object score;
   private final int index;
+
+  public FinalDecision( Tree tree, Node node )
+    {
+    this( null, tree, node );
+    }
 
   public FinalDecision( String[] categories, Tree tree, Node node )
     {
     super( tree, node );
 
-    this.category = node.getCategory();
+    this.score = node.getScore();
 
-    if( this.category == null )
+    if( this.score == null )
       throw new IllegalStateException( "score may not be null, likely missing leaf node in tree at: " + getName() );
 
     if( categories != null )
-      this.index = Arrays.asList( categories ).indexOf( this.category );
+      this.index = Arrays.asList( categories ).indexOf( this.score );
     else
       this.index = -1;
     }
 
-  public String getCategory()
+  public Object getScore()
     {
-    return category;
+    return score;
     }
 
   public int getIndex()
@@ -76,7 +81,7 @@ public class FinalDecision extends Decision
     {
     final StringBuilder sb = new StringBuilder( "FinalDecision{" );
     sb.append( "name='" ).append( getName() ).append( '\'' );
-    sb.append( ",category='" ).append( category ).append( '\'' );
+    sb.append( ",score='" ).append( score ).append( '\'' );
     sb.append( '}' );
     return sb.toString();
     }

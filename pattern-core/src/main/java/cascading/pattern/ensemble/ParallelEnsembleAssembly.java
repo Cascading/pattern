@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cascading.pattern.ensemble.function.InsertGUID;
+import cascading.pattern.ensemble.selection.ClassificationSelectionBuffer;
+import cascading.pattern.ensemble.selection.PredictionSelectionBuffer;
 import cascading.pattern.ensemble.selection.SelectionBuffer;
 import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.ModelScoringFunction;
@@ -49,6 +51,8 @@ public class ParallelEnsembleAssembly extends SubAssembly
 
   public ParallelEnsembleAssembly( Pipe pipe, EnsembleSpec ensembleSpec )
     {
+    super( pipe );
+
     if( !ensembleSpec.getSelectionStrategy().isParallel() )
       throw new IllegalArgumentException( "given selection strategy must support parallel models" );
 
@@ -68,6 +72,8 @@ public class ParallelEnsembleAssembly extends SubAssembly
       pipe = new InsertGUID( pipe, keyFields );
       }
 
+    boolean isCategorical = ensembleSpec.isPredictedCategorical();
+
     List<Pipe> pipes = new ArrayList<Pipe>();
 
     for( int i = 0; i < modelSpecs.size(); i++ )
@@ -75,12 +81,19 @@ public class ParallelEnsembleAssembly extends SubAssembly
       Spec spec = modelSpecs.get( i );
 
       if( spec instanceof TreeSpec )
-        pipes.add( createScoringPipe( i, pipe, modelSchema, new TreeFunction( (TreeSpec) spec, true, false ) ) );
+        pipes.add( createScoringPipe( i, pipe, modelSchema, new TreeFunction( (TreeSpec) spec, isCategorical, false ) ) );
       }
 
     pipe = new GroupBy( "vote", pipes.toArray( new Pipe[ pipes.size() ] ), keyFields );
 
-    pipe = new Every( pipe, predictedFields, new SelectionBuffer( ensembleSpec ), Fields.SWAP );
+    SelectionBuffer buffer;
+
+    if( isCategorical )
+      buffer = new ClassificationSelectionBuffer( ensembleSpec );
+    else
+      buffer = new PredictionSelectionBuffer( ensembleSpec );
+
+    pipe = new Every( pipe, predictedFields, buffer, Fields.SWAP );
 
     if( modelSchema.getKeyFields().isNone() )
       pipe = new Discard( pipe, keyFields );

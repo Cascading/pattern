@@ -53,14 +53,14 @@ public class Tree implements Serializable
     return root;
     }
 
-  public Set<String> getCategories()
+  public Set<Object> getScores()
     {
-    Set<String> set = new LinkedHashSet<String>();
+    Set<Object> set = new LinkedHashSet<Object>();
 
     for( Node node : getGraph().vertexSet() )
       {
-      if( node.getCategory() != null )
-        set.add( node.getCategory() );
+      if( node.getScore() != null )
+        set.add( node.getScore() );
       }
 
     return set;
@@ -76,12 +76,12 @@ public class Tree implements Serializable
     addPredicate( fromID, toID, predicate, null );
     }
 
-  public void addPredicate( String fromID, String toID, Predicate predicate, String category )
+  public void addPredicate( String fromID, String toID, Predicate predicate, Object score )
     {
     if( nodes.containsKey( toID ) )
       throw new IllegalArgumentException( "duplicate node name: " + toID );
 
-    Node toNode = new Node( toID, predicate, category );
+    Node toNode = new Node( toID, predicate, score );
 
     nodes.put( toID, toNode );
     graph.addVertex( toNode );

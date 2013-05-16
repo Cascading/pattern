@@ -54,6 +54,13 @@ public abstract class Spec implements Serializable
     return modelSchema;
     }
 
+  public boolean isPredictedCategorical()
+    {
+    DataField predictedField = getModelSchema().getPredictedField( getModelSchema().getPredictedFieldNames().get( 0 ) );
+
+    return predictedField instanceof CategoricalDataField;
+    }
+
   public List<String> getCategories()
     {
     DataField predictedField = getModelSchema().getPredictedField( getModelSchema().getPredictedFieldNames().get( 0 ) );

@@ -29,12 +29,16 @@ import cascading.pattern.util.Logging;
 import cascading.tuple.Tuple;
 import junit.framework.AssertionFailedError;
 import junit.framework.ComparisonFailure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 public class PatternPlatformTestCase extends PlatformTestCase
   {
+  private static final Logger LOG = LoggerFactory.getLogger( PatternPlatformTestCase.class );
+
   public static void enableLogging( String log, String level )
     {
     Logging.setLogLevel( PatternPlatformTestCase.class, log, level );
@@ -74,6 +78,7 @@ public class PatternPlatformTestCase extends PlatformTestCase
         }
       catch( AssertionFailedError exception )
         {
+        LOG.error( "actual error", exception );
         throw new ComparisonFailure( "tuples not equal", lhsTuple.toString(), rhsTuple.toString() );
         }
       }

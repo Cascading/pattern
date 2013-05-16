@@ -20,12 +20,34 @@
 
 package cascading.pattern.ensemble.selection;
 
-import java.io.Serializable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
-public abstract class SelectionStrategy implements Serializable
+public class Average extends PredictionSelector
   {
-  public abstract boolean isParallel();
+  private static final Logger LOG = LoggerFactory.getLogger( Average.class );
+
+  @Override
+  public boolean isParallel()
+    {
+    return true;
+    }
+
+  @Override
+  double predict( double[] results )
+    {
+    double sum = 0;
+
+    for( double result : results )
+      sum += result;
+
+    double avg = sum / results.length;
+
+    LOG.debug( "prediction: {}", avg );
+
+    return avg;
+    }
   }

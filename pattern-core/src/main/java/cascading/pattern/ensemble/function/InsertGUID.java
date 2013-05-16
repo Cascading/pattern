@@ -33,6 +33,8 @@ public class InsertGUID extends SubAssembly
   {
   public InsertGUID( Pipe previous, Fields declaredFields )
     {
+    super( previous );
+
     String expression = "cascading.util.Util.createUniqueID()";
 
     ExpressionFunction expressionFunction = new ExpressionFunction( declaredFields, expression )

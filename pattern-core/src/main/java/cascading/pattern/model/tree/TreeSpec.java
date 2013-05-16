@@ -52,15 +52,6 @@ public class TreeSpec extends Spec
     this.tree = tree;
     }
 
-  public List<String> getNodeCategories()
-    {
-    List<String> categories = new ArrayList<String>();
-
-    categories.addAll( tree.getCategories() );
-
-    return categories;
-    }
-
   @Override
   public String toString()
     {

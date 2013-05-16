@@ -1,0 +1,1601 @@
+<?xml version="1.0"?>
+<PMML version="4.1" xmlns="http://www.dmg.org/PMML-4_1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dmg.org/PMML-4_1 http://www.dmg.org/v4-1/pmml-4-1.xsd">
+ <Header copyright="Copyright (c)2012, Concurrent, Inc. (www.concurrentinc.com)" description="Random Forest Tree Model">
+  <Extension name="user" value="girish.kathalagiri" extender="Rattle/PMML"/>
+  <Application name="Rattle/PMML" version="1.2.34r27"/>
+  <Timestamp>2013-04-25 11:52:47</Timestamp>
+ </Header>
+ <DataDictionary numberOfFields="5">
+  <DataField name="setosa" optype="continuous" dataType="double"/>
+  <DataField name="sepal_length" optype="continuous" dataType="double"/>
+  <DataField name="sepal_width" optype="continuous" dataType="double"/>
+  <DataField name="petal_length" optype="continuous" dataType="double"/>
+  <DataField name="petal_width" optype="continuous" dataType="double"/>
+ </DataDictionary>
+ <MiningModel modelName="randomForest_Model" functionName="regression">
+  <MiningSchema>
+   <MiningField name="setosa" usageType="predicted"/>
+   <MiningField name="sepal_length" usageType="active"/>
+   <MiningField name="sepal_width" usageType="active"/>
+   <MiningField name="petal_length" usageType="active"/>
+   <MiningField name="petal_width" usageType="active"/>
+  </MiningSchema>
+  <Output>
+   <OutputField name="Predicted_setosa" feature="predictedValue"/>
+  </Output>
+  <Segmentation multipleModelMethod="average">
+   <Segment id="1">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="2">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="3">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
+       <Node id="4">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.15"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.95"/>
+        </Node>
+        <Node id="9">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="4.95"/>
+         <Node id="10" score="0">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.65"/>
+         </Node>
+         <Node id="11" score="1">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="2.65"/>
+         </Node>
+        </Node>
+       </Node>
+       <Node id="5" score="0.666666666666667">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.15"/>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.6"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="0.6"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="4">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.05"/>
+       <Node id="4" score="0">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.95"/>
+       </Node>
+       <Node id="5" score="0.142857142857143">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="2.95"/>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="3.05"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.85"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.85"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="5">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.3"/>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.3"/>
+       <Node id="4">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.85"/>
+        <Node id="6">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.6"/>
+         <Node id="8" score="0">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.2"/>
+         </Node>
+         <Node id="9" score="1">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="3.2"/>
+         </Node>
+        </Node>
+        <Node id="7" score="0">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="5.6"/>
+        </Node>
+       </Node>
+       <Node id="5" score="1">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="3.85"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="6">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.15"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.05"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.05"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.35"/>
+        </Node>
+        <Node id="9" score="0">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="2.35"/>
+        </Node>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.15"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="7">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.05"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.6"/>
+       </Node>
+       <Node id="5" score="0">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="0.6"/>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="3.05"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.7"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.7"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="8">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.35"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.6"/>
+       </Node>
+       <Node id="5" score="0">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="0.6"/>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="3.35"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="3.05"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="3.05"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="9">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="10">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.35"/>
+       <Node id="4">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.05"/>
+        <Node id="8" score="0">
+         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.95"/>
+        </Node>
+        <Node id="9">
+         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.95"/>
+         <Node id="12" score="1">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.8"/>
+         </Node>
+         <Node id="13" score="0">
+          <SimplePredicate field="petal_length" operator="greaterThan" value="2.8"/>
+         </Node>
+        </Node>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="3.05"/>
+        <Node id="10">
+         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.25"/>
+         <Node id="14">
+          <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.15"/>
+          <Node id="16" score="1">
+           <SimplePredicate field="petal_width" operator="lessOrEqual" value="1"/>
+          </Node>
+          <Node id="17" score="0">
+           <SimplePredicate field="petal_width" operator="greaterThan" value="1"/>
+          </Node>
+         </Node>
+         <Node id="15">
+          <SimplePredicate field="sepal_width" operator="greaterThan" value="3.15"/>
+          <Node id="18" score="1">
+           <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
+          </Node>
+          <Node id="19" score="0">
+           <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
+          </Node>
+         </Node>
+        </Node>
+        <Node id="11" score="0">
+         <SimplePredicate field="sepal_width" operator="greaterThan" value="3.25"/>
+        </Node>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="3.35"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.4"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.4"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="11">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="12">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="13">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="0">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.95"/>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="2.95"/>
+       <Node id="4">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.45"/>
+        <Node id="6" score="1">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.25"/>
+        </Node>
+        <Node id="7">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="5.25"/>
+         <Node id="10" score="0.333333333333333">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.5"/>
+         </Node>
+         <Node id="11" score="0">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="5.5"/>
+         </Node>
+        </Node>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="3.45"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="4"/>
+        </Node>
+        <Node id="9" score="0">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="4"/>
+        </Node>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="14">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="15">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="16">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="17">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.55"/>
+       <Node id="4" score="0">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.85"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="2.85"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.3"/>
+        </Node>
+        <Node id="9">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="5.3"/>
+         <Node id="10">
+          <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
+          <Node id="12" score="1">
+           <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.95"/>
+          </Node>
+          <Node id="13" score="0">
+           <SimplePredicate field="petal_width" operator="greaterThan" value="0.95"/>
+          </Node>
+         </Node>
+         <Node id="11" score="1">
+          <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
+         </Node>
+        </Node>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.55"/>
+       <Node id="6" score="0">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.65"/>
+       </Node>
+       <Node id="7" score="1">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="3.65"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="18">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.9"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="4.9"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.45"/>
+        </Node>
+        <Node id="9" score="0">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="2.45"/>
+        </Node>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
+       <Node id="6">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.55"/>
+        <Node id="10" score="0">
+         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.05"/>
+        </Node>
+        <Node id="11" score="1">
+         <SimplePredicate field="sepal_width" operator="greaterThan" value="3.05"/>
+        </Node>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.55"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="19">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
+       <Node id="4">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.15"/>
+        <Node id="8" score="0">
+         <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.65"/>
+        </Node>
+        <Node id="9" score="1">
+         <SimplePredicate field="sepal_width" operator="greaterThan" value="2.65"/>
+        </Node>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.15"/>
+        <Node id="10" score="0">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.3"/>
+        </Node>
+        <Node id="11">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="5.3"/>
+         <Node id="14" score="1">
+          <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.95"/>
+         </Node>
+         <Node id="15" score="0">
+          <SimplePredicate field="petal_width" operator="greaterThan" value="0.95"/>
+         </Node>
+        </Node>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
+       <Node id="6" score="0.4">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.55"/>
+       </Node>
+       <Node id="7">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.55"/>
+        <Node id="12">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.9"/>
+         <Node id="16" score="1">
+          <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.35"/>
+         </Node>
+         <Node id="17" score="0">
+          <SimplePredicate field="petal_length" operator="greaterThan" value="2.35"/>
+         </Node>
+        </Node>
+        <Node id="13" score="0">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="5.9"/>
+        </Node>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="20">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="21">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.05"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.05"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.45"/>
+        </Node>
+        <Node id="9" score="0">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="2.45"/>
+        </Node>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.6"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="0.6"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="22">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
+       <Node id="4" score="0">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.75"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="2.75"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.3"/>
+        </Node>
+        <Node id="9" score="0.714285714285714">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="5.3"/>
+        </Node>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
+       <Node id="6">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.9"/>
+        <Node id="10" score="1">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.6"/>
+        </Node>
+        <Node id="11" score="0">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="0.6"/>
+        </Node>
+       </Node>
+       <Node id="7" score="1">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="3.9"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="23">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="24">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="0">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.95"/>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="2.95"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.05"/>
+       </Node>
+       <Node id="5" score="0">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.05"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="25">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="26">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.15"/>
+       <Node id="4">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.05"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.45"/>
+        </Node>
+        <Node id="9" score="0">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="2.45"/>
+        </Node>
+       </Node>
+       <Node id="5" score="0">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.05"/>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="3.15"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.85"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.85"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="27">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.35"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.95"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="4.95"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
+        </Node>
+        <Node id="9" score="0">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
+        </Node>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="3.35"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.55"/>
+       </Node>
+       <Node id="7">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="3.55"/>
+        <Node id="10" score="1">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.2"/>
+        </Node>
+        <Node id="11" score="0">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="6.2"/>
+        </Node>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="28">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.35"/>
+       <Node id="4">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.2"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.45"/>
+        </Node>
+        <Node id="9" score="0">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="2.45"/>
+        </Node>
+       </Node>
+       <Node id="5" score="0">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="5.2"/>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="3.35"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.1"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.1"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="29">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.75"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.75"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="30">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.45"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.45"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="31">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.7"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.7"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="32">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.35"/>
+       <Node id="4" score="0">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.95"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="2.95"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.25"/>
+        </Node>
+        <Node id="9" score="0">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="5.25"/>
+        </Node>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="3.35"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="3.2"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="3.2"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="33">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="sepal_length" operator="lessOrEqual" value="4.9"/>
+       </Node>
+       <Node id="5">
+        <SimplePredicate field="sepal_length" operator="greaterThan" value="4.9"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.5"/>
+        </Node>
+        <Node id="9" score="0">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="2.5"/>
+        </Node>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
+       <Node id="6">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.9"/>
+        <Node id="10" score="1">
+         <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.4"/>
+        </Node>
+        <Node id="11" score="0">
+         <SimplePredicate field="petal_length" operator="greaterThan" value="2.4"/>
+        </Node>
+       </Node>
+       <Node id="7" score="1">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="3.9"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="34">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="35">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="36">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.35"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.3"/>
+       </Node>
+       <Node id="5" score="0">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="2.3"/>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="3.35"/>
+       <Node id="6">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.85"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.7"/>
+        </Node>
+        <Node id="9" score="0">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="5.7"/>
+        </Node>
+       </Node>
+       <Node id="7" score="1">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="3.85"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="37">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.45"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.45"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="38">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.55"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.7"/>
+       </Node>
+       <Node id="5" score="0">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="0.7"/>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.55"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.55"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="2.55"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="39">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="0">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.95"/>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="2.95"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="3"/>
+       </Node>
+       <Node id="5" score="0">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="3"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="40">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.35"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.45"/>
+       </Node>
+       <Node id="5" score="0">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="2.45"/>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="3.35"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.2"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="1.2"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="41">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="42">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.25"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.3"/>
+       </Node>
+       <Node id="5" score="0">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="2.3"/>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="3.25"/>
+       <Node id="6">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.35"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="petal_width" operator="lessOrEqual" value="1.3"/>
+        </Node>
+        <Node id="9" score="0">
+         <SimplePredicate field="petal_width" operator="greaterThan" value="1.3"/>
+        </Node>
+       </Node>
+       <Node id="7" score="1">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="3.35"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="43">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.6"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.6"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="44">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="45">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.8"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_width" operator="greaterThan" value="0.8"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="46">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.85"/>
+       </Node>
+       <Node id="5" score="0">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="0.85"/>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
+       <Node id="6" score="0">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.45"/>
+       </Node>
+       <Node id="7">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="3.45"/>
+        <Node id="8" score="1">
+         <SimplePredicate field="sepal_length" operator="lessOrEqual" value="6.5"/>
+        </Node>
+        <Node id="9" score="0">
+         <SimplePredicate field="sepal_length" operator="greaterThan" value="6.5"/>
+        </Node>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="47">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_length" operator="lessOrEqual" value="5.45"/>
+       <Node id="4" score="0">
+        <SimplePredicate field="sepal_width" operator="lessOrEqual" value="2.85"/>
+       </Node>
+       <Node id="5" score="1">
+        <SimplePredicate field="sepal_width" operator="greaterThan" value="2.85"/>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_length" operator="greaterThan" value="5.45"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="petal_width" operator="lessOrEqual" value="0.6"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="petal_width" operator="greaterThan" value="0.6"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="48">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.7"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.7"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="49">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2" score="1">
+       <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.45"/>
+      </Node>
+      <Node id="3" score="0">
+       <SimplePredicate field="petal_length" operator="greaterThan" value="2.45"/>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+   <Segment id="50">
+    <True/>
+    <TreeModel modelName="randomForest_Model" functionName="regression" algorithmName="randomForest" splitCharacteristic="binarySplit">
+     <MiningSchema>
+      <MiningField name="setosa" usageType="predicted"/>
+      <MiningField name="sepal_length" usageType="active"/>
+      <MiningField name="sepal_width" usageType="active"/>
+      <MiningField name="petal_length" usageType="active"/>
+      <MiningField name="petal_width" usageType="active"/>
+     </MiningSchema>
+     <Node id="1">
+      <True/>
+      <Node id="2">
+       <SimplePredicate field="sepal_width" operator="lessOrEqual" value="3.15"/>
+       <Node id="4" score="1">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="2.3"/>
+       </Node>
+       <Node id="5" score="0">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="2.3"/>
+       </Node>
+      </Node>
+      <Node id="3">
+       <SimplePredicate field="sepal_width" operator="greaterThan" value="3.15"/>
+       <Node id="6" score="1">
+        <SimplePredicate field="petal_length" operator="lessOrEqual" value="3.1"/>
+       </Node>
+       <Node id="7" score="0">
+        <SimplePredicate field="petal_length" operator="greaterThan" value="3.1"/>
+       </Node>
+      </Node>
+     </Node>
+    </TreeModel>
+   </Segment>
+  </Segmentation>
+ </MiningModel>
+</PMML>

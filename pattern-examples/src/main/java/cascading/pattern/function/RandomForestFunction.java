@@ -104,7 +104,7 @@ public class RandomForestFunction extends ModelScoringFunction<RandomForestSpec,
       FinalDecision finalDecision = decisionTrees[ i ].decide( arguments );
 
       if( LOG.isDebugEnabled() )
-        LOG.debug( "segment: {}, returned category: {}", i, finalDecision.getCategory() );
+        LOG.debug( "segment: {}, returned category: {}", i, finalDecision.getScore() );
 
       results[ finalDecision.getIndex() ]++;
       }

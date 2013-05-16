@@ -109,4 +109,10 @@ public class SimplePMMLPlatformTest extends PMMLPlatformTestCase
     {
     pmmlTest( "sample.rf", Fields.FIRST, Fields.LAST );
     }
+
+  @Test
+  public void testRandomForestRegression() throws IOException
+    {
+    pmmlTest( "iris.rf.bin", new Fields("setosa"), new Fields( "predict", double.class ) );
+    }
   }

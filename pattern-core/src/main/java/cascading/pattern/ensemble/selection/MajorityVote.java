@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class MajorityVote extends SelectionStrategy
+public class MajorityVote extends ClassificationSelector
   {
   private static final Logger LOG = LoggerFactory.getLogger( MajorityVote.class );
 

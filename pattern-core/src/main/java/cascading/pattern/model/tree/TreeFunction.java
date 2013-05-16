@@ -57,12 +57,12 @@ public class TreeFunction extends ModelScoringFunction<TreeSpec, DecisionTree>
         }
       };
     else
-      result = new Result<FinalDecision, String>()
+      result = new Result<FinalDecision,Object>()
       {
       @Override
-      public String transform( FinalDecision finalDecision )
+      public Object transform( FinalDecision finalDecision )
         {
-        return finalDecision.getCategory();
+        return finalDecision.getScore();
         }
       };
     }

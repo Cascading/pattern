@@ -37,6 +37,9 @@ import cascading.pattern.PatternException;
 import cascading.pattern.datafield.ContinuousDataField;
 import cascading.pattern.ensemble.EnsembleSpec;
 import cascading.pattern.ensemble.ParallelEnsembleAssembly;
+import cascading.pattern.ensemble.selection.Average;
+import cascading.pattern.ensemble.selection.MajorityVote;
+import cascading.pattern.ensemble.selection.SelectionStrategy;
 import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.ModelScoringFunction;
 import cascading.pattern.model.clustering.ClusteringFunction;
@@ -56,7 +59,6 @@ import cascading.pattern.model.tree.TreeFunction;
 import cascading.pattern.model.tree.TreeSpec;
 import cascading.pattern.pmml.generalregression.GLMUtil;
 import cascading.pattern.pmml.regression.RegressionUtil;
-import cascading.pattern.pmml.tree.TreeUtil;
 import cascading.pipe.Each;
 import cascading.pipe.Pipe;
 import cascading.pipe.assembly.Retain;
@@ -82,11 +84,13 @@ import org.dmg.pmml.PMML;
 import org.dmg.pmml.RegressionModel;
 import org.dmg.pmml.Segment;
 import org.dmg.pmml.TreeModel;
+import org.dmg.pmml.True;
 import org.jpmml.manager.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static cascading.pattern.pmml.DataFields.createDataFields;
+import static cascading.pattern.pmml.tree.TreeUtil.createTree;
 
 /**
  *
@@ -416,9 +420,6 @@ public class PMMLPlanner implements AssemblyPlanner
       return false;
       }
 
-    if( model.getSegmentation().getMultipleModelMethod() != MultipleModelMethodType.MAJORITY_VOTE )
-      throw new PatternException( "only majority vote method supported, got: " + model.getSegmentation().getMultipleModelMethod() );
-
     return true;
     }
 
@@ -429,8 +430,11 @@ public class PMMLPlanner implements AssemblyPlanner
 
     for( Segment segment : model.getSegmentation().getSegments() )
       {
+      if( !segment.getPredicate().getClass().equals( True.class ) )
+        throw new PatternException( "segment predicates currently not supported, got: " + segment.getPredicate() );
+
       TreeModel treeModel = (TreeModel) segment.getModel();
-      Tree tree = TreeUtil.createTree( treeModel, modelSchema );
+      Tree tree = createTree( treeModel, modelSchema );
 
       models.add( new TreeSpec( modelSchema, tree ) );
       }
@@ -440,14 +444,49 @@ public class PMMLPlanner implements AssemblyPlanner
     LOG.debug( "creating: {}, input: {}, output: {}", new Object[]{miningSpec, modelSchema.getInputFields(),
                                                                    modelSchema.getDeclaredFields()} );
 
+    SelectionStrategy strategy = getSelectionStrategy( model );
+
+    miningSpec.setSelectionStrategy( strategy );
+
     return new ParallelEnsembleAssembly( tail, miningSpec );
+    }
+
+  private SelectionStrategy getSelectionStrategy( MiningModel model )
+    {
+    MultipleModelMethodType modelMethod = model.getSegmentation().getMultipleModelMethod();
+
+    switch( modelMethod )
+      {
+      case MAJORITY_VOTE:
+        return new MajorityVote();
+      case AVERAGE:
+        return new Average();
+      case WEIGHTED_MAJORITY_VOTE:
+        break;
+      case WEIGHTED_AVERAGE:
+        break;
+      case MEDIAN:
+        break;
+      case MAX:
+        break;
+      case SUM:
+        break;
+      case SELECT_FIRST:
+        break;
+      case SELECT_ALL:
+        break;
+      case MODEL_CHAIN:
+        break;
+      }
+
+    throw new PatternException( "only majority vote method supported, got: " + modelMethod );
     }
 
   private Pipe handleTreeModel( Pipe tail, TreeModel model )
     {
     ModelSchema modelSchema = createModelSchema( model );
 
-    Tree tree = TreeUtil.createTree( model, modelSchema );
+    Tree tree = createTree( model, modelSchema );
 
     TreeSpec treeSpec = new TreeSpec( modelSchema, tree );
 
@@ -583,11 +622,32 @@ public class PMMLPlanner implements AssemblyPlanner
 
   private Pipe handleMiningModel( Pipe tail, MiningModel model )
     {
-    // todo: support all models types, not just tree/random forest
-    if( isRandomForest( model ) )
-      tail = handleRandomForestModel( tail, model );
-    else
-      throw new PatternException( "unsupported mining model algorithm type: " + model.getAlgorithmName() );
+    ModelSchema modelSchema = createModelSchema( model );
+    List<TreeSpec> models = new LinkedList<TreeSpec>();
+
+    for( Segment segment : model.getSegmentation().getSegments() )
+      {
+      if( !segment.getPredicate().getClass().equals( True.class ) )
+        throw new PatternException( "segment predicates currently not supported, got: " + segment.getPredicate() );
+
+      Model segmentModel = segment.getModel();
+
+      if( segmentModel instanceof TreeModel )
+        models.add( new TreeSpec( modelSchema, createTree( (TreeModel) segmentModel, modelSchema ) ) );
+      else
+        throw new PatternException( "ensemble model currently not supported, got: " + segmentModel );
+      }
+
+    EnsembleSpec<TreeSpec> miningSpec = new EnsembleSpec<TreeSpec>( modelSchema, models );
+
+    LOG.debug( "creating: {}, input: {}, output: {}", new Object[]{miningSpec, modelSchema.getInputFields(),
+                                                                   modelSchema.getDeclaredFields()} );
+
+    SelectionStrategy strategy = getSelectionStrategy( model );
+
+    miningSpec.setSelectionStrategy( strategy );
+
+    tail = new ParallelEnsembleAssembly( tail, miningSpec );
 
     return tail;
     }
