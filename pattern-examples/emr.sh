@@ -19,7 +19,7 @@ DATA=sample.tsv
 s3cmd del -r s3://$BUCKET/$SINK
 
 # load built JAR + input data
-s3cmd put build/libs/pattern.jar s3://$BUCKET/
+s3cmd put build/libs/pattern-examples-*.jar s3://$BUCKET/pattern.jar
 s3cmd put data/$PMML s3://$BUCKET/
 s3cmd put data/$DATA s3://$BUCKET/
 
@@ -30,6 +30,5 @@ elastic-mapreduce --create --name "RF" \
   --jar s3n://$BUCKET/pattern.jar \
   --arg s3n://$BUCKET/$DATA \
   --arg s3n://$BUCKET/$SINK/classify \
-  --arg s3n://$BUCKET/$SINK/trap \
   --arg "--pmml" \
   --arg s3n://$BUCKET/$PMML
