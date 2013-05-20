@@ -20,13 +20,14 @@
 
 package cascading.pattern.model.tree;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.Spec;
 
 
+/**
+ * Class TreeSpec is used to define a decision tree model. It simply holds a {@link Tree} instance
+ * populated with {@link cascading.pattern.model.tree.predicate.Predicate} instances.
+ */
 public class TreeSpec extends Spec
   {
   public Tree tree;

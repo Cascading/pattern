@@ -27,7 +27,7 @@ import java.io.Serializable;
  */
 public abstract class Normalization implements Serializable
   {
-  public static final Normalization NULL = new Normalization()
+  public static final Normalization NONE = new Normalization()
   {
   @Override
   public double[] normalize( double[] values )

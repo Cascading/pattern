@@ -22,9 +22,7 @@ package cascading.pattern.model.tree.predicate;
 
 import java.util.Collection;
 
-/**
- *
- */
+/** Class IsNotInSetPredicate returns true if the current value is not in the given collection of values. */
 public class IsNotInSetPredicate extends SimpleSetPredicate
   {
   public IsNotInSetPredicate( String field, Collection values )

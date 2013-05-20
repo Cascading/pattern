@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package cascading.pattern.pmml.tree;
+package cascading.pattern.pmml;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -41,7 +41,6 @@ import cascading.pattern.model.tree.predicate.compound.AndPredicate;
 import cascading.pattern.model.tree.predicate.compound.OrPredicate;
 import cascading.pattern.model.tree.predicate.compound.SurrogatePredicate;
 import cascading.pattern.model.tree.predicate.compound.XorPredicate;
-import cascading.pattern.pmml.PMMLUtil;
 import cascading.tuple.coerce.Coercions;
 import org.dmg.pmml.ArrayType;
 import org.dmg.pmml.CompoundPredicate;
@@ -54,7 +53,7 @@ import org.dmg.pmml.TreeModel;
 /**
  *
  */
-public class TreeUtil
+class TreeUtil
   {
   public static Tree createTree( TreeModel model, ModelSchema modelSchema )
     {

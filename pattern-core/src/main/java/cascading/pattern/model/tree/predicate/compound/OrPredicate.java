@@ -25,9 +25,7 @@ import java.util.List;
 
 import cascading.pattern.model.tree.predicate.Predicate;
 
-/**
- *
- */
+/** Class OrPredicate returns true if any child predicate returns true. */
 public class OrPredicate extends CompoundPredicate
   {
   public OrPredicate( List<Predicate> children )

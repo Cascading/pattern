@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 import static cascading.pattern.pmml.PMMLUtil.asStrings;
 
 
-public class DataFields
+class DataFields
   {
   /** Field LOG */
   private static final Logger LOG = LoggerFactory.getLogger( DataFields.class );

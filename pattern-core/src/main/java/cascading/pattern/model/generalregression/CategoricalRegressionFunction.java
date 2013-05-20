@@ -34,7 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Class CategoricalRegressionFunction will return a classification or category with the greatest probability
+ * as determined by the set of {@link RegressionTable}s added to the {@link GeneralRegressionSpec}.
  */
 public class CategoricalRegressionFunction extends BaseRegressionFunction
   {

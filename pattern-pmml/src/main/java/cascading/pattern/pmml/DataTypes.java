@@ -32,7 +32,7 @@ import org.dmg.pmml.DataType;
 /**
  *
  */
-public class DataTypes
+class DataTypes
   {
   private static Map<DataType, Type> pmmlToType = HashBiMap.create();
   private static Map<Type, DataType> typeToPmml = ( (BiMap) pmmlToType ).inverse();

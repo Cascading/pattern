@@ -18,21 +18,24 @@
  * limitations under the License.
  */
 
-package cascading.pattern.pmml.regression;
+package cascading.pattern.pmml;
 
 import java.math.BigInteger;
 
 import cascading.pattern.model.generalregression.Parameter;
 import cascading.pattern.model.generalregression.RegressionTable;
+import cascading.pattern.model.generalregression.normalization.Normalization;
+import cascading.pattern.model.generalregression.normalization.SoftMaxNormalization;
 import cascading.pattern.model.generalregression.predictor.CovariantPredictor;
 import cascading.pattern.model.generalregression.predictor.FactorPredictor;
 import org.dmg.pmml.CategoricalPredictor;
 import org.dmg.pmml.NumericPredictor;
+import org.dmg.pmml.RegressionModel;
 
 /**
  *
  */
-public class RegressionUtil
+class RegressionUtil
   {
   public static RegressionTable createTable( org.dmg.pmml.RegressionTable regressionTable )
     {
@@ -70,5 +73,32 @@ public class RegressionUtil
       }
 
     return generalRegressionTable;
+    }
+
+  static Normalization getNormalizationMethod( RegressionModel model )
+    {
+    switch( model.getNormalizationMethod() )
+      {
+      case NONE:
+        return Normalization.NONE;
+      case SIMPLEMAX:
+        break;
+      case SOFTMAX:
+        return new SoftMaxNormalization();
+      case LOGIT:
+        break;
+      case PROBIT:
+        break;
+      case CLOGLOG:
+        break;
+      case EXP:
+        break;
+      case LOGLOG:
+        break;
+      case CAUCHIT:
+        break;
+      }
+
+    throw new UnsupportedOperationException( "unsupported normalization method: " + model.getNormalizationMethod() );
     }
   }

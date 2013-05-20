@@ -20,9 +20,7 @@
 
 package cascading.pattern.model.tree.predicate;
 
-/**
- *
- */
+/** Class TruePredicate always evaluates to true. */
 public class TruePredicate extends SimplePredicate
   {
   public TruePredicate()

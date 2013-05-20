@@ -37,14 +37,11 @@ import cascading.pattern.PatternException;
 import cascading.pattern.datafield.ContinuousDataField;
 import cascading.pattern.ensemble.EnsembleSpec;
 import cascading.pattern.ensemble.ParallelEnsembleAssembly;
-import cascading.pattern.ensemble.selection.Average;
-import cascading.pattern.ensemble.selection.MajorityVote;
 import cascading.pattern.ensemble.selection.SelectionStrategy;
 import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.ModelScoringFunction;
 import cascading.pattern.model.clustering.ClusteringFunction;
 import cascading.pattern.model.clustering.ClusteringSpec;
-import cascading.pattern.model.clustering.compare.AbsoluteDifferenceCompareFunction;
 import cascading.pattern.model.clustering.measure.EuclideanMeasure;
 import cascading.pattern.model.clustering.measure.SquaredEuclideanMeasure;
 import cascading.pattern.model.generalregression.CategoricalRegressionFunction;
@@ -52,13 +49,9 @@ import cascading.pattern.model.generalregression.GeneralRegressionSpec;
 import cascading.pattern.model.generalregression.LinkFunction;
 import cascading.pattern.model.generalregression.PredictionRegressionFunction;
 import cascading.pattern.model.generalregression.RegressionTable;
-import cascading.pattern.model.generalregression.normalization.Normalization;
-import cascading.pattern.model.generalregression.normalization.SoftMaxNormalization;
 import cascading.pattern.model.tree.Tree;
 import cascading.pattern.model.tree.TreeFunction;
 import cascading.pattern.model.tree.TreeSpec;
-import cascading.pattern.pmml.generalregression.GLMUtil;
-import cascading.pattern.pmml.regression.RegressionUtil;
 import cascading.pipe.Each;
 import cascading.pipe.Pipe;
 import cascading.pipe.assembly.Coerce;
@@ -69,7 +62,6 @@ import cascading.tuple.Fields;
 import cascading.util.Util;
 import org.dmg.pmml.Cluster;
 import org.dmg.pmml.ClusteringModel;
-import org.dmg.pmml.CompareFunctionType;
 import org.dmg.pmml.ComparisonMeasure;
 import org.dmg.pmml.DataField;
 import org.dmg.pmml.DataType;
@@ -80,7 +72,6 @@ import org.dmg.pmml.MiningField;
 import org.dmg.pmml.MiningFunctionType;
 import org.dmg.pmml.MiningModel;
 import org.dmg.pmml.Model;
-import org.dmg.pmml.MultipleModelMethodType;
 import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMML;
 import org.dmg.pmml.RegressionModel;
@@ -92,10 +83,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static cascading.pattern.pmml.DataFields.createDataFields;
-import static cascading.pattern.pmml.tree.TreeUtil.createTree;
+import static cascading.pattern.pmml.TreeUtil.createTree;
 
 /**
- *
+ * Class PMMLPlanner is an implementation of a Cascading {@link AssemblyPlanner} that will convert a PMML document into
+ * a Cascading {@link cascading.flow.Flow} instance.
+ * <p/>
+ * Predictive Model Markup Language (<a href="http://en.wikipedia.org/wiki/Predictive_Model_Markup_Language">PMML</a>)
+ * is an XML format use to share common machine learning model parameters between applications. PMML documents are
+ * typically exported from tools such as R after a model has been created..
+ * <p/>
+ * PMML is very flexible, but sometimes it doesn't declare defaults for missing elements. For example, the
+ * "predicted" field is optional (the output field), but Cascading requires it for obvious reasons.
+ * <p/>
+ * So methods on this class help set sensible defaults if values are missing in the PMML document.
+ * <p/>
+ * PMMLPlanner in essence maps the PMML elements to Pattern model classes and populates those models with the
+ * given parameters. There may not always be a 1 to 1 correlation of elements to Pattern models, for example PMML
+ * regression is mapped to Pattern's {@link GeneralRegressionSpec}.
+ * <p/>
+ * To use, hand PMMLPlanner an PMML XML file, and pass the PMMLPlanner instance to
+ * {@link cascading.flow.FlowDef#addAssemblyPlanner(cascading.flow.AssemblyPlanner)}. Use the FlowDef as usual from
+ * there. The {@link cascading.flow.FlowConnector#connect(cascading.flow.FlowDef)} will then return a
+ * {@link cascading.flow.Flow} that will score your data.
+ * <p/>
+ * Optionally {@link #resolveAssembly(cascading.pipe.Pipe)} can be used directly, but requires more Cascading
+ * experience.
  */
 public class PMMLPlanner implements AssemblyPlanner
   {
@@ -112,16 +125,27 @@ public class PMMLPlanner implements AssemblyPlanner
   private Fields retainIncomingFields;
   private Fields defaultPredictedField;
 
+  /**
+   * Instantiates a new PMML planner.
+   *
+   * @param pmmlFile the pmml file
+   */
   public PMMLPlanner( File pmmlFile )
     {
     this.pmmlFile = pmmlFile;
     }
 
+  /**
+   * Instantiates a new PMML planner.
+   *
+   * @param pmmlStream the pmml stream
+   */
   public PMMLPlanner( InputStream pmmlStream )
     {
     this.pmmlStream = pmmlStream;
     }
 
+  /** Instantiates a new PMML planner. */
   public PMMLPlanner()
     {
     }
@@ -168,11 +192,27 @@ public class PMMLPlanner implements AssemblyPlanner
     return defaultPredictedField;
     }
 
+  /**
+   * Gets head name.
+   *
+   * @return the head name
+   */
   public String getHeadName()
     {
     return headName;
     }
 
+  /**
+   * Sets incoming source head name to use.
+   * <p/>
+   * If not set, will use the only available input source Tap name. If more than one
+   * source was declared, the planner will throw an exception.
+   * <p/>
+   * Cascading binds heads of the pipe assembly to the corresponding named source Tap.
+   *
+   * @param headName the head name
+   * @return the head name
+   */
   public PMMLPlanner setHeadName( String headName )
     {
     this.headName = headName;
@@ -185,6 +225,12 @@ public class PMMLPlanner implements AssemblyPlanner
     return branchName;
     }
 
+  /**
+   * Sets branch name to use for the resulting pipe assembly.
+   *
+   * @param branchName the branch name
+   * @return the branch name
+   */
   public PMMLPlanner setBranchName( String branchName )
     {
     this.branchName = branchName;
@@ -197,6 +243,17 @@ public class PMMLPlanner implements AssemblyPlanner
     return tailName;
     }
 
+  /**
+   * Sets the outgoing tail name to use.
+   * <p/>
+   * If not set, will use the only available input sink Tap name. If more than one
+   * sink was declared, the planner will throw an exception.
+   * <p/>
+   * Cascading binds tails of the pipe assembly to the corresponding named sink Tap.
+   *
+   * @param tailName the tail name
+   * @return the tail name
+   */
   public PMMLPlanner setTailName( String tailName )
     {
     this.tailName = tailName;
@@ -209,6 +266,18 @@ public class PMMLPlanner implements AssemblyPlanner
     return retainIncomingFields;
     }
 
+  /**
+   * Sets the incoming fields that should be retained, by default all incoming fields
+   * are passed through the assembly from the source Tap.
+   * <p/>
+   * This must include the fields required by the underlying models.
+   * <p/>
+   * Use {@link #retainOnlyActiveIncomingFields()} to dynamically limit the result to
+   * those required.
+   *
+   * @param retainIncomingFields the retain incoming fields
+   * @return the retain incoming fields
+   */
   public PMMLPlanner setRetainIncomingFields( Fields retainIncomingFields )
     {
     if( retainIncomingFields.isNone() )
@@ -219,12 +288,18 @@ public class PMMLPlanner implements AssemblyPlanner
     return this;
     }
 
+  /**
+   * Retain only active incoming fields as declared by the PMML. All other fields
+   * in the incoming source Tap will be discarded.
+   *
+   * @return the pMML planner
+   */
   public PMMLPlanner retainOnlyActiveIncomingFields()
     {
     return setRetainIncomingFields( getActiveFields() );
     }
 
-  protected PMMLModel getPMMLModel()
+  private PMMLModel getPMMLModel()
     {
     if( pmmlModel == null )
       this.pmmlModel = new PMMLModel( getPMML() );
@@ -232,7 +307,7 @@ public class PMMLPlanner implements AssemblyPlanner
     return pmmlModel;
     }
 
-  protected PMML getPMML()
+  private PMML getPMML()
     {
     if( pmml == null )
       {
@@ -259,7 +334,7 @@ public class PMMLPlanner implements AssemblyPlanner
       }
     }
 
-  protected void setPMML( PMML pmml )
+  private void setPMML( PMML pmml )
     {
     this.pmml = pmml;
     }
@@ -276,11 +351,21 @@ public class PMMLPlanner implements AssemblyPlanner
       }
     }
 
+  /**
+   * Returns the "active" fields declared in the PMML document.
+   *
+   * @return the active fields
+   */
   public Fields getActiveFields()
     {
     return getPMMLModel().getActiveFields();
     }
 
+  /**
+   * Returns predicted fields declared in the PMML document.
+   *
+   * @return the predicted fields
+   */
   public Fields getPredictedFields()
     {
     return getPMMLModel().getPredictedFields();
@@ -399,6 +484,15 @@ public class PMMLPlanner implements AssemblyPlanner
     return tailName;
     }
 
+  /**
+   * Resolve assembly can be used if the give PMML needs to be extended beyond the capability of a Flow created
+   * by a FlowConnector and FlowDef.
+   * <p/>
+   * The models will be appended to the given head Pipe instance, the final tail Pipe will be returned.
+   *
+   * @param pipe the pipe
+   * @return the pipe
+   */
   public Pipe resolveAssembly( Pipe pipe )
     {
     Pipe tail;
@@ -436,81 +530,6 @@ public class PMMLPlanner implements AssemblyPlanner
     return tail;
     }
 
-  private boolean isRandomForest( MiningModel model )
-    {
-    if( model.getSegmentation() == null )
-      return false;
-
-    for( Segment segment : model.getSegmentation().getSegments() )
-      {
-      if( segment.getModel() instanceof TreeModel )
-        continue;
-
-      return false;
-      }
-
-    return true;
-    }
-
-  private Pipe handleRandomForestModel( Pipe tail, MiningModel model )
-    {
-    ModelSchema modelSchema = createModelSchema( model );
-    List<TreeSpec> models = new LinkedList<TreeSpec>();
-
-    for( Segment segment : model.getSegmentation().getSegments() )
-      {
-      if( !segment.getPredicate().getClass().equals( True.class ) )
-        throw new PatternException( "segment predicates currently not supported, got: " + segment.getPredicate() );
-
-      TreeModel treeModel = (TreeModel) segment.getModel();
-      Tree tree = createTree( treeModel, modelSchema );
-
-      models.add( new TreeSpec( modelSchema, tree ) );
-      }
-
-    EnsembleSpec<TreeSpec> miningSpec = new EnsembleSpec<TreeSpec>( modelSchema, models );
-
-    LOG.debug( "creating: {}, input: {}, output: {}", new Object[]{miningSpec, modelSchema.getInputFields(),
-                                                                   modelSchema.getDeclaredFields()} );
-
-    SelectionStrategy strategy = getSelectionStrategy( model );
-
-    miningSpec.setSelectionStrategy( strategy );
-
-    return new ParallelEnsembleAssembly( tail, miningSpec );
-    }
-
-  private SelectionStrategy getSelectionStrategy( MiningModel model )
-    {
-    MultipleModelMethodType modelMethod = model.getSegmentation().getMultipleModelMethod();
-
-    switch( modelMethod )
-      {
-      case MAJORITY_VOTE:
-        return new MajorityVote();
-      case AVERAGE:
-        return new Average();
-      case WEIGHTED_MAJORITY_VOTE:
-        break;
-      case WEIGHTED_AVERAGE:
-        break;
-      case MEDIAN:
-        break;
-      case MAX:
-        break;
-      case SUM:
-        break;
-      case SELECT_FIRST:
-        break;
-      case SELECT_ALL:
-        break;
-      case MODEL_CHAIN:
-        break;
-      }
-
-    throw new PatternException( "only majority vote method supported, got: " + modelMethod );
-    }
-
   private Pipe handleTreeModel( Pipe tail, TreeModel model )
     {
     ModelSchema modelSchema = createModelSchema( model );
@@ -526,11 +545,11 @@ public class PMMLPlanner implements AssemblyPlanner
     {
     ModelSchema modelSchema = createModelSchema( model );
 
-    Set<String> parameterList = GLMUtil.createParameters( model );
-    Set<String> covariateList = GLMUtil.createCovariates( model );
-    Set<String> factorsList = GLMUtil.createFactors( model );
+    Set<String> parameterList = GeneralRegressionUtil.createParameters( model );
+    Set<String> covariateList = GeneralRegressionUtil.createCovariates( model );
+    Set<String> factorsList = GeneralRegressionUtil.createFactors( model );
 
-    RegressionTable regressionTable = GLMUtil.createPPMatrix( model, parameterList, factorsList, covariateList );
+    RegressionTable regressionTable = GeneralRegressionUtil.createPPMatrix( model, parameterList, factorsList, covariateList );
 
     LinkFunction linkFunction = LinkFunction.getFunction( model.getLinkFunction().value() );
 
@@ -542,15 +561,15 @@ public class PMMLPlanner implements AssemblyPlanner
   private Pipe handleRegressionModel( Pipe tail, RegressionModel model )
     {
     if( model.getFunctionName() == MiningFunctionType.REGRESSION )
-      return handleContinuousRegressionModel( tail, model );
+      return handlePredictionRegressionModel( tail, model );
 
     if( model.getFunctionName() == MiningFunctionType.CLASSIFICATION )
-      return handleClassifierRegressionModel( tail, model );
+      return handleCategoricalRegressionModel( tail, model );
 
     throw new UnsupportedOperationException( "unsupported mining type, got: " + model.getFunctionName() );
     }
 
-  private Pipe handleClassifierRegressionModel( Pipe tail, RegressionModel model )
+  private Pipe handleCategoricalRegressionModel( Pipe tail, RegressionModel model )
     {
     ModelSchema modelSchema = createModelSchema( model );
 
@@ -561,7 +580,7 @@ public class PMMLPlanner implements AssemblyPlanner
 
     GeneralRegressionSpec regressionSpec = new GeneralRegressionSpec( modelSchema );
 
-    regressionSpec.setNormalization( getNormalizationMethod( model ) );
+    regressionSpec.setNormalization( RegressionUtil.getNormalizationMethod( model ) );
 
     for( org.dmg.pmml.RegressionTable regressionTable : model.getRegressionTables() )
       regressionSpec.addRegressionTable( RegressionUtil.createTable( regressionTable ) );
@@ -569,7 +588,7 @@ public class PMMLPlanner implements AssemblyPlanner
     return create( tail, modelSchema, new CategoricalRegressionFunction( regressionSpec ) );
     }
 
-  private Pipe handleContinuousRegressionModel( Pipe tail, RegressionModel model )
+  private Pipe handlePredictionRegressionModel( Pipe tail, RegressionModel model )
     {
     if( model.getRegressionTables().size() != 1 )
       throw new UnsupportedOperationException( "regression model only supports a single regression table, got: " + model.getRegressionTables().size() );
@@ -614,7 +633,7 @@ public class PMMLPlanner implements AssemblyPlanner
     else
       throw new UnsupportedOperationException( "unsupported comparison measure: " + comparisonMeasure );
 
-    clusteringSpec.setDefaultCompareFunction( setComparisonFunction( model ) );
+    clusteringSpec.setDefaultCompareFunction( ClusteringUtil.setComparisonFunction( model ) );
 
     for( Cluster cluster : model.getClusters() )
       {
@@ -626,27 +645,6 @@ public class PMMLPlanner implements AssemblyPlanner
       }
 
     return create( tail, modelSchema, new ClusteringFunction( clusteringSpec ) );
-    }
-
-  private AbsoluteDifferenceCompareFunction setComparisonFunction( ClusteringModel model )
-    {
-    CompareFunctionType compareFunction = model.getComparisonMeasure().getCompareFunction();
-
-    switch( compareFunction )
-      {
-      case ABS_DIFF:
-        return new AbsoluteDifferenceCompareFunction();
-      case GAUSS_SIM:
-        break;
-      case DELTA:
-        break;
-      case EQUAL:
-        break;
-      case TABLE:
-        break;
-      }
-
-    throw new UnsupportedOperationException( "unknown comparison function type: " + compareFunction );
     }
 
   private Pipe handleMiningModel( Pipe tail, MiningModel model )
@@ -672,7 +670,7 @@ public class PMMLPlanner implements AssemblyPlanner
     LOG.debug( "creating: {}, input: {}, output: {}", new Object[]{miningSpec, modelSchema.getInputFields(),
                                                                    modelSchema.getDeclaredFields()} );
 
-    SelectionStrategy strategy = getSelectionStrategy( model );
+    SelectionStrategy strategy = PMMLUtil.getSelectionStrategy( model );
 
     miningSpec.setSelectionStrategy( strategy );
 
@@ -714,30 +712,4 @@ public class PMMLPlanner implements AssemblyPlanner
     return modelSchema;
     }
 
-  private Normalization getNormalizationMethod( RegressionModel model )
-    {
-    switch( model.getNormalizationMethod() )
-      {
-      case NONE:
-        return Normalization.NULL;
-      case SIMPLEMAX:
-        break;
-      case SOFTMAX:
-        return new SoftMaxNormalization();
-      case LOGIT:
-        break;
-      case PROBIT:
-        break;
-      case CLOGLOG:
-        break;
-      case EXP:
-        break;
-      case LOGLOG:
-        break;
-      case CAUCHIT:
-        break;
-      }
-
-    throw new UnsupportedOperationException( "unsupported normalization method: " + model.getNormalizationMethod() );
-    }
   }

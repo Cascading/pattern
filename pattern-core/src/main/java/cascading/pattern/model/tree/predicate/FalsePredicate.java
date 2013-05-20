@@ -20,9 +20,7 @@
 
 package cascading.pattern.model.tree.predicate;
 
-/**
- *
- */
+/** Class FalsePredicate always evaluates to false. */
 public class FalsePredicate extends SimplePredicate
   {
   public FalsePredicate()

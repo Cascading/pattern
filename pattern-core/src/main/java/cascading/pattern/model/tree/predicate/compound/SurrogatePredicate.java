@@ -26,7 +26,8 @@ import java.util.List;
 import cascading.pattern.model.tree.predicate.Predicate;
 
 /**
- *
+ * Class SurrogatePredicate returns the result of the first child predicate
+ * that as non null or not missing value. This is similar to a if then else statement.
  */
 public class SurrogatePredicate extends CompoundPredicate
   {

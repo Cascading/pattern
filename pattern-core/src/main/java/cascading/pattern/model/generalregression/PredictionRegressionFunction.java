@@ -27,7 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Class PredictionRegressionFunction will return a single prediction
+ * as determined by the {@link RegressionTable}s added to the {@link GeneralRegressionSpec}.
  */
 public class PredictionRegressionFunction extends BaseRegressionFunction
   {

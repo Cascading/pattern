@@ -20,9 +20,7 @@
 
 package cascading.pattern.model.tree.predicate;
 
-/**
- *
- */
+/** Class IsMissingPredicate returns true if the given field has a null value. */
 public class IsMissingPredicate extends SimplePredicate
   {
   public IsMissingPredicate( String field )

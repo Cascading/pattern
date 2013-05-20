@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package cascading.pattern.pmml.generalregression;
+package cascading.pattern.pmml;
 
 import java.math.BigInteger;
 import java.util.LinkedHashSet;
@@ -40,9 +40,9 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class GLMUtil
+class GeneralRegressionUtil
   {
-  private static final Logger LOG = LoggerFactory.getLogger( GLMUtil.class );
+  private static final Logger LOG = LoggerFactory.getLogger( GeneralRegressionUtil.class );
 
   public static RegressionTable createPPMatrix( GeneralRegressionModel model, Set<String> parameterList, Set<String> factorsList, Set<String> covariateList )
     {

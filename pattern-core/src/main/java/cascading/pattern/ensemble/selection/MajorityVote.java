@@ -43,7 +43,7 @@ public class MajorityVote extends CategoricalSelector
     int max = Ints.max( results );
     int index = Ints.indexOf( results, max );
 
-    LOG.debug( "winning score: {}, with votes: {}", index, max );
+    LOG.debug( "score: {}, with votes: {}", index, max );
 
     return index;
     }

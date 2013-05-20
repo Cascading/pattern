@@ -25,9 +25,7 @@ import java.util.List;
 
 import cascading.pattern.model.tree.predicate.Predicate;
 
-/**
- *
- */
+/** Class AndPredicate returns true if all child predicates are true. */
 public class AndPredicate extends CompoundPredicate
   {
   public AndPredicate( List<Predicate> children )

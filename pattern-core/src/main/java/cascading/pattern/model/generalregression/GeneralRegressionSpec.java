@@ -35,11 +35,21 @@ import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 
 
+/**
+ * Class GeneralRegressionSpec is used to define a general regression model for classification or prediction, and
+ * can be used with {@link CategoricalRegressionFunction} and {@link PredictionRegressionFunction} respectively.
+ * <p/>
+ * General regression applies a {@link RegressionTable} to each Tuple. If only one table is specified, this spec
+ * can be used with the PredictionRegressionFunction. If multiple tables are specified, each must have a unique
+ * category and should be used with CategoricalRegressionFunction.
+ * <p/>
+ * By default, no link function or normalization method is used.
+ */
 public class GeneralRegressionSpec extends Spec
   {
   List<RegressionTable> regressionTables = new ArrayList<RegressionTable>();
   LinkFunction linkFunction = LinkFunction.NONE;
-  Normalization normalization = Normalization.NULL;
+  Normalization normalization = Normalization.NONE;
 
   public GeneralRegressionSpec( ModelSchema modelSchema, RegressionTable regressionTable, LinkFunction linkFunction )
     {

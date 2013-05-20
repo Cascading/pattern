@@ -29,7 +29,7 @@ import cascading.tuple.Fields;
 /**
  *
  */
-public abstract class BaseRegressionFunction extends ModelScoringFunction<GeneralRegressionSpec, BaseRegressionFunction.ExpressionContext>
+abstract class BaseRegressionFunction extends ModelScoringFunction<GeneralRegressionSpec, BaseRegressionFunction.ExpressionContext>
   {
   protected static class ExpressionContext
     {

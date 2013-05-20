@@ -29,6 +29,12 @@ import cascading.pattern.model.generalregression.expression.ExpressionEvaluator;
 import cascading.pattern.model.generalregression.expression.ParameterExpression;
 import cascading.tuple.Fields;
 
+/**
+ * Class RegressionTable simply holds a set of {@link Parameter} instances.
+ * <p/>
+ * If used for classification or categorization with CategoricalRegressionFunction, the
+ * table must have a {@code targetCategory} value.
+ */
 public class RegressionTable implements Serializable
   {
   private String targetCategory;
@@ -78,7 +84,7 @@ public class RegressionTable implements Serializable
     return true;
     }
 
-  public ExpressionEvaluator bind( Fields argumentFields )
+  ExpressionEvaluator bind( Fields argumentFields )
     {
     if( isNoOp() )
       return new ExpressionEvaluator( targetCategory );

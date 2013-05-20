@@ -29,9 +29,7 @@ import cascading.pattern.model.tree.decision.FinalDecision;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- */
+/** Class TreeFunction will return the result or score from the given decision tree defined by the {@link TreeSpec}. */
 public class TreeFunction extends ModelScoringFunction<TreeSpec, DecisionTree>
   {
   private static final Logger LOG = LoggerFactory.getLogger( TreeFunction.class );
@@ -57,7 +55,7 @@ public class TreeFunction extends ModelScoringFunction<TreeSpec, DecisionTree>
         }
       };
     else
-      result = new Result<FinalDecision,Object>()
+      result = new Result<FinalDecision, Object>()
       {
       @Override
       public Object transform( FinalDecision finalDecision )

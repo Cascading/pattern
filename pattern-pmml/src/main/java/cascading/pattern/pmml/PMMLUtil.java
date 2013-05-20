@@ -23,16 +23,22 @@ package cascading.pattern.pmml;
 import java.util.ArrayList;
 import java.util.List;
 
+import cascading.pattern.PatternException;
+import cascading.pattern.ensemble.selection.Average;
+import cascading.pattern.ensemble.selection.MajorityVote;
+import cascading.pattern.ensemble.selection.SelectionStrategy;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.dmg.pmml.ArrayType;
+import org.dmg.pmml.MiningModel;
+import org.dmg.pmml.MultipleModelMethodType;
 import org.dmg.pmml.Value;
 import org.jpmml.evaluator.ArrayUtil;
 
 /**
  *
  */
-public class PMMLUtil
+class PMMLUtil
   {
   public static List parseArray( ArrayType arrayType )
     {
@@ -81,5 +87,36 @@ public class PMMLUtil
     } );
 
     return new ArrayList<String>( result ); // minimize serialization closure
+    }
+
+  static SelectionStrategy getSelectionStrategy( MiningModel model )
+    {
+    MultipleModelMethodType modelMethod = model.getSegmentation().getMultipleModelMethod();
+
+    switch( modelMethod )
+      {
+      case MAJORITY_VOTE:
+        return new MajorityVote();
+      case AVERAGE:
+        return new Average();
+      case WEIGHTED_MAJORITY_VOTE:
+        break;
+      case WEIGHTED_AVERAGE:
+        break;
+      case MEDIAN:
+        break;
+      case MAX:
+        break;
+      case SUM:
+        break;
+      case SELECT_FIRST:
+        break;
+      case SELECT_ALL:
+        break;
+      case MODEL_CHAIN:
+        break;
+      }
+
+    throw new PatternException( "only majority vote method supported, got: " + modelMethod );
     }
   }

@@ -18,42 +18,35 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.tree.predicate.compound;
+package cascading.pattern.pmml;
 
-import java.util.Iterator;
-import java.util.List;
+import cascading.pattern.model.clustering.compare.AbsoluteDifferenceCompareFunction;
+import org.dmg.pmml.ClusteringModel;
+import org.dmg.pmml.CompareFunctionType;
 
-import cascading.pattern.model.tree.predicate.Predicate;
-
-/** Class XorPredicate returns true if an odd number of child predicates return true. */
-public class XorPredicate extends CompoundPredicate
+/**
+ *
+ */
+class ClusteringUtil
   {
-  public XorPredicate( List<Predicate> children )
+  static AbsoluteDifferenceCompareFunction setComparisonFunction( ClusteringModel model )
     {
-    super( children );
-    }
+    CompareFunctionType compareFunction = model.getComparisonMeasure().getCompareFunction();
 
-  public XorPredicate( Predicate... children )
-    {
-    super( children );
-    }
-
-  @Override
-  public Boolean evaluate( Iterator<Boolean> results )
-    {
-    int count = 0;
-
-    while( results.hasNext() )
+    switch( compareFunction )
       {
-      Boolean result = results.next();
-
-      if( result == null )
-        return null;
-
-      if( result )
-        count++;
+      case ABS_DIFF:
+        return new AbsoluteDifferenceCompareFunction();
+      case GAUSS_SIM:
+        break;
+      case DELTA:
+        break;
+      case EQUAL:
+        break;
+      case TABLE:
+        break;
       }
 
-    return ( count % 2 ) == 1; // is odd
+    throw new UnsupportedOperationException( "unknown comparison function type: " + compareFunction );
     }
   }

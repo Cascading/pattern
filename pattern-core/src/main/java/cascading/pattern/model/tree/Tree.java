@@ -32,7 +32,17 @@ import cascading.tuple.Fields;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.SimpleDirectedGraph;
 
-
+/**
+ * Class Tree defines a decision tree.
+ * <p/>
+ * A Tree is literally a tree data structure where every possible branch is governed by a predicate, when
+ * traversed, a branch is chosen if the predicate returns true against the current {@link cascading.tuple.Tuple}.
+ * <p/>
+ * When a leaf node is reached the "score" is returned, where the score can be a category or numeric value.
+ * <p/>
+ * When a set of Tree instances should be applied, see {@link cascading.pattern.ensemble.ParallelEnsembleAssembly}
+ * for constructing a random forest implementation.
+ */
 public class Tree implements Serializable
   {
   private transient Map<String, Node> nodes = new HashMap<String, Node>();
@@ -105,7 +115,6 @@ public class Tree implements Serializable
     sb.append( "nodes=" ).append( nodes );
     sb.append( ", graph=" ).append( graph );
     sb.append( ", root=" ).append( root );
-    sb.append( ", count=" ).append( count );
     sb.append( '}' );
     return sb.toString();
     }
