@@ -21,7 +21,7 @@
 package cascading.pattern.model.generalregression;
 
 /** Enum for the LinkFunction in GLM */
-enum LinkFunction
+public enum LinkFunction
   {
     NONE( "none" )
       {

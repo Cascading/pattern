@@ -299,7 +299,7 @@ public class PMMLPlanner implements AssemblyPlanner
     return setRetainIncomingFields( getActiveFields() );
     }
 
-  private PMMLModel getPMMLModel()
+  protected PMMLModel getPMMLModel()
     {
     if( pmmlModel == null )
       this.pmmlModel = new PMMLModel( getPMML() );
