@@ -1,6 +1,6 @@
 # Overview
 
-__Pattern__ is a library for machine learning model scoring in parallel at scale.
+[Pattern](http://www.cascading.org/pattern/) is a library for machine learning model scoring in parallel at scale.
 
 Pattern can read [PMML](http://en.wikipedia.org/wiki/Predictive_Model_Markup_Language) models as workflow
 specifications for generating Cascading flows which can run on Apache Hadoop.
@@ -10,6 +10,26 @@ from the `files.concurrentinc.com` domain. When Pattern hits 1.0 and beyond, fin
 `files.cascading.org`.
 
 See the `pattern-examples` subdirectory for sample apps.
+
+For more information, visit: http://www.cascading.org/pattern/
+
+# PMML
+
+Pattern currently supports the following PMML model types:
+
+    * General Regression
+    * Regression
+    * Clustering
+    * Tree
+    * Mining - ensembles of the above models like Random Forest
+
+In progress are:
+
+    * Neural Network
+    * Support Vector Machine
+
+Not all aspects of each of the above models are supported. To request support for a particular model or model
+parameter, (report an issue)[#reporting-issues].
 
 # Using
 
