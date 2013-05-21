@@ -43,7 +43,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Class ParallelEnsembleAssembly allows for the execution of multiple models in parallel where the result
+ * is either a prediction or classification, depending on the predicted fields data type.
+ * <p/>
+ * If {@link cascading.pattern.ensemble.EnsembleSpec#isPredictedCategorical()} returns {@code true}, the
+ * ensemble will return a category based on the current {@link cascading.pattern.ensemble.selection.CategoricalSelector}.
+ * If {@link cascading.pattern.model.ModelSchema#isIncludePredictedCategories()} returns {@code true}, a field
+ * will be created for each declared category, and the count of occurrences of each category will be returned.
+ * <p/>
+ * Otherwise a numeric prediction is returned based on the current
+ * {@link cascading.pattern.ensemble.selection.PredictionSelector}. {@code isIncludePredictedCategories()} is ignored.
+ * <p/>
+ * If {@link cascading.pattern.ensemble.EnsembleSpec#isParallel()} returns {@code false}, this assembly will
+ * throw an IllegalArgumentException. The chosen {@link cascading.pattern.ensemble.selection.SelectionStrategy} must
+ * support parallel execution.
+ * <p/>
+ * If {@link cascading.pattern.model.ModelSchema#getKeyFields()} is {@link Fields#NONE}, a globally unique ID will
+ * be created to that the results of each independent model can be grouped together so the SelectionStrategy can
+ * be applied. This field will be discarded downstream.
+ * <p/>
+ * Currently ParallelEnsembleAssembly does not support associating models with predicates.
  */
 public class ParallelEnsembleAssembly extends SubAssembly
   {

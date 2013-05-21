@@ -33,7 +33,7 @@ import cascading.tuple.Fields;
  * Class CategoricalDataField represent a field with a fixed set of possible values.
  * <p/>
  * For example, if the field name is {@code SIZE}, it could have three possible categories,
- * {@code small}, {@code medium), and {@code large}.
+ * {@code small}, {@code medium}, and {@code large}.
  * <p/>
  * Order of categories is retained so that indexes into the internal list of categories can be used
  * to speed up some operations.

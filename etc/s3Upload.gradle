@@ -44,7 +44,11 @@ task s3Upload( type: S3Sync ) {
   configFile "${rootProject.projectDir}/etc/synchronizer.properties"
 
   ext.source = "${buildDir}/publish"
-  ext.destination = "${project.s3Bucket}/${rootProject.name}/${majorVersion}/"
+
+  if( project == rootProject ) // only publishes docs
+    ext.destination = "${project.s3BucketDocs}/${rootProject.name}/${majorVersion}/"
+  else
+    ext.destination = "${project.s3Bucket}/${rootProject.name}/${majorVersion}/${project.name}/"
 
   from source
   into destination

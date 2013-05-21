@@ -27,7 +27,10 @@ import cascading.pipe.SubAssembly;
 import cascading.tuple.Fields;
 
 /**
- *
+ * Class InsertGUID creates a globally unique ID by calling {@link java.util.UUID#randomUUID()}.
+ * <p/>
+ * This Function also returns {@code false} for {@link cascading.operation.Operation#isSafe()}, preventing
+ * duplicate ids from being generated for the same record.
  */
 public class InsertGUID extends SubAssembly
   {
@@ -35,7 +38,7 @@ public class InsertGUID extends SubAssembly
     {
     super( previous );
 
-    String expression = "cascading.util.Util.createUniqueID()";
+    String expression = "java.util.UUID.randomUUID().toString()";
 
     ExpressionFunction expressionFunction = new ExpressionFunction( declaredFields, expression )
     {

@@ -28,4 +28,10 @@ import java.io.Serializable;
 public abstract class SelectionStrategy implements Serializable
   {
   public abstract boolean isParallel();
+
+  @Override
+  public String toString()
+    {
+    return getClass().getSimpleName();
+    }
   }

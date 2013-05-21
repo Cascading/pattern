@@ -33,6 +33,11 @@ import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.Spec;
 
 
+/**
+ * Class EnsembleSpec is used to define an ensemble model.
+ * <p/>
+ * It is used with {@link ParallelEnsembleAssembly}.
+ */
 public class EnsembleSpec<S extends Spec> extends Spec implements Serializable
   {
   protected List<S> modelSpecs = new ArrayList<S>();
@@ -79,6 +84,11 @@ public class EnsembleSpec<S extends Spec> extends Spec implements Serializable
     this.selectionStrategy = selectionStrategy;
     }
 
+  /**
+   * Returns unique list of all the underlying declared model categories.
+   *
+   * @return the model categories
+   */
   public List<String> getModelCategories()
     {
     List<String> categories = new ArrayList<String>();
@@ -98,6 +108,7 @@ public class EnsembleSpec<S extends Spec> extends Spec implements Serializable
     {
     final StringBuilder sb = new StringBuilder( "EnsembleSpec{" );
     sb.append( "modelSpecs=" ).append( modelSpecs );
+    sb.append( ", selectionStrategy=" ).append( selectionStrategy );
     sb.append( '}' );
     return sb.toString();
     }

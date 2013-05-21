@@ -19,10 +19,10 @@
  */
 
 apply from: 'etc/version.gradle'
+apply from: 'etc/s3Upload.gradle'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
-apply plugin: 'maven'
 
 ext.cascadingVersion = '2.2.0-+'
 
@@ -127,5 +127,41 @@ subprojects {
       }
     }
   }
+}
 
+task javadocAll( type: Javadoc ) {
+
+  ext.copyright = '<i>Copyright &#169; 2007-2013 Concurrent, Inc. All Rights Reserved.</i>'
+  title = "Cascading Lingual ${releaseVersion}"
+
+  source project( ":pattern-core" ).sourceSets.main.allJava
+
+  source 'pattern-pmml/src/test/java/cascading/pattern/pmml/PMMLPlatformTestCase.java'
+  source 'pattern-pmml/src/test/java/cascading/pattern/pmml/SimplePMMLPlatformTest.java'
+
+  destinationDir = new File( buildDir, 'javadoc' )
+
+  classpath = files( subprojects.collect { project ->
+    project.sourceSets.test.compileClasspath
+  } )
+
+  configure( options ) {
+    encoding = "UTF8"
+    bottom = copyright
+    links = [
+            'http://docs.concurrentinc.com/cascading/2.2/javadoc/',
+            'http://docs.oracle.com/javase/6/docs/api/',
+            'http://hadoop.apache.org/common/docs/r1.0.4/api/',
+            'http://junit.sourceforge.net/javadoc/'
+    ]
+  }
+}
+
+task javadocDist( type: Copy, dependsOn: javadocAll ) {
+  description = "build javadoc"
+
+  from javadocAll.destinationDir
+  into "${s3Upload.source}/javadoc/"
+
+  s3Upload.dependsOn javadocDist
 }
