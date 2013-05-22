@@ -107,3 +107,4 @@ PMML Resources
  * [Data Mining Group](http://www.dmg.org/) XML standards and supported vendors
  * [PMML In Action](http://www.amazon.com/dp/1470003244) book 
  * [PMML validator](http://www.zementis.com/pmml_tools.htm)
+ * [Enterprise Data Workflows with Cascading](http://shop.oreilly.com/product/0636920028536.do) book
