@@ -98,7 +98,7 @@ To execute the R script:
 
 It is possible to extend PMML support for other kinds of modeling in R
 and other analytics platforms.  Contact the developers to discuss on
-the [cascading-user](https://groups.google.com/forum/?fromgroups#!forum/cascading-user)
+the [pattern-user](https://groups.google.com/forum/?fromgroups#!forum/pattern-user)
 email forum.
 
 

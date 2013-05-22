@@ -26,7 +26,6 @@ import java.util.Properties;
 import cascading.flow.Flow;
 import cascading.flow.FlowDef;
 import cascading.flow.hadoop.HadoopFlowConnector;
-import cascading.operation.AssertionLevel;
 import cascading.operation.DebugLevel;
 import cascading.pattern.pmml.PMMLPlanner;
 import cascading.property.AppProps;
@@ -64,7 +63,6 @@ public class Main
     OptionParser optParser = new OptionParser();
     optParser.accepts( "pmml" ).withRequiredArg();
     optParser.accepts( "debug" );
-    optParser.accepts( "assert" );
 
     OptionSet options = optParser.parse( args );
 
@@ -74,7 +72,7 @@ public class Main
       .addSource( "input", inputTap )
       .addSink( "classify", classifyTap );
 
-    // define a "Classifier" model from the PMML description
+    // build a Cascading assembly from the PMML description
     if( options.hasArgument( "pmml" ) )
       {
       String pmmlPath = (String) options.valuesOf( "pmml" ).get( 0 );
@@ -93,13 +91,6 @@ public class Main
       flowDef.setDebugLevel( DebugLevel.VERBOSE );
     else
       flowDef.setDebugLevel( DebugLevel.NONE );
-
-    // set to AssertionLevel.STRICT for all assertions, or
-    // AssertionLevel.NONE in production
-    if( options.has( "assert" ) )
-      flowDef.setAssertionLevel( AssertionLevel.STRICT );
-    else
-      flowDef.setAssertionLevel( AssertionLevel.NONE );
 
     // write a DOT file and run the flow
     Flow classifyFlow = flowConnector.connect( flowDef );
