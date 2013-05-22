@@ -35,15 +35,10 @@ import cascading.tap.hadoop.Hfs;
 import cascading.tuple.Fields;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class Main
   {
-  /** Field LOG */
-  private static final Logger LOG = LoggerFactory.getLogger( Main.class );
-
   /** @param args  */
   public static void main( String[] args ) throws RuntimeException
     {
