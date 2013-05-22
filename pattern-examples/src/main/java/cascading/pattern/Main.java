@@ -26,7 +26,6 @@ import java.util.Properties;
 import cascading.flow.Flow;
 import cascading.flow.FlowDef;
 import cascading.flow.hadoop.HadoopFlowConnector;
-import cascading.operation.DebugLevel;
 import cascading.pattern.pmml.PMMLPlanner;
 import cascading.property.AppProps;
 import cascading.scheme.hadoop.TextDelimited;
@@ -57,7 +56,6 @@ public class Main
     // handle command line options
     OptionParser optParser = new OptionParser();
     optParser.accepts( "pmml" ).withRequiredArg();
-    optParser.accepts( "debug" );
 
     OptionSet options = optParser.parse( args );
 
@@ -79,13 +77,6 @@ public class Main
 
       flowDef.addAssemblyPlanner( pmmlPlanner );
       }
-
-    // set to DebugLevel.VERBOSE for trace, or DebugLevel.NONE
-    // in production
-    if( options.has( "debug" ) )
-      flowDef.setDebugLevel( DebugLevel.VERBOSE );
-    else
-      flowDef.setDebugLevel( DebugLevel.NONE );
 
     // write a DOT file and run the flow
     Flow classifyFlow = flowConnector.connect( flowDef );
