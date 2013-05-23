@@ -132,7 +132,7 @@ subprojects {
 task javadocAll( type: Javadoc ) {
 
   ext.copyright = '<i>Copyright &#169; 2007-2013 Concurrent, Inc. All Rights Reserved.</i>'
-  title = "Cascading Lingual ${releaseVersion}"
+  title = "Cascading Pattern ${releaseVersion}"
 
   source project( ":pattern-core" ).sourceSets.main.allJava
 
