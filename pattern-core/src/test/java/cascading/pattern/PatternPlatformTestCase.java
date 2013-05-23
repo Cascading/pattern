@@ -26,7 +26,10 @@ import java.util.List;
 
 import cascading.PlatformTestCase;
 import cascading.pattern.util.Logging;
+import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
 import junit.framework.AssertionFailedError;
 import junit.framework.ComparisonFailure;
 import org.slf4j.Logger;
@@ -46,6 +49,11 @@ public class PatternPlatformTestCase extends PlatformTestCase
 
   public static void assertEquals( List<Tuple> lhs, List<Tuple> rhs, double delta )
     {
+    assertEquals( lhs, rhs, delta, null, null );
+    }
+
+  public static void assertEquals( List<Tuple> lhs, List<Tuple> rhs, double delta, final Fields skipFields, final Tuple[] skip )
+    {
     assertEquals( "not same number of results", lhs.size(), rhs.size() );
 
     Collections.sort( lhs );
@@ -53,6 +61,48 @@ public class PatternPlatformTestCase extends PlatformTestCase
 
     Iterator<Tuple> lhsIterator = lhs.iterator();
     Iterator<Tuple> rhsIterator = rhs.iterator();
+
+    if( skip != null )
+      {
+      lhsIterator = Iterators.filter( lhsIterator, new Predicate<Tuple>()
+      {
+      @Override
+      public boolean apply( Tuple tuple )
+        {
+        for( Tuple skipTuple : skip )
+          {
+          Tuple value = tuple.get( skipFields.getPos() );
+
+          if( value.equals( skipTuple ) )
+            {
+            LOG.debug( "skipping: lhs: {}", tuple );
+            return false;
+            }
+          }
+        return true;
+        }
+      } );
+
+      rhsIterator = Iterators.filter( rhsIterator, new Predicate<Tuple>()
+      {
+      @Override
+      public boolean apply( Tuple tuple )
+        {
+        for( Tuple skipTuple : skip )
+          {
+          Tuple value = tuple.get( skipFields.getPos() );
+
+          if( value.equals( skipTuple ) )
+            {
+            LOG.debug( "skipping: rhs: {}", tuple );
+
+            return false;
+            }
+          }
+        return true;
+        }
+      } );
+      }
 
     while( lhsIterator.hasNext() )
       {

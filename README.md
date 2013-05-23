@@ -32,6 +32,19 @@ In progress are:
 Not all aspects of each of the above models are supported. To request support for a particular model or model
 parameter, (report an issue)[#reporting-issues].
 
+These PMML model types translate or compose into:
+
+  * [Random Forest](http://en.wikipedia.org/wiki/Random_forest) in [PMML 4.0+](http://www.dmg.org/v4-0-1/MultipleModels.html) exported from [R/Rattle](http://cran.r-project.org/web/packages/rattle/index.html)
+  * [Linear Regression](http://en.wikipedia.org/wiki/Linear_regression) in [PMML 1.1+](http://www.dmg.org/v1-1/generalregression.html)
+  * [K-Means Clustering](http://en.wikipedia.org/wiki/K-means_clustering) in [PMML 2.0+](http://www.dmg.org/v2-0/ClusteringModel.html)
+  * [Logistic Regression](http://en.wikipedia.org/wiki/Logistic_regression) in [PMML 4.0.1+](http://www.dmg.org/v4-0-1/Regression.html)
+  * [Multinomial Model](http://en.wikipedia.org/wiki/Multinomial_distribution) in [PMML 2.0+](http://www.dmg.org/v2-0/Regression.html)
+
+Note: [Hierarchical Clustering](http://en.wikipedia.org/wiki/Hierarchical_clustering) is also implemented. The unit test
+for that algorithm currently excludes two data points. In regression tests with the Iris data set, we've
+isolated edge cases where the classifiers in R and Pattern do not agree. Then again, Iris data gets used to illustrate model behaviors
+with such properties. This will take some digging into numerical operations inside R.
+
 # Using
 
 To use Pattern, there is no installation other than adding the necessary dependencies to Maven, Ivy, or Gradle.

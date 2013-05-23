@@ -24,7 +24,6 @@ import cascading.operation.BaseOperation;
 import cascading.operation.Buffer;
 import cascading.pattern.ensemble.EnsembleSpec;
 import cascading.tuple.Fields;
-import cascading.tuple.Tuple;
 
 /**
  *

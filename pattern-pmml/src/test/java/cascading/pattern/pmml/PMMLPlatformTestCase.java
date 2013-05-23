@@ -71,6 +71,11 @@ public class PMMLPlatformTestCase extends PatternPlatformTestCase
 
   protected void pmmlTest( String testModel, Fields trainingFields, Fields predictorFields ) throws IOException
     {
+    pmmlTest( testModel, trainingFields, predictorFields, null, null );
+    }
+
+  protected void pmmlTest( String testModel, Fields trainingFields, Fields predictorFields, Fields skipFields, Tuple[] skip ) throws IOException
+    {
     File file = new File( DATA_PATH + testModel + ".pmml" );
 
     assertTrue( "pmml file does not exist", file.exists() );
@@ -125,6 +130,6 @@ public class PMMLPlatformTestCase extends PatternPlatformTestCase
     List<Tuple> sourceTuples = asList( flow, source, sourceSelector );
     List<Tuple> sinkTuples = asList( flow, sink, sinkSelector );
 
-    assertEquals( sourceTuples, sinkTuples, 0.000001d );
+    assertEquals( sourceTuples, sinkTuples, 0.000001d, skipFields, skip );
     }
   }

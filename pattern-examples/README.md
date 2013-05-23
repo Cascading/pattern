@@ -14,24 +14,14 @@ Current support for PMML includes:
  * [Logistic Regression](http://en.wikipedia.org/wiki/Logistic_regression) in [PMML 4.0.1+](http://www.dmg.org/v4-0-1/Regression.html)
  * [Multinomial Model](http://en.wikipedia.org/wiki/Multinomial_distribution) in [PMML 2.0+](http://www.dmg.org/v2-0/Regression.html)
 
-NB: [Hierarchical Clustering](http://en.wikipedia.org/wiki/Hierarchical_clustering) 
-
-is also implemented. The unit test for that algorithm is currently
-commented out. In regression tests with the Iris data set, we've
-isolated edge cases where the classifiers in R and Pattern do not
-agree. Then again, Iris data gets used to illustrate model behaviors
-with such properties. This will take some digging into numerical
-operations inside R.
-
-
 Build Instructions
 ------------------
 To build _Pattern_ and then run its unit tests:
 
     gradle --info --stacktrace clean test
 
-The following script generates a data set for training a model based 
-on the _Random Forest_ algorithm. This reference data set has 3 
+The following script generates a data set for training a model based
+on the _Random Forest_ algorithm. This reference data set has 3
 independent variables and 200 rows of simulated ecommerce orders:
 
     ./examples/py/gen_orders.py 200 3 > sample.tsv
@@ -114,6 +104,6 @@ email forum.
 PMML Resources
 --------------
  * [Data Mining Group](http://www.dmg.org/) XML standards and supported vendors
- * [PMML In Action](http://www.amazon.com/dp/1470003244) book 
+ * [PMML In Action](http://www.amazon.com/dp/1470003244) book
  * [PMML validator](http://www.zementis.com/pmml_tools.htm)
  * [Enterprise Data Workflows with Cascading](http://shop.oreilly.com/product/0636920028536.do) book

@@ -34,9 +34,7 @@ import cascading.tuple.Fields;
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 
-/**
- * Class ClusteringSpec is used to define a cluster model for scoring.
- */
+/** Class ClusteringSpec is used to define a cluster model for scoring. */
 public class ClusteringSpec extends Spec
   {
   private List<Cluster> clusters = new ArrayList<Cluster>();

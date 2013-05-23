@@ -30,7 +30,7 @@ dependencies {
 
   compile( 'net.sf.jopt-simple:jopt-simple:4.4' )
 
-    // hadoop deps
+  // hadoop deps
   runtime( group: 'org.apache.hadoop', name: 'hadoop-core', version: hadoopVersion ) {
     exclude group: 'ant'
     exclude group: 'junit'
