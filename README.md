@@ -1,6 +1,7 @@
 # Overview
 
-[Pattern](http://www.cascading.org/pattern/) is a Cascading library for machine learning model scoring at scale.
+[Pattern](http://www.cascading.org/pattern/) is a Cascading framework and library for machine learning model
+scoring at scale.
 
 Pattern can read [PMML](http://en.wikipedia.org/wiki/Predictive_Model_Markup_Language) models as workflow
 specifications for generating Cascading flows which can run on Apache Hadoop.
