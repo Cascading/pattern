@@ -30,7 +30,7 @@ In progress are:
   * Support Vector Machine
 
 Not all aspects of each of the above models are supported. To request support for a particular model or model
-parameter, (report an issue)[#reporting-issues].
+parameter, [report an issue](#reporting-issues).
 
 These PMML model types translate or compose into:
 
