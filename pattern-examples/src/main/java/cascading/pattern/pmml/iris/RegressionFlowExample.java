@@ -45,7 +45,7 @@ public class RegressionFlowExample
 
   public void run() throws IOException
     {
-    Tap irisTap = new FileTap( new TextDelimited( true, "\t", "\"" ), "src/main/resources/data/iris.lm_p.tsv", SinkMode.KEEP );
+    Tap irisTap = new FileTap( new TextDelimited( true, "\t", "\"" ), "data/iris.lm_p.tsv", SinkMode.KEEP );
 
     Tap resultsTap = new FileTap( new TextDelimited( true, "\t", "\"" ), "build/test/output/flow/results.tsv", SinkMode.REPLACE );
 
@@ -55,7 +55,7 @@ public class RegressionFlowExample
       .addSink( "results", resultsTap );
 
     PMMLPlanner pmmlPlanner = new PMMLPlanner()
-      .setPMMLInput( new File( "src/main/resources/data/iris.lm_p.xml" ) )
+      .setPMMLInput( new File( "data/iris.lm_p.xml" ) )
       .retainOnlyActiveIncomingFields();
 
     flowDef.addAssemblyPlanner( pmmlPlanner );

@@ -21,7 +21,6 @@
 ext.hadoopVersion = '1.0.4'
 
 dependencies {
-//  compile( group: 'cascading', name: 'cascading-core', version: cascadingVersion )
   compile( group: 'cascading', name: 'cascading-hadoop', version: cascadingVersion )
 
   compile project( ':pattern-pmml' )
@@ -30,14 +29,14 @@ dependencies {
 
   compile( 'net.sf.jopt-simple:jopt-simple:4.4' )
 
-  // hadoop deps
-  runtime( group: 'org.apache.hadoop', name: 'hadoop-core', version: hadoopVersion ) {
+  // hadoop deps for Main example
+  providedCompile( group: 'org.apache.hadoop', name: 'hadoop-core', version: hadoopVersion ) {
     exclude group: 'ant'
     exclude group: 'junit'
     exclude group: 'oro' // causes transient build maven failures, ftw
   }
-//  compile group: 'cascading', name: 'cascading-local', version: cascadingVersion, changing: true
 
+  // included so RegressionFlowExample can run in IDE, it only relies on local mode
   runtime group: 'log4j', name: 'log4j', version: '1.2.16'
   runtime group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
   runtime group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.6.1'
@@ -52,7 +51,6 @@ jar {
   }
 
   manifest {
-//    attributes( "Main-Class": "cascading.pattern.pmml.iris.RegressionFlowExample" )
     attributes( "Main-Class": "cascading.pattern.Main" )
   }
 }
