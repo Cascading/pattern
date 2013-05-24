@@ -20,9 +20,15 @@
 
 apply from: 'etc/version.gradle'
 apply from: 'etc/s3Upload.gradle'
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
+
+allprojects {
+  apply plugin: 'java'
+  apply plugin: 'idea'
+  apply plugin: 'eclipse'
+
+  targetCompatibility = 1.6
+  sourceCompatibility = 1.6
+}
 
 ext.cascadingVersion = '2.2.0-+'
 
@@ -42,11 +48,7 @@ buildscript {
 }
 
 subprojects {
-
-  apply plugin: 'java'
   apply plugin: 'maven'
-  apply plugin: 'idea'
-  apply plugin: 'eclipse'
 
   // pattern is a sub-project of cascading
   // project name is set in settings.gradle
