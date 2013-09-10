@@ -87,7 +87,7 @@ public class PMMLPlatformTestCase extends PatternPlatformTestCase
 
     Pipe pipe = new Pipe( "head" );
 
-    Fields discardFields = trainingFields.append( predictorFields );
+    Fields discardFields = trainingFields.appendSelector( predictorFields );
 
     if( !discardFields.isNone() )
       pipe = new Discard( pipe, discardFields );
