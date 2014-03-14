@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class PMMLPlatformTestCase extends PatternPlatformTestCase
+public abstract class PMMLPlatformTestCase extends PatternPlatformTestCase
   {
   private static final Logger LOG = LoggerFactory.getLogger( PMMLPlatformTestCase.class );
 

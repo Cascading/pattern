@@ -55,12 +55,12 @@ task platformTest( type: Test, dependsOn: test ) {
 
   systemProperties = setTestingProperties()
 
+  setTestClassesDir( file( project( ':pattern-pmml' ).sourceSets.test.output.classesDir ) )
+
   // not called when disabled
   doFirst() {
 
     rootProject.ext.testRoots << systemProperties[ 'test.output.root' ]
-
-    setTestClassesDir( file( project( ':pattern-pmml' ).sourceSets.test.output.classesDir ) )
   }
 }
 
