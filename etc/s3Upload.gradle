@@ -25,7 +25,6 @@ buildscript {
   repositories {
     mavenLocal()
     mavenCentral()
-    mavenRepo name: 'monochromeroad', url: 'http://repository-monochromeroad.forge.cloudbees.com/release/'
     mavenRepo name: 'monochromeroad', url: 'http://conjars.org/repo/'
   }
   dependencies {
