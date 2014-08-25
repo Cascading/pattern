@@ -23,9 +23,9 @@ package cascading.pattern.model.tree.predicate;
 /**
  *
  */
-public class GreaterOrEqualThanPredicate extends ComparablePredicate<Comparable>
+public class GreaterOrEqualThanPredicate extends ComparablePredicate<Object>
   {
-  public GreaterOrEqualThanPredicate( String field, Comparable value )
+  public GreaterOrEqualThanPredicate( String field, Object value )
     {
     super( field, value );
     }
@@ -36,6 +36,8 @@ public class GreaterOrEqualThanPredicate extends ComparablePredicate<Comparable>
     if( argument == null )
       return null;
 
-    return ( (Comparable) argument ).compareTo( value ) >= 0;
+    @SuppressWarnings( "unchecked" )
+    Comparable<Object> arg = (Comparable<Object>) argument;
+    return arg.compareTo( value ) >= 0;
     }
   }

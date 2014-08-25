@@ -43,7 +43,7 @@ public class PredictionRegressionFunction extends BaseRegressionFunction
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context<BaseRegressionFunction.ExpressionContext>> functionCall )
+  public void operate( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, FunctionCall<Context<BaseRegressionFunction.ExpressionContext>> functionCall )
     {
     ExpressionEvaluator evaluator = functionCall.getContext().payload.expressions[ 0 ];
     LinkFunction linkFunction = getSpec().linkFunction;

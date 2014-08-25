@@ -50,8 +50,8 @@ public class Main
     HadoopFlowConnector flowConnector = new HadoopFlowConnector( properties );
 
     // create source and sink taps
-    Tap inputTap = new Hfs( new TextDelimited( true, "\t" ), inputPath );
-    Tap classifyTap = new Hfs( new TextDelimited( true, "\t" ), classifyPath );
+    Tap<?, ?, ?> inputTap = new Hfs( new TextDelimited( true, "\t" ), inputPath );
+    Tap<?, ?, ?> classifyTap = new Hfs( new TextDelimited( true, "\t" ), classifyPath );
 
     // handle command line options
     OptionParser optParser = new OptionParser();
@@ -79,7 +79,7 @@ public class Main
       }
 
     // write a DOT file and run the flow
-    Flow classifyFlow = flowConnector.connect( flowDef );
+    Flow<?> classifyFlow = flowConnector.connect( flowDef );
     classifyFlow.writeDOT( "dot/classify.dot" );
     classifyFlow.complete();
     }

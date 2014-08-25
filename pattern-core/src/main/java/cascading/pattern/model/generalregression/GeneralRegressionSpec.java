@@ -103,12 +103,12 @@ public class GeneralRegressionSpec extends Spec
     // order tables in category order as this is the declared field name order
     if( predictedField instanceof CategoricalDataField )
       {
-      Ordering<RegressionTable> ordering = Ordering.natural().onResultOf( new Function<RegressionTable, Comparable>()
+      Ordering<RegressionTable> ordering = Ordering.natural().onResultOf( new Function<RegressionTable, Integer>()
       {
       private List<String> categories = ( (CategoricalDataField) predictedField ).getCategories();
 
       @Override
-      public Comparable apply( RegressionTable regressionTable )
+      public Integer apply( RegressionTable regressionTable )
         {
         return categories.indexOf( regressionTable.getTargetCategory() );
         }

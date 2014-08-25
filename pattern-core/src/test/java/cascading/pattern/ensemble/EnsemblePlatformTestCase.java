@@ -73,15 +73,15 @@ public class EnsemblePlatformTestCase extends PatternPlatformTestCase
     pipe = new ParallelEnsembleAssembly( pipe, ensembleSpec );
     pipe = new Pipe( "tail", pipe );
 
-    Tap source = getPlatform().getDelimitedFile( expectedFields.append( predictedFields ), true, ",", "\"", DATA_PATH + inputData, SinkMode.KEEP );
-    Tap sink = getPlatform().getDelimitedFile( Fields.ALL, true, ",", "\"", getResultPath(), SinkMode.REPLACE );
+    Tap<?, ?, ?> source = getPlatform().getDelimitedFile( expectedFields.append( predictedFields ), true, ",", "\"", DATA_PATH + inputData, SinkMode.KEEP );
+    Tap<?, ?, ?> sink = getPlatform().getDelimitedFile( Fields.ALL, true, ",", "\"", getResultPath(), SinkMode.REPLACE );
 
     FlowDef flowDef = FlowDef.flowDef()
       .addSource( "head", source )
       .addSink( "tail", sink )
       .addTail( pipe );
 
-    Flow flow = getPlatform().getFlowConnector().connect( flowDef );
+    Flow<?> flow = getPlatform().getFlowConnector().connect( flowDef );
 
     flow.writeDOT( getFlowPlanPath() + "/plan.dot" );
 

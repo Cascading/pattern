@@ -25,7 +25,7 @@ import java.util.Collection;
 /** Class IsInSetPredicate returns true if the current value is in the given collection of values. */
 public class IsInSetPredicate extends SimpleSetPredicate
   {
-  public IsInSetPredicate( String field, Collection values )
+  public IsInSetPredicate( String field, Collection<?> values )
     {
     super( field, values );
     }

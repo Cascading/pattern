@@ -22,6 +22,7 @@ package cascading.pattern.pmml.iris;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 
 import cascading.flow.Flow;
 import cascading.flow.FlowDef;
@@ -45,9 +46,9 @@ public class RegressionFlowExample
 
   public void run() throws IOException
     {
-    Tap irisTap = new FileTap( new TextDelimited( true, "\t", "\"" ), "data/iris.lm_p.tsv", SinkMode.KEEP );
+    Tap<?, ?, ?> irisTap = new FileTap( new TextDelimited( true, "\t", "\"" ), "data/iris.lm_p.tsv", SinkMode.KEEP );
 
-    Tap resultsTap = new FileTap( new TextDelimited( true, "\t", "\"" ), "build/test/output/flow/results.tsv", SinkMode.REPLACE );
+    Tap<Properties, ?, ?> resultsTap = new FileTap( new TextDelimited( true, "\t", "\"" ), "build/test/output/flow/results.tsv", SinkMode.REPLACE );
 
     FlowDef flowDef = FlowDef.flowDef()
       .setName( "pmml flow" )
@@ -60,7 +61,8 @@ public class RegressionFlowExample
 
     flowDef.addAssemblyPlanner( pmmlPlanner );
 
-    Flow flow = new LocalFlowConnector().connect( flowDef );
+    @SuppressWarnings( "unchecked" )
+	Flow<Properties> flow = new LocalFlowConnector().connect( flowDef );
 
     flow.complete();
 

@@ -43,7 +43,7 @@ abstract class BaseRegressionFunction extends ModelScoringFunction<GeneralRegres
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<Context<ExpressionContext>> operationCall )
+  public void prepare( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, OperationCall<Context<ExpressionContext>> operationCall )
     {
     super.prepare( flowProcess, operationCall );
 

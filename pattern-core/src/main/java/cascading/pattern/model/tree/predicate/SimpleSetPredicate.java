@@ -29,9 +29,9 @@ import java.util.Set;
  */
 public abstract class SimpleSetPredicate extends SimplePredicate
   {
-  Set set = new HashSet();
+  Set<Object> set = new HashSet<Object>();
 
-  public SimpleSetPredicate( String field, Collection values )
+  public SimpleSetPredicate( String field, Collection<?> values )
     {
     super( field );
     this.set.addAll( values );

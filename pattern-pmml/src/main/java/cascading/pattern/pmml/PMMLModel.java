@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 class PMMLModel
   {
   /** Field LOG */
+  @SuppressWarnings( "unused" )
   private static final Logger LOG = LoggerFactory.getLogger( PMMLModel.class );
 
   private final PMML pmml;
@@ -56,7 +57,7 @@ class PMMLModel
     List<Model> content = pmml.getContent();
 
     if( content == null )
-      return Collections.EMPTY_LIST;
+      return Collections.emptyList();
 
     return content;
     }

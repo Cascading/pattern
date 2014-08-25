@@ -30,9 +30,9 @@ import cascading.tuple.Fields;
  */
 public abstract class SelectionBuffer<Context> extends BaseOperation<Context> implements Buffer<Context>
   {
-  protected final EnsembleSpec ensembleSpec;
+  protected final EnsembleSpec<?> ensembleSpec;
 
-  public SelectionBuffer( Fields fieldDeclaration, EnsembleSpec ensembleSpec )
+  public SelectionBuffer( Fields fieldDeclaration, EnsembleSpec<?> ensembleSpec )
     {
     super( fieldDeclaration );
 

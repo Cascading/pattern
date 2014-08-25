@@ -77,6 +77,12 @@ class TreeUtil
       buildTree( modelSchema, tree, child );
       }
     }
+  
+  @SuppressWarnings( "unchecked" )
+  private static Comparable<?> comparableCoerce(String value, Type expectedFieldType)
+    {
+	return (Comparable<Object>) Coercions.coerce( value, expectedFieldType );
+    }
 
   private static cascading.pattern.model.tree.predicate.Predicate getPredicateFor( ModelSchema modelSchema, Predicate predicate )
     {
@@ -99,13 +105,13 @@ class TreeUtil
         case NOT_EQUAL:
           return new NotEqualsToPredicate( fieldName, Coercions.coerce( value, expectedFieldType ) );
         case LESS_THAN:
-          return new LessThanPredicate( fieldName, (Comparable) Coercions.coerce( value, expectedFieldType ) );
+          return new LessThanPredicate( fieldName, comparableCoerce( value, expectedFieldType ) );
         case LESS_OR_EQUAL:
-          return new LessOrEqualThanPredicate( fieldName, (Comparable) Coercions.coerce( value, expectedFieldType ) );
+          return new LessOrEqualThanPredicate( fieldName, comparableCoerce( value, expectedFieldType ) );
         case GREATER_THAN:
-          return new GreaterThanPredicate( fieldName, (Comparable) Coercions.coerce( value, expectedFieldType ) );
+          return new GreaterThanPredicate( fieldName, comparableCoerce( value, expectedFieldType ) );
         case GREATER_OR_EQUAL:
-          return new GreaterOrEqualThanPredicate( fieldName, (Comparable) Coercions.coerce( value, expectedFieldType ) );
+          return new GreaterOrEqualThanPredicate( fieldName, comparableCoerce( value, expectedFieldType ) );
         case IS_MISSING:
           return new IsMissingPredicate( fieldName );
         case IS_NOT_MISSING:
@@ -123,7 +129,7 @@ class TreeUtil
       if( expectedField == null )
         throw new IllegalStateException( "missing field declaration in dictionary for: " + fieldName );
 
-      List list = PMMLUtil.parseArray( valueArray ); // performs coercions
+      List<?> list = PMMLUtil.parseArray( valueArray ); // performs coercions
 
       switch( operator )
         {

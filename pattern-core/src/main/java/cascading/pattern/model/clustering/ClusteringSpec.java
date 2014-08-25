@@ -108,10 +108,10 @@ public class ClusteringSpec extends Spec
     // order tables in category order as this is the declared field name order
     if( predictedField instanceof CategoricalDataField )
       {
-      Ordering<Cluster> ordering = Ordering.natural().onResultOf( new Function<Cluster, Comparable>()
+      Ordering<Cluster> ordering = Ordering.natural().onResultOf( new Function<Cluster, Integer>()
       {
       @Override
-      public Comparable apply( Cluster cluster )
+      public Integer apply( Cluster cluster )
         {
         return ( (CategoricalDataField) predictedField ).getCategories().indexOf( cluster.getTargetCategory() );
         }

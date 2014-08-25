@@ -73,7 +73,7 @@ public class RandomForestFunction extends ModelScoringFunction<RandomForestSpec,
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<Context<DecisionContext>> operationCall )
+  public void prepare( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, OperationCall<Context<DecisionContext>> operationCall )
     {
     super.prepare( flowProcess, operationCall );
 
@@ -88,7 +88,7 @@ public class RandomForestFunction extends ModelScoringFunction<RandomForestSpec,
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context<DecisionContext>> functionCall )
+  public void operate( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, FunctionCall<Context<DecisionContext>> functionCall )
     {
     TupleEntry arguments = functionCall.getArguments();
 

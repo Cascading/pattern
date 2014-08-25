@@ -334,11 +334,6 @@ public class PMMLPlanner implements AssemblyPlanner
       }
     }
 
-  private void setPMML( PMML pmml )
-    {
-    this.pmml = pmml;
-    }
-
   private static PMML parse( InputStream inputStream )
     {
     try
@@ -373,7 +368,7 @@ public class PMMLPlanner implements AssemblyPlanner
 
   public PMMLPlanner addDataTypes( Fields fields )
     {
-    for( Comparable field : fields )
+    for( Comparable<?> field : fields )
       {
       if( field instanceof Number )
         continue;
@@ -433,7 +428,7 @@ public class PMMLPlanner implements AssemblyPlanner
     return Arrays.asList( tail );
     }
 
-  private Pipe applyCoercion( Pipe tail, Tap source )
+  private Pipe applyCoercion( Pipe tail, Tap<?, ?, ?> source )
     {
     Fields sourceFields = source.getSourceFields();
     FieldTypeResolver fieldTypeResolver = getFieldTypeResolver();
@@ -441,7 +436,7 @@ public class PMMLPlanner implements AssemblyPlanner
     Fields coercedFields = Fields.NONE;
 
     int count = 0;
-    for( Comparable sourceField : sourceFields )
+    for( Comparable<?> sourceField : sourceFields )
       {
       Type incoming = sourceFields.getType( sourceField );
       Type outgoing = fieldTypeResolver.inferTypeFrom( count++, sourceField.toString() );
@@ -637,7 +632,8 @@ public class PMMLPlanner implements AssemblyPlanner
 
     for( Cluster cluster : model.getClusters() )
       {
-      List<Double> exemplar = PMMLUtil.parseArray( cluster.getArray() );
+      @SuppressWarnings( "unchecked" )
+	List<Double> exemplar = (List<Double>)PMMLUtil.parseArray( cluster.getArray() );
 
       LOG.debug( "exemplar: {}", exemplar );
 
@@ -679,7 +675,7 @@ public class PMMLPlanner implements AssemblyPlanner
     return tail;
     }
 
-  private Pipe create( Pipe tail, ModelSchema schemaParam, ModelScoringFunction function )
+  private Pipe create( Pipe tail, ModelSchema schemaParam, ModelScoringFunction<?, ?> function )
     {
     Fields inputFields = schemaParam.getInputFields();
     Fields declaredFields = schemaParam.getDeclaredFields();

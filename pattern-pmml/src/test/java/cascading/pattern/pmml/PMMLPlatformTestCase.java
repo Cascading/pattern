@@ -92,8 +92,8 @@ public abstract class PMMLPlatformTestCase extends PatternPlatformTestCase
     if( !discardFields.isNone() )
       pipe = new Discard( pipe, discardFields );
 
-    Tap source = getPlatform().getDelimitedFile( "\t", "\"", planner.getFieldTypeResolver(), DATA_PATH + testModel + ".tsv", SinkMode.KEEP );
-    Tap sink = getPlatform().getDelimitedFile( "\t", "\"", null, getResultPath(), SinkMode.REPLACE );
+    Tap<?, ?, ?> source = getPlatform().getDelimitedFile( "\t", "\"", planner.getFieldTypeResolver(), DATA_PATH + testModel + ".tsv", SinkMode.KEEP );
+    Tap<?, ?, ?> sink = getPlatform().getDelimitedFile( "\t", "\"", null, getResultPath(), SinkMode.REPLACE );
 
     FlowDef flowDef = FlowDef.flowDef()
       .addSource( "head", source )
@@ -101,7 +101,7 @@ public abstract class PMMLPlatformTestCase extends PatternPlatformTestCase
       .addTail( pipe )
       .addAssemblyPlanner( planner );
 
-    Flow flow;
+    Flow<?> flow;
 
     try
       {

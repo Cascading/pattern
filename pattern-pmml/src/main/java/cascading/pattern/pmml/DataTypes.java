@@ -35,7 +35,7 @@ import org.dmg.pmml.DataType;
 class DataTypes
   {
   private static Map<DataType, Type> pmmlToType = HashBiMap.create();
-  private static Map<Type, DataType> typeToPmml = ( (BiMap) pmmlToType ).inverse();
+  private static Map<Type, DataType> typeToPmml = ( (BiMap<DataType, Type>) pmmlToType ).inverse();
 
   static
     {
@@ -54,7 +54,7 @@ class DataTypes
   public static DataType getTypeToPmml( Type type )
     {
     if( type instanceof Class )
-      type = Primitives.wrap( (Class<Object>) type );
+      type = Primitives.wrap( (Class<?>) type );
 
     return typeToPmml.get( type );
     }
