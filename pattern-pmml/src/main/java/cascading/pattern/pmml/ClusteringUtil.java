@@ -20,7 +20,16 @@
 
 package cascading.pattern.pmml;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import cascading.pattern.model.clustering.compare.AbsoluteDifferenceCompareFunction;
+import cascading.pattern.model.clustering.compare.CompareFunction;
+import cascading.pattern.model.clustering.compare.DeltaCompareFunction;
+import cascading.pattern.model.clustering.compare.EqualCompareFunction;
+import cascading.pattern.model.clustering.compare.GaussianSimilarityCompareFunction;
+
+import org.dmg.pmml.ClusteringField;
 import org.dmg.pmml.ClusteringModel;
 import org.dmg.pmml.CompareFunctionType;
 
@@ -29,24 +38,52 @@ import org.dmg.pmml.CompareFunctionType;
  */
 class ClusteringUtil
   {
-  static AbsoluteDifferenceCompareFunction setComparisonFunction( ClusteringModel model )
+  static CompareFunction getDefaultComparisonFunction( ClusteringModel model )
     {
-    CompareFunctionType compareFunction = model.getComparisonMeasure().getCompareFunction();
+    CompareFunctionType compareFunctionType = model.getComparisonMeasure().getCompareFunction();
 
-    switch( compareFunction )
+    return getComparisonFunction( null, compareFunctionType, null );
+    }
+
+  public static Map<String, CompareFunction> getComparisonFunctions( ClusteringModel model, CompareFunction defaultCompareFunction )
+    {
+    Map<String, CompareFunction> result = new HashMap<String, CompareFunction>();
+    
+    for (ClusteringField field : model.getClusteringFields())
+      {
+      result.put( field.getField().getValue(), getComparisonFunction( defaultCompareFunction, field.getCompareFunction(), field.getSimilarityScale() ) );
+      }
+    
+    return result;
+    }
+
+  private static CompareFunction getComparisonFunction( CompareFunction defaultCompareFunction, CompareFunctionType compareFunctionType, Double similarityScale )
+    {
+    if (compareFunctionType == null)
+      {
+      if (defaultCompareFunction instanceof GaussianSimilarityCompareFunction)
+        // similarity scale is required for each field that uses GaussianSimilarity
+        // even if GaussianSimilarity is the default (there is no such thing as a default
+        // similarity scale)
+        return new GaussianSimilarityCompareFunction( similarityScale );
+      else
+        return defaultCompareFunction;
+      }
+
+    switch( compareFunctionType )
       {
       case ABS_DIFF:
         return new AbsoluteDifferenceCompareFunction();
-      case GAUSS_SIM:
-        break;
       case DELTA:
-        break;
+        return new DeltaCompareFunction();
       case EQUAL:
-        break;
+        return new EqualCompareFunction();
+      case GAUSS_SIM:
+        return new GaussianSimilarityCompareFunction( similarityScale );
       case TABLE:
         break;
       }
 
-    throw new UnsupportedOperationException( "unknown comparison function type: " + compareFunction );
+    throw new UnsupportedOperationException( "unsupported compare function: " + compareFunctionType );
     }
   }

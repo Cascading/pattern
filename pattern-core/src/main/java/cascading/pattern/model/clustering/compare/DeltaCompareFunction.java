@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
+ * Copyright (c) 2014 Concurrent, Inc. All Rights Reserved.
  *
  * Project and contact information: http://www.cascading.org/
  *
@@ -21,20 +21,21 @@
 package cascading.pattern.model.clustering.compare;
 
 /**
- *
+ * PMML Delta comparison function. 0 if the two sides are equal, 1 if not
+ * 'c(x,y) = 0 if x=y, 1 else'
  */
-public class AbsoluteDifferenceCompareFunction extends CompareFunction
+public class DeltaCompareFunction extends CompareFunction
   {
   @Override
   public double result( double lhs, double rhs )
     {
-    return Math.abs( lhs - rhs );
+    return ( lhs == rhs ) ? 0 : 1;
     }
 
   @Override
   public int hashCode()
     {
-    return 41;
+    return 37;
     }
 
   @Override
@@ -52,7 +53,7 @@ public class AbsoluteDifferenceCompareFunction extends CompareFunction
   @Override
   public String toString()
     {
-    return "AbsoluteDifferenceCompareFunction []";
+    return "DeltaCompareFunction []";
     }
 
   }

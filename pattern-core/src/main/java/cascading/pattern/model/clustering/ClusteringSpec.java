@@ -23,6 +23,7 @@ package cascading.pattern.model.clustering;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import cascading.pattern.datafield.CategoricalDataField;
 import cascading.pattern.datafield.DataField;
@@ -31,6 +32,7 @@ import cascading.pattern.model.Spec;
 import cascading.pattern.model.clustering.compare.CompareFunction;
 import cascading.pattern.model.clustering.measure.ComparisonMeasure;
 import cascading.tuple.Fields;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 
@@ -40,6 +42,7 @@ public class ClusteringSpec extends Spec
   private List<Cluster> clusters = new ArrayList<Cluster>();
   private CompareFunction defaultCompareFunction;
   private ComparisonMeasure comparisonMeasure;
+  private Map<String, CompareFunction> comparisonFunctions;
 
   public ClusteringSpec()
     {
@@ -123,11 +126,17 @@ public class ClusteringSpec extends Spec
     ClusterEvaluator[] clusterEvaluators = new ClusterEvaluator[ sorted.size() ];
 
     for( int i = 0; i < sorted.size(); i++ )
-      clusterEvaluators[ i ] = new ClusterEvaluator( argumentFields, sorted.get( i ), getComparisonMeasure(), getDefaultCompareFunction() );
+      clusterEvaluators[ i ] = new ClusterEvaluator( argumentFields, sorted.get( i ), getComparisonMeasure(), getDefaultCompareFunction(), comparisonFunctions );
 
     return clusterEvaluators;
     }
 
+
+  public void setCompareFunctions( Map<String, CompareFunction> comparisonFunctions )
+    {
+    this.comparisonFunctions = comparisonFunctions;
+    }
+  
   @Override
   public String toString()
     {
@@ -136,4 +145,5 @@ public class ClusteringSpec extends Spec
     sb.append( '}' );
     return sb.toString();
     }
+
   }

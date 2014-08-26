@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
+ * Copyright (c) 2014 Concurrent, Inc. All Rights Reserved.
  *
  * Project and contact information: http://www.cascading.org/
  *
@@ -21,20 +21,28 @@
 package cascading.pattern.model.clustering.compare;
 
 /**
- *
+ * PMML Equal comparison function. 1 if the two sides are equal, 0 if not
+ * 'c(x,y) = 1 if x=y, 0 else'
  */
-public class AbsoluteDifferenceCompareFunction extends CompareFunction
+public class EqualCompareFunction extends CompareFunction
   {
+   
   @Override
   public double result( double lhs, double rhs )
     {
-    return Math.abs( lhs - rhs );
+    return (lhs == rhs) ? 1 : 0;
     }
 
   @Override
   public int hashCode()
     {
-    return 41;
+    return 31;
+    }
+
+  @Override
+  public String toString()
+    {
+    return "EqualCompareFunction []";
     }
 
   @Override
@@ -48,11 +56,4 @@ public class AbsoluteDifferenceCompareFunction extends CompareFunction
       return false;
     return true;
     }
-
-  @Override
-  public String toString()
-    {
-    return "AbsoluteDifferenceCompareFunction []";
-    }
-
   }

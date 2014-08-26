@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
+ * Copyright (c) 2014 Concurrent, Inc. All Rights Reserved.
  *
  * Project and contact information: http://www.cascading.org/
  *
@@ -20,39 +20,18 @@
 
 package cascading.pattern.model.clustering.compare;
 
-/**
- *
- */
-public class AbsoluteDifferenceCompareFunction extends CompareFunction
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class EqualCompareFunctionTest
   {
-  @Override
-  public double result( double lhs, double rhs )
+  @Test
+  public void testCompare()
     {
-    return Math.abs( lhs - rhs );
+    CompareFunction fun = new EqualCompareFunction();
+    assertEquals( 0.0, fun.result( 4.0, 3.0 ), 0.0 );
+    assertEquals( 0.0, fun.result( 3.0, 4.0 ), 0.0 );
+    assertEquals( 1.0, fun.result( 4.0, 4.0 ), 0.0 );
     }
-
-  @Override
-  public int hashCode()
-    {
-    return 41;
-    }
-
-  @Override
-  public boolean equals( Object obj )
-    {
-    if( this == obj )
-      return true;
-    if( obj == null )
-      return false;
-    if( getClass() != obj.getClass() )
-      return false;
-    return true;
-    }
-
-  @Override
-  public String toString()
-    {
-    return "AbsoluteDifferenceCompareFunction []";
-    }
-
   }

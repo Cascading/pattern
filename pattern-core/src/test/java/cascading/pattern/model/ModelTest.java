@@ -20,11 +20,14 @@
 
 package cascading.pattern.model;
 
+import java.util.HashMap;
+
 import cascading.CascadingTestCase;
 import cascading.pattern.model.clustering.Cluster;
 import cascading.pattern.model.clustering.ClusteringFunction;
 import cascading.pattern.model.clustering.ClusteringSpec;
 import cascading.pattern.model.clustering.compare.AbsoluteDifferenceCompareFunction;
+import cascading.pattern.model.clustering.compare.CompareFunction;
 import cascading.pattern.model.clustering.measure.SquaredEuclideanMeasure;
 import cascading.pattern.model.generalregression.CategoricalRegressionFunction;
 import cascading.pattern.model.generalregression.GeneralRegressionSpec;
@@ -45,6 +48,7 @@ import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
 import cascading.tuple.TupleListCollector;
+
 import org.junit.Test;
 
 /**
@@ -101,6 +105,7 @@ public class ModelTest extends CascadingTestCase
     ClusteringSpec clusteringSpec = new ClusteringSpec( modelSchema );
 
     clusteringSpec.setDefaultCompareFunction( new AbsoluteDifferenceCompareFunction() );
+    clusteringSpec.setCompareFunctions( new HashMap<String, CompareFunction>() );
     clusteringSpec.setComparisonMeasure( new SquaredEuclideanMeasure() );
 
     clusteringSpec.addCluster( new Cluster( "1", 5.006d, 3.428d, 1.462d, 0.246d ) );
