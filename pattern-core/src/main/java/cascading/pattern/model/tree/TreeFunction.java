@@ -26,6 +26,7 @@ import cascading.operation.OperationCall;
 import cascading.pattern.model.ModelScoringFunction;
 import cascading.pattern.model.tree.decision.DecisionTree;
 import cascading.pattern.model.tree.decision.FinalDecision;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +67,7 @@ public class TreeFunction extends ModelScoringFunction<TreeSpec, DecisionTree>
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<Context<DecisionTree>> operationCall )
+  public void prepare( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, OperationCall<Context<DecisionTree>> operationCall )
     {
     super.prepare( flowProcess, operationCall );
 
@@ -74,7 +75,7 @@ public class TreeFunction extends ModelScoringFunction<TreeSpec, DecisionTree>
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context<DecisionTree>> functionCall )
+  public void operate( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, FunctionCall<Context<DecisionTree>> functionCall )
     {
     DecisionTree decisionTree = functionCall.getContext().payload;
 

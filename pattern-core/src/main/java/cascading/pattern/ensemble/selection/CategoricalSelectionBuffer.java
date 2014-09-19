@@ -55,7 +55,7 @@ public class CategoricalSelectionBuffer extends SelectionBuffer<CategoricalSelec
       }
     }
 
-  public CategoricalSelectionBuffer( EnsembleSpec ensembleSpec )
+  public CategoricalSelectionBuffer( EnsembleSpec<?> ensembleSpec )
     {
     super( ensembleSpec.getModelSchema().getDeclaredFields(), ensembleSpec );
 
@@ -68,9 +68,9 @@ public class CategoricalSelectionBuffer extends SelectionBuffer<CategoricalSelec
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<DecisionContext> operationCall )
+  public void prepare( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, OperationCall<DecisionContext> operationCall )
     {
-    ( (BufferCall) operationCall ).setRetainValues( true );
+    ( (BufferCall<DecisionContext>) operationCall ).setRetainValues( true );
 
     DecisionContext context = new DecisionContext();
 
@@ -81,7 +81,7 @@ public class CategoricalSelectionBuffer extends SelectionBuffer<CategoricalSelec
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, BufferCall<DecisionContext> bufferCall )
+  public void operate( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, BufferCall<DecisionContext> bufferCall )
     {
     int[] results = bufferCall.getContext().results;
 

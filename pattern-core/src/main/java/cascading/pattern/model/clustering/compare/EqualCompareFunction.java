@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
+ * Copyright (c) 2014 Concurrent, Inc. All Rights Reserved.
  *
  * Project and contact information: http://www.cascading.org/
  *
@@ -18,26 +18,42 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.tree.predicate;
+package cascading.pattern.model.clustering.compare;
 
 /**
- *
+ * PMML Equal comparison function. 1 if the two sides are equal, 0 if not
+ * 'c(x,y) = 1 if x=y, 0 else'
  */
-public class LessThanPredicate extends ComparablePredicate<Object>
+public class EqualCompareFunction extends CompareFunction
   {
-  public LessThanPredicate( String field, Object value )
+   
+  @Override
+  public double result( double lhs, double rhs )
     {
-    super( field, value );
+    return (lhs == rhs) ? 1 : 0;
     }
 
   @Override
-  public Boolean evaluate( Object argument )
+  public int hashCode()
     {
-    if( argument == null )
-      return null;
+    return 31;
+    }
 
-    @SuppressWarnings( "unchecked" )
-    Comparable<Object> arg = (Comparable<Object>) argument;
-    return arg.compareTo( value ) < 0;
+  @Override
+  public String toString()
+    {
+    return "EqualCompareFunction []";
+    }
+
+  @Override
+  public boolean equals( Object obj )
+    {
+    if( this == obj )
+      return true;
+    if( obj == null )
+      return false;
+    if( getClass() != obj.getClass() )
+      return false;
+    return true;
     }
   }

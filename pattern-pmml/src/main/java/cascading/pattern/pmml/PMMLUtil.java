@@ -40,11 +40,11 @@ import org.jpmml.evaluator.ArrayUtil;
  */
 class PMMLUtil
   {
-  public static List parseArray( ArrayType arrayType )
+  public static List<?> parseArray( ArrayType arrayType )
     {
     List<String> tokenize = ArrayUtil.tokenize( arrayType );
 
-    List result;
+    List<?> result;
 
     if( arrayType.getType() == ArrayType.Type.REAL )
       result = Lists.transform( tokenize, new Function<String, Double>()
@@ -69,7 +69,7 @@ class PMMLUtil
     else
       throw new UnsupportedOperationException( "unknown array type: " + arrayType.getType() );
 
-    return new ArrayList( result ); // minimize serialization closure
+    return new ArrayList<Object>( result ); // minimize serialization closure
     }
 
   public static List<String> asStrings( List<Value> results )
@@ -117,6 +117,6 @@ class PMMLUtil
         break;
       }
 
-    throw new PatternException( "only majority vote method supported, got: " + modelMethod );
+    throw new PatternException( "only 'majority vote' and 'average' methods supported, got: " + modelMethod );
     }
   }

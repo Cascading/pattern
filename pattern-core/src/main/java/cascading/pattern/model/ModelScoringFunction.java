@@ -84,8 +84,8 @@ public abstract class ModelScoringFunction<S extends Spec, P> extends BaseOperat
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<ModelScoringFunction.Context<P>> operationCall )
+  public void prepare( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, OperationCall<ModelScoringFunction.Context<P>> operationCall )
     {
-    operationCall.setContext( new ModelScoringFunction.Context( getFieldDeclaration().size() ) );
+    operationCall.setContext( new ModelScoringFunction.Context<P>( getFieldDeclaration().size() ) );
     }
   }

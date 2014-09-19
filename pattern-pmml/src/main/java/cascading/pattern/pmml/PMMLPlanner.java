@@ -27,8 +27,10 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import cascading.flow.AssemblyPlanner;
@@ -42,6 +44,7 @@ import cascading.pattern.model.ModelSchema;
 import cascading.pattern.model.ModelScoringFunction;
 import cascading.pattern.model.clustering.ClusteringFunction;
 import cascading.pattern.model.clustering.ClusteringSpec;
+import cascading.pattern.model.clustering.compare.CompareFunction;
 import cascading.pattern.model.clustering.measure.EuclideanMeasure;
 import cascading.pattern.model.clustering.measure.SquaredEuclideanMeasure;
 import cascading.pattern.model.generalregression.CategoricalRegressionFunction;
@@ -60,7 +63,9 @@ import cascading.scheme.util.FieldTypeResolver;
 import cascading.tap.Tap;
 import cascading.tuple.Fields;
 import cascading.util.Util;
+
 import org.dmg.pmml.Cluster;
+import org.dmg.pmml.ClusteringField;
 import org.dmg.pmml.ClusteringModel;
 import org.dmg.pmml.ComparisonMeasure;
 import org.dmg.pmml.DataField;
@@ -334,11 +339,6 @@ public class PMMLPlanner implements AssemblyPlanner
       }
     }
 
-  private void setPMML( PMML pmml )
-    {
-    this.pmml = pmml;
-    }
-
   private static PMML parse( InputStream inputStream )
     {
     try
@@ -373,7 +373,7 @@ public class PMMLPlanner implements AssemblyPlanner
 
   public PMMLPlanner addDataTypes( Fields fields )
     {
-    for( Comparable field : fields )
+    for( Comparable<?> field : fields )
       {
       if( field instanceof Number )
         continue;
@@ -433,7 +433,7 @@ public class PMMLPlanner implements AssemblyPlanner
     return Arrays.asList( tail );
     }
 
-  private Pipe applyCoercion( Pipe tail, Tap source )
+  private Pipe applyCoercion( Pipe tail, Tap<?, ?, ?> source )
     {
     Fields sourceFields = source.getSourceFields();
     FieldTypeResolver fieldTypeResolver = getFieldTypeResolver();
@@ -441,7 +441,7 @@ public class PMMLPlanner implements AssemblyPlanner
     Fields coercedFields = Fields.NONE;
 
     int count = 0;
-    for( Comparable sourceField : sourceFields )
+    for( Comparable<?> sourceField : sourceFields )
       {
       Type incoming = sourceFields.getType( sourceField );
       Type outgoing = fieldTypeResolver.inferTypeFrom( count++, sourceField.toString() );
@@ -610,6 +610,12 @@ public class PMMLPlanner implements AssemblyPlanner
     {
     ModelSchema modelSchema = createModelSchema( model );
 
+    final Map<FieldName, ClusteringField> clusteringFields = new HashMap<FieldName, ClusteringField>();
+    for( ClusteringField cfield : model.getClusteringFields() )
+      {
+      clusteringFields.put( cfield.getField(), cfield );
+      }
+
     if( model.getModelClass() != ClusteringModel.ModelClass.CENTER_BASED )
       throw new UnsupportedOperationException( "unsupported model class, got: " + model.getModelClass() );
 
@@ -633,11 +639,15 @@ public class PMMLPlanner implements AssemblyPlanner
     else
       throw new UnsupportedOperationException( "unsupported comparison measure: " + comparisonMeasure );
 
-    clusteringSpec.setDefaultCompareFunction( ClusteringUtil.setComparisonFunction( model ) );
+    CompareFunction defaultCompareFunction = ClusteringUtil.getDefaultComparisonFunction( model );
+    clusteringSpec.setDefaultCompareFunction( defaultCompareFunction );
+    
+    clusteringSpec.setCompareFunctions( ClusteringUtil.getComparisonFunctions( model, defaultCompareFunction ) );
 
     for( Cluster cluster : model.getClusters() )
       {
-      List<Double> exemplar = PMMLUtil.parseArray( cluster.getArray() );
+      @SuppressWarnings( "unchecked" )
+	List<Double> exemplar = (List<Double>)PMMLUtil.parseArray( cluster.getArray() );
 
       LOG.debug( "exemplar: {}", exemplar );
 
@@ -679,7 +689,7 @@ public class PMMLPlanner implements AssemblyPlanner
     return tail;
     }
 
-  private Pipe create( Pipe tail, ModelSchema schemaParam, ModelScoringFunction function )
+  private Pipe create( Pipe tail, ModelSchema schemaParam, ModelScoringFunction<?, ?> function )
     {
     Fields inputFields = schemaParam.getInputFields();
     Fields declaredFields = schemaParam.getDeclaredFields();

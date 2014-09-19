@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
+ * Copyright (c) 2014 Concurrent, Inc. All Rights Reserved.
  *
  * Project and contact information: http://www.cascading.org/
  *
@@ -18,26 +18,20 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.tree.predicate;
+package cascading.pattern.model.clustering.compare;
 
-/**
- *
- */
-public class LessThanPredicate extends ComparablePredicate<Object>
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class DeltaCompareFunctionTest
   {
-  public LessThanPredicate( String field, Object value )
+  @Test
+  public void testCompare()
     {
-    super( field, value );
-    }
-
-  @Override
-  public Boolean evaluate( Object argument )
-    {
-    if( argument == null )
-      return null;
-
-    @SuppressWarnings( "unchecked" )
-    Comparable<Object> arg = (Comparable<Object>) argument;
-    return arg.compareTo( value ) < 0;
+    CompareFunction fun = new DeltaCompareFunction();
+    assertEquals( 1.0, fun.result( 5.0, 3.0 ), 0.0 );
+    assertEquals( 1.0, fun.result( 3.0, 7.0 ), 0.0 );
+    assertEquals( 1.0, fun.result( 3.0, 3.0 ), 1.0 );
     }
   }

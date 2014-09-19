@@ -28,11 +28,11 @@ import cascading.CascadingException;
 /** Reflection is a reflection utility helper. */
 public class Reflection
   {
-  public static Object invokeStaticMethod( ClassLoader loader, String typeString, String methodName, Object[] parameters, Class[] parameterTypes )
+  public static Object invokeStaticMethod( ClassLoader loader, String typeString, String methodName, Object[] parameters, Class<?>[] parameterTypes )
     {
     try
       {
-      Class type = loader.loadClass( typeString );
+      Class<?> type = loader.loadClass( typeString );
 
       return invokeStaticMethod( type, methodName, parameters, parameterTypes );
       }
@@ -42,7 +42,7 @@ public class Reflection
       }
     }
 
-  public static Object invokeStaticMethod( Class type, String methodName, Object[] parameters, Class[] parameterTypes )
+  public static Object invokeStaticMethod( Class<?> type, String methodName, Object[] parameters, Class<?>[] parameterTypes )
     {
     try
       {
@@ -58,7 +58,7 @@ public class Reflection
       }
     }
 
-  public static <T> T getStaticField( Class type, String fieldName )
+  public static <T> T getStaticField( Class<?> type, String fieldName )
     {
     try
       {
@@ -66,7 +66,9 @@ public class Reflection
 
       field.setAccessible( true );
 
-      return (T) field.get( null );
+      @SuppressWarnings( "unchecked" )
+      T result = (T) field.get( null );
+      return result;
       }
     catch( Exception exception )
       {
@@ -79,12 +81,12 @@ public class Reflection
     return invokeInstanceMethod( target, methodName, (Object[]) null, (Class[]) null );
     }
 
-  public static <T> T invokeInstanceMethod( Object target, String methodName, Object parameter, Class parameterType )
+  public static <T> T invokeInstanceMethod( Object target, String methodName, Object parameter, Class<?> parameterType )
     {
     return invokeInstanceMethod( target, methodName, new Object[]{parameter}, new Class[]{parameterType} );
     }
 
-  public static <T> T invokeInstanceMethod( Object target, String methodName, Object[] parameters, Class[] parameterTypes )
+  public static <T> T invokeInstanceMethod( Object target, String methodName, Object[] parameters, Class<?>[] parameterTypes )
     {
     try
       {
@@ -101,7 +103,9 @@ public class Reflection
 
       method.setAccessible( true );
 
-      return (T) method.invoke( target, parameters );
+      @SuppressWarnings( "unchecked" )
+      T result = (T) method.invoke( target, parameters );
+      return result;
       }
     catch( Exception exception )
       {

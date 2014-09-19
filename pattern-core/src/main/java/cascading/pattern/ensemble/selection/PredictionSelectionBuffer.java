@@ -54,7 +54,7 @@ public class PredictionSelectionBuffer extends SelectionBuffer<PredictionSelecti
       }
     }
 
-  public PredictionSelectionBuffer( EnsembleSpec ensembleSpec )
+  public PredictionSelectionBuffer( @SuppressWarnings( "rawtypes" ) EnsembleSpec ensembleSpec )
     {
     super( ensembleSpec.getModelSchema().getDeclaredFields(), ensembleSpec );
 
@@ -65,9 +65,9 @@ public class PredictionSelectionBuffer extends SelectionBuffer<PredictionSelecti
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<DecisionContext> operationCall )
+  public void prepare( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, OperationCall<DecisionContext> operationCall )
     {
-    ( (BufferCall) operationCall ).setRetainValues( true );
+    ( (BufferCall<DecisionContext>) operationCall ).setRetainValues( true );
 
     DecisionContext context = new DecisionContext();
 
@@ -78,7 +78,7 @@ public class PredictionSelectionBuffer extends SelectionBuffer<PredictionSelecti
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, BufferCall<DecisionContext> bufferCall )
+  public void operate( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, BufferCall<DecisionContext> bufferCall )
     {
     double[] results = bufferCall.getContext().results;
 

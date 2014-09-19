@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2013 Concurrent, Inc. All Rights Reserved.
+ * Copyright (c) 2014 Concurrent, Inc. All Rights Reserved.
  *
  * Project and contact information: http://www.cascading.org/
  *
@@ -18,26 +18,42 @@
  * limitations under the License.
  */
 
-package cascading.pattern.model.tree.predicate;
+package cascading.pattern.model.clustering.compare;
 
 /**
- *
+ * PMML Delta comparison function. 0 if the two sides are equal, 1 if not
+ * 'c(x,y) = 0 if x=y, 1 else'
  */
-public class LessThanPredicate extends ComparablePredicate<Object>
+public class DeltaCompareFunction extends CompareFunction
   {
-  public LessThanPredicate( String field, Object value )
+  @Override
+  public double result( double lhs, double rhs )
     {
-    super( field, value );
+    return ( lhs == rhs ) ? 0 : 1;
     }
 
   @Override
-  public Boolean evaluate( Object argument )
+  public int hashCode()
     {
-    if( argument == null )
-      return null;
-
-    @SuppressWarnings( "unchecked" )
-    Comparable<Object> arg = (Comparable<Object>) argument;
-    return arg.compareTo( value ) < 0;
+    return 37;
     }
+
+  @Override
+  public boolean equals( Object obj )
+    {
+    if( this == obj )
+      return true;
+    if( obj == null )
+      return false;
+    if( getClass() != obj.getClass() )
+      return false;
+    return true;
+    }
+
+  @Override
+  public String toString()
+    {
+    return "DeltaCompareFunction []";
+    }
+
   }

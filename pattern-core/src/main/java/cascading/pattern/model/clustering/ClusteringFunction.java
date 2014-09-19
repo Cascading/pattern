@@ -53,7 +53,7 @@ public class ClusteringFunction extends ModelScoringFunction<ClusteringSpec, Clu
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<Context<EvaluatorContext>> operationCall )
+  public void prepare( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, OperationCall<Context<EvaluatorContext>> operationCall )
     {
     super.prepare( flowProcess, operationCall );
 
@@ -64,7 +64,7 @@ public class ClusteringFunction extends ModelScoringFunction<ClusteringSpec, Clu
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context<EvaluatorContext>> functionCall )
+  public void operate( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, FunctionCall<Context<EvaluatorContext>> functionCall )
     {
     ClusterEvaluator[] evaluators = functionCall.getContext().payload.evaluators;
     double[] results = functionCall.getContext().payload.results;

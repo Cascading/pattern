@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 public class ModelSchema implements Serializable
   {
   /** Field LOG */
+  @SuppressWarnings( "unused" )
   private static final Logger LOG = LoggerFactory.getLogger( ModelSchema.class );
 
   Map<String, DataField> dictionary = new LinkedHashMap<String, DataField>();
@@ -208,7 +209,7 @@ public class ModelSchema implements Serializable
     {
     List<DataField> dataFields = new ArrayList<DataField>();
 
-    for( Comparable field : fields )
+    for( Comparable<?> field : fields )
       {
       if( field instanceof Number )
         throw new IllegalArgumentException( "all fields must be names, not ordinal, got: " + field );
@@ -223,7 +224,7 @@ public class ModelSchema implements Serializable
     {
     List<DataField> dataFields = new ArrayList<DataField>();
 
-    for( Comparable field : fields )
+    for( Comparable<?> field : fields )
       {
       if( field instanceof Number )
         throw new IllegalArgumentException( "all fields must be names, not ordinal, got: " + field );

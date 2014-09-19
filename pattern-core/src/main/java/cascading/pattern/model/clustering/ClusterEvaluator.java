@@ -21,6 +21,7 @@
 package cascading.pattern.model.clustering;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import cascading.pattern.model.clustering.compare.CompareFunction;
 import cascading.pattern.model.clustering.measure.ComparisonMeasure;
@@ -37,30 +38,27 @@ class ClusterEvaluator
   private final CompareFunction[] compareFunctions;
   private final double[] points;
 
-  public ClusterEvaluator( Fields argumentFields, Cluster cluster, ComparisonMeasure comparisonMeasure, CompareFunction compareFunction )
+  public ClusterEvaluator( Fields argumentFields, Cluster cluster, ComparisonMeasure comparisonMeasure, CompareFunction defaultCompareFunction, Map<String, CompareFunction> compareFunctions  )
     {
     this.cluster = cluster;
     this.comparisonMeasure = comparisonMeasure;
-    this.compareFunctions = createCompareFunctions( argumentFields, compareFunction );
+    this.compareFunctions = createCompareFunctions( argumentFields, defaultCompareFunction, compareFunctions );
     this.points = cluster.getPoints();
     }
 
-  private CompareFunction[] createCompareFunctions( Fields fields, CompareFunction defaultFunction, CompareFunction... functions )
+  private CompareFunction[] createCompareFunctions( Fields fields, CompareFunction defaultFunction, Map<String, CompareFunction> compareFunctions )
     {
     CompareFunction[] results = new CompareFunction[ fields.size() ];
 
     Arrays.fill( results, defaultFunction );
 
-    if( functions.length == 0 )
-      return results;
-
-    if( functions.length != fields.size() )
-      throw new IllegalStateException( "fields and number of functions are not equal" );
-
-    for( int i = 0; i < functions.length; i++ )
+    for( int i = 0; i < fields.size(); i++ )
       {
-      if( functions[ i ] != null )
-        results[ i ] = functions[ i ];
+      CompareFunction function = compareFunctions.get( fields.get( i ) );
+      if (function != null)
+        {
+        results[i] = function;
+        }
       }
 
     return results;

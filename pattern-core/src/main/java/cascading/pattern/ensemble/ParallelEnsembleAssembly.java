@@ -68,7 +68,7 @@ public class ParallelEnsembleAssembly extends SubAssembly
   {
   private static final Logger LOG = LoggerFactory.getLogger( ParallelEnsembleAssembly.class );
 
-  public ParallelEnsembleAssembly( Pipe pipe, EnsembleSpec ensembleSpec )
+  public ParallelEnsembleAssembly( Pipe pipe, EnsembleSpec<?> ensembleSpec )
     {
     super( pipe );
 
@@ -104,7 +104,7 @@ public class ParallelEnsembleAssembly extends SubAssembly
 
     pipe = new GroupBy( "vote", pipes.toArray( new Pipe[ pipes.size() ] ), keyFields );
 
-    SelectionBuffer buffer;
+    SelectionBuffer<?> buffer;
 
     if( isCategorical )
       buffer = new CategoricalSelectionBuffer( ensembleSpec );
@@ -119,7 +119,7 @@ public class ParallelEnsembleAssembly extends SubAssembly
     setTails( pipe );
     }
 
-  private Each createScoringPipe( int ordinal, Pipe tail, ModelSchema ensembleSchema, ModelScoringFunction function )
+  private Each createScoringPipe( int ordinal, Pipe tail, ModelSchema ensembleSchema, ModelScoringFunction<?, ?> function )
     {
     Fields inputFields = ensembleSchema.getInputFields();
     Fields declaredFields = ensembleSchema.getDeclaredFields();

@@ -28,7 +28,7 @@ public class Logging
     setLogLevel( Logging.class.getClassLoader(), "cascading", level );
     }
 
-  public static void setLogLevel( Class type, String log, String level )
+  public static void setLogLevel( Class<?> type, String log, String level )
     {
     setLogLevel( type.getClassLoader(), log, level );
     }

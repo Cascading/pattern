@@ -60,7 +60,7 @@ public class CategoricalRegressionFunction extends BaseRegressionFunction
     }
 
   @Override
-  public void prepare( FlowProcess flowProcess, OperationCall<Context<ExpressionContext>> operationCall )
+  public void prepare( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, OperationCall<Context<ExpressionContext>> operationCall )
     {
     super.prepare( flowProcess, operationCall );
 
@@ -69,7 +69,7 @@ public class CategoricalRegressionFunction extends BaseRegressionFunction
     }
 
   @Override
-  public void operate( FlowProcess flowProcess, FunctionCall<Context<BaseRegressionFunction.ExpressionContext>> functionCall )
+  public void operate( @SuppressWarnings( "rawtypes" ) FlowProcess flowProcess, FunctionCall<Context<BaseRegressionFunction.ExpressionContext>> functionCall )
     {
     TupleEntry arguments = functionCall.getArguments();
     ExpressionEvaluator[] expressions = functionCall.getContext().payload.expressions;
