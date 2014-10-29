@@ -53,7 +53,7 @@ class PMMLModel
 
   public List<Model> getModels()
     {
-    List<Model> content = pmml.getContent();
+    List<Model> content = pmml.getModels();
 
     if( content == null )
       return Collections.EMPTY_LIST;

@@ -29,7 +29,7 @@ import cascading.pattern.ensemble.selection.MajorityVote;
 import cascading.pattern.ensemble.selection.SelectionStrategy;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import org.dmg.pmml.ArrayType;
+import org.dmg.pmml.Array;
 import org.dmg.pmml.MiningModel;
 import org.dmg.pmml.MultipleModelMethodType;
 import org.dmg.pmml.Value;
@@ -40,13 +40,14 @@ import org.jpmml.evaluator.ArrayUtil;
  */
 class PMMLUtil
   {
-  public static List parseArray( ArrayType arrayType )
+  public static List<?> parseArray( Array arrayType )
     {
-    List<String> tokenize = ArrayUtil.tokenize( arrayType );
+    List<String> tokenize = ArrayUtil.parse( arrayType );
 
     List result;
 
-    if( arrayType.getType() == ArrayType.Type.REAL )
+    if( arrayType.getType() == Array.Type.REAL )
+      {
       result = Lists.transform( tokenize, new Function<String, Double>()
       {
       @Override
@@ -55,7 +56,9 @@ class PMMLUtil
         return Double.parseDouble( input );
         }
       } );
-    else if( arrayType.getType() == ArrayType.Type.INT )
+      }
+    else if( arrayType.getType() == Array.Type.INT )
+      {
       result = Lists.transform( tokenize, new Function<String, Integer>()
       {
       @Override
@@ -64,10 +67,15 @@ class PMMLUtil
         return Integer.parseInt( input );
         }
       } );
-    else if( arrayType.getType() == ArrayType.Type.STRING )
+      }
+    else if( arrayType.getType() == Array.Type.STRING )
+      {
       result = tokenize;
+      }
     else
+      {
       throw new UnsupportedOperationException( "unknown array type: " + arrayType.getType() );
+      }
 
     return new ArrayList( result ); // minimize serialization closure
     }

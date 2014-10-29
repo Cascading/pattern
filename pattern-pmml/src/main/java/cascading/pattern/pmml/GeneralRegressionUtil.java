@@ -20,7 +20,6 @@
 
 package cascading.pattern.pmml;
 
-import java.math.BigInteger;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,7 +51,7 @@ class GeneralRegressionUtil
       {
       String parameterName = modelPCell.getParameterName();
       double beta = modelPCell.getBeta();
-      BigInteger df = modelPCell.getDf();
+      Integer df = modelPCell.getDf();
 
       regressionTable.addParameter( new cascading.pattern.model.generalregression.Parameter( parameterName, beta, df.intValue() ) );
       }

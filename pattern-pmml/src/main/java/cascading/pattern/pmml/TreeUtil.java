@@ -42,7 +42,7 @@ import cascading.pattern.model.tree.predicate.compound.OrPredicate;
 import cascading.pattern.model.tree.predicate.compound.SurrogatePredicate;
 import cascading.pattern.model.tree.predicate.compound.XorPredicate;
 import cascading.tuple.coerce.Coercions;
-import org.dmg.pmml.ArrayType;
+import org.dmg.pmml.Array;
 import org.dmg.pmml.CompoundPredicate;
 import org.dmg.pmml.Node;
 import org.dmg.pmml.Predicate;
@@ -116,7 +116,7 @@ class TreeUtil
     if( predicate instanceof SimpleSetPredicate )
       {
       String fieldName = ( (SimpleSetPredicate) predicate ).getField().getValue();
-      ArrayType valueArray = ( (SimpleSetPredicate) predicate ).getArray();
+      Array valueArray = ( (SimpleSetPredicate) predicate ).getArray();
       SimpleSetPredicate.BooleanOperator operator = ( (SimpleSetPredicate) predicate ).getBooleanOperator();
       DataField expectedField = modelSchema.getExpectedField( fieldName );
 
@@ -140,7 +140,7 @@ class TreeUtil
 
       List<cascading.pattern.model.tree.predicate.Predicate> predicates = new ArrayList<cascading.pattern.model.tree.predicate.Predicate>();
 
-      for( Predicate child : compoundPredicate.getContent() )
+      for( Predicate child : compoundPredicate.getPredicates() )
         predicates.add( getPredicateFor( modelSchema, child ) );
 
       CompoundPredicate.BooleanOperator operator = compoundPredicate.getBooleanOperator();

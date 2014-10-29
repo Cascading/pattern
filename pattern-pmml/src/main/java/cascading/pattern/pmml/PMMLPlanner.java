@@ -31,6 +31,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.transform.sax.SAXSource;
+
 import cascading.flow.AssemblyPlanner;
 import cascading.flow.planner.PlannerException;
 import cascading.pattern.PatternException;
@@ -65,9 +67,11 @@ import org.dmg.pmml.ClusteringModel;
 import org.dmg.pmml.ComparisonMeasure;
 import org.dmg.pmml.DataField;
 import org.dmg.pmml.DataType;
+import org.dmg.pmml.Euclidean;
 import org.dmg.pmml.FieldName;
 import org.dmg.pmml.FieldUsageType;
 import org.dmg.pmml.GeneralRegressionModel;
+import org.dmg.pmml.Measure;
 import org.dmg.pmml.MiningField;
 import org.dmg.pmml.MiningFunctionType;
 import org.dmg.pmml.MiningModel;
@@ -76,11 +80,14 @@ import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMML;
 import org.dmg.pmml.RegressionModel;
 import org.dmg.pmml.Segment;
+import org.dmg.pmml.SquaredEuclidean;
 import org.dmg.pmml.TreeModel;
 import org.dmg.pmml.True;
-import org.jpmml.manager.IOUtil;
+import org.jpmml.model.ImportFilter;
+import org.jpmml.model.JAXBUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
 
 import static cascading.pattern.pmml.DataFields.createDataFields;
 import static cascading.pattern.pmml.TreeUtil.createTree;
@@ -343,7 +350,9 @@ public class PMMLPlanner implements AssemblyPlanner
     {
     try
       {
-      return IOUtil.unmarshal( inputStream );
+      InputSource source = new InputSource(inputStream);
+      SAXSource transformedSource = ImportFilter.apply(source);
+      return JAXBUtil.unmarshalPMML( transformedSource );
       }
     catch( Exception exception )
       {
@@ -618,17 +627,14 @@ public class PMMLPlanner implements AssemblyPlanner
     if( comparisonMeasure.getKind() != ComparisonMeasure.Kind.DISTANCE )
       throw new UnsupportedOperationException( "unsupported comparison kind, got: " + comparisonMeasure.getKind() );
 
-    boolean isSquared = comparisonMeasure.getSquaredEuclidean() != null;
-    boolean isEuclidean = comparisonMeasure.getEuclidean() != null;
 
-    if( isEuclidean && isSquared )
-      throw new IllegalStateException( "cannot be both squared and euclidean models" );
 
     ClusteringSpec clusteringSpec = new ClusteringSpec( modelSchema );
 
-    if( isEuclidean )
+    Measure measure = comparisonMeasure.getMeasure();
+    if( measure instanceof Euclidean )
       clusteringSpec.setComparisonMeasure( new EuclideanMeasure() );
-    else if( isSquared )
+    else if( measure instanceof SquaredEuclidean )
       clusteringSpec.setComparisonMeasure( new SquaredEuclideanMeasure() );
     else
       throw new UnsupportedOperationException( "unsupported comparison measure: " + comparisonMeasure );
@@ -637,7 +643,7 @@ public class PMMLPlanner implements AssemblyPlanner
 
     for( Cluster cluster : model.getClusters() )
       {
-      List<Double> exemplar = PMMLUtil.parseArray( cluster.getArray() );
+      List<Double> exemplar = (List<Double>) PMMLUtil.parseArray( cluster.getArray() );
 
       LOG.debug( "exemplar: {}", exemplar );
 

@@ -20,8 +20,6 @@
 
 package cascading.pattern.pmml;
 
-import java.math.BigInteger;
-
 import cascading.pattern.model.generalregression.Parameter;
 import cascading.pattern.model.generalregression.RegressionTable;
 import cascading.pattern.model.generalregression.normalization.Normalization;
@@ -62,10 +60,7 @@ class RegressionUtil
     for( NumericPredictor predictor : regressionTable.getNumericPredictors() )
       {
       String name = predictor.getName().getValue();
-      long exponent = predictor.getExponent().longValue(); // maybe losing data here
-
-      if( !predictor.getExponent().equals( BigInteger.valueOf( exponent ) ) )
-        throw new UnsupportedOperationException( "BigInt values not supported" );
+      int exponent = predictor.getExponent();
 
       double coefficient = predictor.getCoefficient();
 
