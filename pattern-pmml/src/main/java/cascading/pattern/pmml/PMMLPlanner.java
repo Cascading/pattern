@@ -27,13 +27,17 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.transform.sax.SAXSource;
 
 import cascading.flow.AssemblyPlanner;
+import cascading.flow.FlowDescriptors;
 import cascading.flow.planner.PlannerException;
 import cascading.pattern.PatternException;
 import cascading.pattern.datafield.ContinuousDataField;
@@ -350,8 +354,8 @@ public class PMMLPlanner implements AssemblyPlanner
     {
     try
       {
-      InputSource source = new InputSource(inputStream);
-      SAXSource transformedSource = ImportFilter.apply(source);
+      InputSource source = new InputSource( inputStream );
+      SAXSource transformedSource = ImportFilter.apply( source );
       return JAXBUtil.unmarshalPMML( transformedSource );
       }
     catch( Exception exception )
@@ -440,6 +444,19 @@ public class PMMLPlanner implements AssemblyPlanner
     tail = new Pipe( findTailName( context ), tail ); // bind the tail to the sink tailName
 
     return Arrays.asList( tail );
+    }
+
+  @Override
+  public Map<String, String> getFlowDescriptor()
+    {
+    if( getPMMLFile() == null )
+      return Collections.emptyMap();
+
+    Map<String, String> map = new HashMap<String, String>();
+
+    map.put( "pmml-resource", getPMMLFile().toString() );
+
+    return map;
     }
 
   private Pipe applyCoercion( Pipe tail, Tap source )
@@ -626,8 +643,6 @@ public class PMMLPlanner implements AssemblyPlanner
 
     if( comparisonMeasure.getKind() != ComparisonMeasure.Kind.DISTANCE )
       throw new UnsupportedOperationException( "unsupported comparison kind, got: " + comparisonMeasure.getKind() );
-
-
 
     ClusteringSpec clusteringSpec = new ClusteringSpec( modelSchema );
 
