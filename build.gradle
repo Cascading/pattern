@@ -30,12 +30,12 @@ allprojects {
   sourceCompatibility = 1.6
 }
 
-ext.cascadingVersion = '2.6.0'
+ext.cascadingVersion = '2.7.0'
 
 // set property to use locally installed cascading builds
 // otherwise wip releases will be pulled from conjars
 if( System.properties[ 'pattern.release.local' ] )
-  cascadingVersion = '2.6.1-wip-dev'
+  cascadingVersion = '2.7.0-wip-dev'
 
 buildscript {
   repositories {
