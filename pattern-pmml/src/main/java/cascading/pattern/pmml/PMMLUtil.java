@@ -33,7 +33,6 @@ import org.dmg.pmml.Array;
 import org.dmg.pmml.MiningModel;
 import org.dmg.pmml.MultipleModelMethodType;
 import org.dmg.pmml.Value;
-import org.jpmml.evaluator.ArrayUtil;
 
 /**
  *
@@ -47,7 +46,6 @@ class PMMLUtil
     List result;
 
     if( arrayType.getType() == Array.Type.REAL )
-      {
       result = Lists.transform( tokenize, new Function<String, Double>()
       {
       @Override
@@ -56,9 +54,7 @@ class PMMLUtil
         return Double.parseDouble( input );
         }
       } );
-      }
     else if( arrayType.getType() == Array.Type.INT )
-      {
       result = Lists.transform( tokenize, new Function<String, Integer>()
       {
       @Override
@@ -67,15 +63,10 @@ class PMMLUtil
         return Integer.parseInt( input );
         }
       } );
-      }
     else if( arrayType.getType() == Array.Type.STRING )
-      {
       result = tokenize;
-      }
     else
-      {
       throw new UnsupportedOperationException( "unknown array type: " + arrayType.getType() );
-      }
 
     return new ArrayList( result ); // minimize serialization closure
     }
